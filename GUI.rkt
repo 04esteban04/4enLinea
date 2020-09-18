@@ -1,35 +1,35 @@
 #lang racket
 (require racket/gui)
+;############# PRIMERA VENTANA ##################
 
-; Make a frame by instantiating the frame% class
-  (define Main (new frame% 
+;Frame principal
+(define Ventana1 (new frame% 
                 [label "4 en Linea"]
-                [width 600]
+                [width 500]
                 [height 400]
-                [style '(fullscreen-button)]
-                [alignment '(left top)]))
-  
-  ; Make a static text message in the frame
-  
-(define Title (new message% [parent Main]
-                          [label "4 EN LINEA"]
-                          [vert-margin 10]
-                          [horiz-margin 300]))
+                [style (list 'no-resize-border)]))
 
-(define Tabletx (new message% [parent Main]
-                            [label "Tamaño del Tablero:"]
-                            [vert-margin 20]
-                            [horiz-margin 200]))
-
-(define Colortx (new message% [parent Main]
-                            [label "Eliga su ficha:"]
-                            [vert-margin 30]
-                            [horiz-margin 200]))
+(new canvas% [parent Ventana1]
+             [style (list 'transparent)]
+             [min-width 10]
+             [min-height 10]
+             [paint-callback
+             (lambda (canvas dc)
+             (send dc set-scale 2 2)
+             (send dc set-text-foreground "red")
+             (send dc draw-text "4 en Linea!" 0 0))])
 
 
+;Configuraciones
+(define SelectToken(new choice% [parent Ventana1]
+                                [label "Seleccione su ficha:  "]
+                                [choices (list "Rojo Carmesi" "Verde Lima Amareto")]
+                                [vert-margin 10]
+                                ))
 
 
 
-  
-  ; Show the frame by calling its show method
-  (send Main show #t)
+ 
+
+; Show the frame by calling its show method
+  (send Ventana1 show #t)
