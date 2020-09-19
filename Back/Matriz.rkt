@@ -29,7 +29,7 @@
             lista
         )
         (else
-        (createList (- size 1) (append lista (list 0))) ))\
+        (createList (- size 1) (append lista (list 0))) ))
 )
 
 ;Funcion principal para reemplazar un valor de una matriz
@@ -65,3 +65,5 @@
             (remplaceValueList value (- pos 1) (cdr lista) (append newLista (list (car lista))))
         ))
 )
+
+(createMatrix 8)
