@@ -29,35 +29,39 @@
 
     (cond 
         ((zero? size)
-            (checkList (caar matrix) (car matrix))
+            (checkList (caar matrix) (car matrix) 0)
         )
         (else
             (cond
-                ((zero? (checkList (caar matrix) (car matrix)))
+                ((zero? (checkList (caar matrix) (car matrix) 0))
                     (checkHorizontal (cdr matrix) (- size 1))
                 )
                 (else
-                    (checkList (caar matrix) (car matrix))
+                    (checkList (caar matrix) (car matrix) 0)
                 )
             )
         )
     )
 )
 
-(define (checkList elemento lista)
+(define (checkList elemento lista repe)
     (cond
         ((null? lista)
+            0
+        )
+        ((equal? repe 3)
             elemento
         )
         ((zero? (car lista))
-            0
+            (checkList (car lista) (cdr lista) 0)
         )
         
         ((equal? elemento (car lista))
-            (checkList elemento (cdr lista))
+            
+            (checkList elemento (cdr lista) (+ repe 1))
         )
         (else
-            0
+            (checkList (car lista) (cdr lista) 0)
         )
     )
 )
