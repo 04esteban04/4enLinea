@@ -21,23 +21,26 @@
 
 (define (4inLine matrix size temp cont)
 
-    
+
+
+
 
 )
 
+;size = numero de filas (comenzando en 0)
 (define (checkHorizontal matrix size)
 
     (cond 
         ((zero? size)
-            (checkList (caar matrix) (car matrix) 0)
+            (checkList (caar matrix) (cdar matrix) 0)
         )
         (else
             (cond
-                ((zero? (checkList (caar matrix) (car matrix) 0))
+                ((zero? (checkList (caar matrix) (cdar matrix) 0))
                     (checkHorizontal (cdr matrix) (- size 1))
                 )
                 (else
-                    (checkList (caar matrix) (car matrix) 0)
+                    (checkList (caar matrix) (cdar matrix) 0)
                 )
             )
         )
@@ -46,18 +49,17 @@
 
 (define (checkList elemento lista repe)
     (cond
-        ((null? lista)
-            0
-        )
         ((equal? repe 3)
             elemento
+        )
+        ((null? lista)
+            0
         )
         ((zero? (car lista))
             (checkList (car lista) (cdr lista) 0)
         )
         
         ((equal? elemento (car lista))
-            
             (checkList elemento (cdr lista) (+ repe 1))
         )
         (else
@@ -66,8 +68,9 @@
     )
 )
 
+;size = numero de columnas (comenzando en 0)
 (define (checkVertical matrix size)
-    (checkHorizontal (columnToRow matrix (- (length matrix) 1) 0 '()) (- (length matrix) 1) )
+    (checkHorizontal (columnToRow matrix (- (length (car matrix)) 1) 0 '()) (- (length (car matrix)) 1) )
 )
 
 (define (columnToRow matrix size tempColumn newMatrix)
@@ -81,7 +84,6 @@
         )
     
     )
-
 )
 
 (define (getRow matrix pos)
