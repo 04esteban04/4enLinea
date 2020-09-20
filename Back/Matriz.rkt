@@ -3,6 +3,7 @@
 ;Crea una matriz cuadrada con el parametro introducido
 ;e: numero entero
 ;s: matriz nxn
+(provide createMatrix)
 (define (createMatrix size)
     (cond
         ((and (< 8 size) (> 16 size)) (list '()))
@@ -29,7 +30,7 @@
             lista
         )
         (else
-        (createList (- size 1) (append lista (list 0))) ))\
+        (createList (- size 1) (append lista (list 0))) ))
 )
 
 ;Funcion principal para reemplazar un valor de una matriz
@@ -65,3 +66,5 @@
             (remplaceValueList value (- pos 1) (cdr lista) (append newLista (list (car lista))))
         ))
 )
+
+(createMatrix 8)
