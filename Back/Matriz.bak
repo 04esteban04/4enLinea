@@ -67,4 +67,4 @@
         ))
 )
 
-(createMatrix 15 14)
+(createMatrix 8 16)

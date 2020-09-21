@@ -19,8 +19,9 @@
 
 )
 
-
 (define (4inLine matrix size temp cont)
+
+
 
 
 
@@ -118,6 +119,3 @@
     )
 
 )
-
-
-
