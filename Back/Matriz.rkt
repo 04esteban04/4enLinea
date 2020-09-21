@@ -4,20 +4,18 @@
 ;e: numero entero
 ;s: matriz nxn
 (provide createMatrix)
-(define (createMatrix size column)
-    (cond
-        ((and (< 8 size) (< 8 column) (> 16 size) (> 16 column)) (list '()))
-        (else (cmAux size column 0 '())))
+(define (createMatrix size row)
+    (cmAux size row 0 '())
 )
 
 ;Funcion auxiliar de createMatrix que de forma recursiva crea las columnas con el parametro introducido
 ;E: numero entero
 ;S: matriz nxn
-(define (cmAux size column cont matrix)
+(define (cmAux size row cont matrix)
     (cond 
-        ((= column cont) matrix)
+        ((= row cont) matrix)
         (else
-            (cmAux size column (+ cont 1) (append matrix (list (createList size '()))) )
+            (cmAux size row (+ cont 1) (append matrix (list (createList size '()))) )
         ))
 )
 
@@ -67,4 +65,4 @@
         ))
 )
 
-(createMatrix 15 14)
+(createMatrix 3 4)
