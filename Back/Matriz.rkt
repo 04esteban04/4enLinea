@@ -1,51 +1,53 @@
 #lang racket
 
-;Crea una matriz cuadrada con el parametro introducido
-;e: numero entero
-;s: matriz nxn
+; Función que crea una matriz del tamaño deseado
+; E: dos numeros enteros positivos con la cantidad de filas y columnas deseadas
+; S: matriz mxn
 (provide createMatrix)
-(define (createMatrix size column)
-    (cond
-        ((and (< 8 size) (< 8 column) (> 16 size) (> 16 column)) (list '()))
-        (else (cmAux size column 0 '())))
-        (print size)
-        (print column)
+(define (createMatrix row column)
+    (cmAux row column 0 '())
+    (print row)
+    (print column)
 )
 
-;Funcion auxiliar de createMatrix que de forma recursiva crea las columnas con el parametro introducido
-;E: numero entero
-;S: matriz nxn
-(define (cmAux size column cont matrix)
+; Función auxiliar de createMatrix que de forma recursiva crea las filas y columnas de la matriz
+; E: dos numeros enteros positivos con la cantidad de filas y columnas deseadas
+; S: matriz mxn
+(define (cmAux row column cont matrix)
     (cond 
-        ((= column cont) matrix)
+        ((= row cont) 
+            matrix)
         (else
-            (cmAux size column (+ cont 1) (append matrix (list (createList size '()))) )
-        ))
+            (cmAux row 
+                   column 
+                   (+ cont 1) 
+                   (append matrix (list (createList column '()))))
+        )
+    )
 )
 
-;Crea una lista de tamano introducido como parametro
-;E: numero entero
-;S: lista de largo n
+; Función que crea una lista del tamano deseado
+; E: numero entero positivo (tamaño de la lista deseada)
+; S: lista de largo n
 (define (createList size lista)
     (cond
         ((zero? size)
-            lista
-        )
+            lista)
         (else
-        (createList (- size 1) (append lista (list 0))) ))
+            (createList (- size 1) (append lista (list 0))) ))
 )
 
-;Funcion principal para reemplazar un valor de una matriz
-;E: value, row, column : como valores enteros. Matriz es una lista que contiene una matriz
-;S: matriz
+; Función principal para reemplazar un valor de una matriz
+; E: valor a cambiar, fila y columna  como valores enteros. Matriz es una lista que contiene una matriz
+; S: matriz
 (define (remplaceValue value row column matriz)
 
     (remplaceValueAux value row column matriz '())
 )
 
-;Funcion auxiliar que realiza la recursion para reemplazar un valor en una matriz
-;E: numeros enteros y una matriz
-;S: matriz
+; Función auxiliar que realiza la recursion para reemplazar un valor en una matriz
+; E: valor a cambiar, fila, columna (numeros enteros) y una matriz
+; S: matriz
 (define (remplaceValueAux value row column matriz newLista)
     (cond 
         ((zero? column)
@@ -57,7 +59,7 @@
 )
 
 ;Funcion que reemplaza un valor de una lista
-;E: numeros enteros y una lista
+;E: valor a cambiar, posición y una lista
 ;S: lista con valor reemplazado
 (define (remplaceValueList value pos lista newLista)
     (cond
@@ -69,4 +71,5 @@
         ))
 )
 
-;(createMatrix 8 16)
+
+;(createMatrix 8 8)
