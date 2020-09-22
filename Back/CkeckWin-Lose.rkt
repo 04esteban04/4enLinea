@@ -21,14 +21,12 @@
 
 
 (define (4inLine matrix size temp cont)
-
-
-
+    (display '" ")
 )
+
 
 ;size = numero de filas (comenzando en 0)
 (define (checkHorizontal matrix size)
-
     (cond 
         ((zero? size)
             (checkList (caar matrix) (cdar matrix) 0)
@@ -91,7 +89,7 @@
             (car matrix)
         )
         (else
-        (getRow (cdr matrix) (- pos 1)))
+            (getRow (cdr matrix) (- pos 1)))
     )
 )
 
@@ -119,5 +117,78 @@
 
 )
 
+(define (checkDiagonally matrix size)
+    (cond ((and (zero? (- (length matrix) 1)) (zero? size))
+                matrix)
+           (else
+                (checkDiagonallyAux matrix 
+                                    size
+                                    (listOfCounters (- (length (car matrix)) 1) '0 '())
+                                    )
+           ) 
+    )
+)
+
+(define (checkDiagonallyAux matrix size listaContadores)
+    (cond ((zero? size)
+                '0)
+    
+    )
+)
 
 
+; Función para generar una lista de contadores
+; E: largo de la matriz -1, contador, lista vacía
+; S: lista con los contadores desde cero hasta el largo de la matriz -1
+(define (listOfCounters largo cont lista)
+    (cond ((zero? largo)
+                '())
+            (else
+                (append lista 
+                        (list cont) 
+                        (listOfCounters (- largo 1) (+ cont 1) lista))
+            )
+    )
+)
+
+(define (getDiagonal matrix size)
+    (cond ((zero? size)
+                matrix)
+           (else
+                (getDiagonalAux matrix 
+                                size
+                                (listOfCounters (+ size 1) '0 '())
+                                '0
+                                '())
+            ) 
+    )
+)
+(define (getDiagonalAux matrix size cont listaContadores listaDiagonal)
+    (cond ((null? listaContadores)
+                '())
+           ((= cont 0)
+                (append listaDiagonal 
+                        (list (caar matrix)) 
+                        (getDiagonalAux (cdr matrix) size (cadr listaContadores) (cdr listaContadores) listaDiagonal)))
+            (else
+
+            )            
+    )
+)
+
+
+(listOfCounters '8 '0 '())
+
+#|
+
+'(0 1 2 3 4 5 6 7)
+
+'((0 0 0 0 0 0 0 0) 
+  (0 0 0 0 0 0 0 0) 
+  (0 0 0 0 0 0 0 0) 
+  (0 0 0 0 0 0 0 0) 
+  (0 0 0 0 0 0 0 0) 
+  (0 0 0 0 0 0 0 0) 
+  (0 0 0 0 0 0 0 0) 
+  (0 0 0 0 0 0 0 0))
+|#
