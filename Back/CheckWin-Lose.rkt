@@ -1,5 +1,8 @@
 #lang racket
 
+; 
+; E:
+; S:
 (define (checkWin-Lose matrix)
 
     (cond 
@@ -19,13 +22,16 @@
 
 )
 
-
+; 
+; E:
+; S:
 (define (4inLine matrix size temp cont)
     (display '" ")
 )
 
-
-;size = numero de filas (comenzando en 0)
+; Función para verificar la repetición de elementos en la matriz horizontalmente 
+; E: matriz, número de filas (comenzando a contar en 0)
+; S: elemento que se repita 4 veces, caso contrario un 0
 (define (checkHorizontal matrix size)
     (cond 
         ((zero? size)
@@ -44,6 +50,9 @@
     )
 )
 
+; Función para verificar la repetición de elementos en una lista
+; E: elemento a buscar, lista, número de repeticiones
+; S: elemento que se repita 4 veces, caso contrario un 0
 (define (checkList elemento lista repe)
     (cond
         ((equal? repe 3)
@@ -65,13 +74,18 @@
     )
 )
 
-;size = numero de columnas (comenzando en 0)
+; Función para verificar la repetición de elementos en la matriz verticalmente 
+; E: matriz, número de columnas (comenzando a contar en 0)
+; S: elemento que se repita 4 veces
 (define (checkVertical matrix size)
-    (checkHorizontal (columnToRow matrix (- (length (car matrix)) 1) 0 '()) (- (length (car matrix)) 1) )
+    (checkHorizontal (columnToRow matrix (- (length (car matrix)) 1) 0 '())
+                     (- (length (car matrix)) 1))
 )
 
+; Función para obtener la matriz transpuesta de la matriz ingresada
+; E: matriz, número de filas, contador, lista donde se almacena la nueva matriz 
+; S: matriz original transpuesta
 (define (columnToRow matrix size tempColumn newMatrix)
-    
     (cond 
         ((equal? tempColumn size)
             (append newMatrix (list (createList matrix tempColumn '())))
@@ -79,20 +93,26 @@
         (else
             (columnToRow matrix size (+ tempColumn 1 ) (append newMatrix (list (createList matrix tempColumn '()))))
         )
-    
     )
 )
 
+; Función para obtener una fila de la matriz
+; E: matriz, número de fila a obtener
+; S: fila deseada de la matriz ingresada
 (define (getRow matrix pos)
     (cond
         ((zero? pos)
             (car matrix)
         )
         (else
-            (getRow (cdr matrix) (- pos 1)))
+            (getRow (cdr matrix) (- pos 1))
+        )
     )
 )
 
+; Función para obtener un elemento de una lista
+; E: lista, posición del elemento a obtener
+; S: elemento deseado de la lista ingresada
 (define (getElement lista pos)
     (cond
         ((zero? pos)
@@ -105,6 +125,9 @@
 
 )
 
+; Función para crear una nueva lista con los valores de posición dados 
+; E: matriz, posición de elemento a ingresar en lista, lista vacía
+; S: lista con los elementos deseados
 (define (createList matrix pos newList)
     (cond
         ((null? matrix)
@@ -117,6 +140,12 @@
 
 )
 
+
+
+
+; 
+; E:
+; S:
 (define (checkDiagonal matrix size)
     (cond ((and (zero? (- (length matrix) 1)) (zero? size))
                 matrix)
@@ -129,6 +158,9 @@
     )
 )
 
+; 
+; E:
+; S:
 (define (checkDiagonalAux matrix size listaContadores)
     (cond ((zero? size)
                 '0)
@@ -151,6 +183,9 @@
     )
 )
 
+; Función para obtener la diagonal de una matriz
+; E: matriz, número de filas, número de columnas
+; S: lista con los elementos de la diagonal de la matriz ingresada
 (define (getDiagonal matrix row column)
     (cond ((and (zero? row) (zero? column))
                 matrix)
@@ -179,6 +214,10 @@
     )
 )
 
+; Función auxiliar de getDiagonal para obtener la diagonal de una matriz
+; E: matriz, fila de la matriz, tamaño de filas o columnas, contador para iterar, 
+;    lista de contadores, lista con elementos de la diagonal 
+; S: lista con los elementos de la diagonal de la matriz ingresada
 (define (getDiagonalAux matrix fila size cont listaContadores listaDiagonal)
     (cond  ; Se valida si hay más filas que columnas     
            ((= cont (length (car matrix)))
@@ -208,43 +247,18 @@
     )
 )
 
-#|
-(getDiagonal '((1 0 0 0 0 0 0 0 0 0 0)
-               (0 2 0 0 0 0 0 0 0 0 0)
-               (0 0 5 0 0 0 0 0 0 0 0)
-               (0 0 0 1 0 0 0 0 0 0 0) 
-               (0 0 0 0 2 0 0 0 0 0 0) 
-               (0 0 0 0 0 3 0 0 0 0 0) 
-               (0 0 0 0 0 0 5 0 0 0 0) 
-               (0 0 0 0 0 0 0 3 0 0 0)
-               (0 0 0 0 0 0 0 0 1 0 0)) '8 '10)
+; Función para invertir una lista 
+; E: lista
+; S: lista invertida
+(define (invertirLista lista)
+    (cond ((null? lista)
+                '())
+           (else
+                (append (invertirLista (cdr lista))
+                        (list (car lista)))
+           )     
+    )
+)
 
-;9x11
-(display '"\n")
 
-(getDiagonal '((1 0 0 0 0 0 0 0 0 0)
-               (0 2 0 0 0 0 0 0 0 0)
-               (0 0 5 0 0 0 0 0 0 0)
-               (0 0 0 1 0 0 0 0 0 0) 
-               (0 0 0 0 2 0 0 0 0 0) 
-               (0 0 0 0 0 3 0 0 0 0) 
-               (0 0 0 0 0 0 5 0 0 0) 
-               (0 0 0 0 0 0 0 3 0 0)
-               (0 0 0 0 0 0 0 0 1 0)
-               (0 0 0 0 0 0 0 0 0 2)) '9 '9)
 
-;10x10
-|#
-(display '"\n")
-
-(getDiagonal '((1 0 0 0 0 0 0 0)
-               (0 2 0 0 0 0 0 0)
-               (0 0 5 0 0 0 0 0)
-               (0 0 0 1 0 0 0 0) 
-               (0 0 0 0 2 0 0 0) 
-               (0 0 0 0 0 3 0 0) 
-               (0 0 0 0 0 0 5 0) 
-               (0 0 0 0 0 0 0 3)
-               (0 0 0 0 0 0 0 0)) '8 '7)
-
-;9x8
