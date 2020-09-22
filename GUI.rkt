@@ -8,7 +8,7 @@
 ;   ||                PRIMERA VENTANA                 ||
 ;    \################################################/
 
-;Frame principal
+;FRAME PRINCIPAL
 (define topWindow (new frame% 
                 [label "4 en Linea"]
                 [width 350]
@@ -19,7 +19,6 @@
   (send dc set-font (make-object font% 20 "Century Gothic" 'decorative 'normal 'bold))
   (send dc draw-text "4 EN LINEA" 100 10))
 
-;Titulo
 (define title(new canvas% [parent topWindow]
                            [paint-callback
                            (lambda (canvas dc)
@@ -28,43 +27,29 @@
                            (send dc draw-text "4 EN LINEA!" 100 10))]
                            [style (list 'transparent)]))
 
-;Panel para configuraciones
+;PANEL PARA CONFIGURACIONES
 (define controlPane (new vertical-pane% [parent topWindow]
                                            [spacing 25]))
                            
   
 
 ;CONFIGURACIONES PARA LA MATRIZ
+(define msg (new message% [parent controlPane]
+                          [label "Tamaño del tablero: "]))
 
-;Crea un hash para identificar el tamaño que sera introducido a la funcion
-;createMatrix 
-(define matrixSize (hash "8x8" 8
-                    "9x9" 9
-                    "10x10" 10
-                    "11x11" 11
-                    "12x12" 12
-                    "13x13" 13
-                    "14x14" 14
-                    "15x15" 15 
-                    "16x16" 16))
+(define selectRow(new choice% [parent controlPane]
+                               [label "Filas:  "]
+                               [choices '("8" "9" "10" "11" "12" "13" "14" "15" "16")]
+                               ))
+(define selectColumn(new choice% [parent controlPane]
+                               [label "Columnas:  "]
+                               [choices '("8" "9" "10" "11" "12" "13" "14" "15" "16")]
+                               ))
 
-;Envia el tamaño a la funcion createMatrix
-(define (set-size choice event)
-  (createMatrix (hash-ref matrixSize (send choice get-string-selection))))
-
-(define selectSize(new choice% [parent controlPane]
-                               [label "Tamaño del tablero:  "]
-                               [choices '("8x8" "9x9" "10x10" "11x11" "12x12" "13x13" "14x14" "15x15" "16x16")]
-                               [callback set-size]))
-
-
+;Boton encargado de enviar el tamaño de la matriz a la funcion respectiva
 (define accept(new button% [parent controlPane]
-                           [label "Aceptar"]))
+                           [label "Aceptar"]
+                           [callback (lambda (button event)
+                           (createMatrix (string->number (send selectRow get-string-selection)) (string->number (send selectColumn get-string-selection))))]))
 
-
-
-
-
-
-
-  (send topWindow show #t)
+(send topWindow show #t)

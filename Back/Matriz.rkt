@@ -8,6 +8,8 @@
     (cond
         ((and (< 8 size) (< 8 column) (> 16 size) (> 16 column)) (list '()))
         (else (cmAux size column 0 '())))
+        (print size)
+        (print column)
 )
 
 ;Funcion auxiliar de createMatrix que de forma recursiva crea las columnas con el parametro introducido
@@ -67,4 +69,4 @@
         ))
 )
 
-(createMatrix 8 16)
+;(createMatrix 8 16)
