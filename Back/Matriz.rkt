@@ -1,34 +1,38 @@
 #lang racket
 
-;Crea una matriz cuadrada con el parametro introducido
-;e: numero entero
-;s: matriz nxn
+; Función que crea una matriz del tamaño deseado
+; e: numero entero
+; s: matriz mxn
 (provide createMatrix)
-(define (createMatrix size row)
-    (cmAux size row 0 '())
+(define (createMatrix row column)
+    (cmAux row column 0 '())
 )
 
 ;Funcion auxiliar de createMatrix que de forma recursiva crea las columnas con el parametro introducido
 ;E: numero entero
 ;S: matriz nxn
-(define (cmAux size row cont matrix)
+(define (cmAux row column cont matrix)
     (cond 
-        ((= row cont) matrix)
+        ((= row cont) 
+            matrix)
         (else
-            (cmAux size row (+ cont 1) (append matrix (list (createList size '()))) )
-        ))
+            (cmAux row 
+                   column 
+                   (+ cont 1) 
+                   (append matrix (list (createList column '()))))
+        )
+    )
 )
 
 ;Crea una lista de tamano introducido como parametro
 ;E: numero entero
 ;S: lista de largo n
-(define (createList size lista)
+(define (createList column lista)
     (cond
-        ((zero? size)
-            lista
-        )
+        ((zero? column)
+            lista)
         (else
-        (createList (- size 1) (append lista (list 0))) ))
+            (createList (- column 1) (append lista (list 0))) ))
 )
 
 ;Funcion principal para reemplazar un valor de una matriz
@@ -65,4 +69,6 @@
         ))
 )
 
-(createMatrix 3 4)
+
+(createMatrix 15 8)
+(createMatrix 9 15)
