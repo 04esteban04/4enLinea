@@ -151,23 +151,43 @@
     )
 )
 
-(define (getDiagonal matrix size)
-    (cond ((zero? size)
+(define (getDiagonal matrix row column)
+    (cond ((and (zero? row) (zero? column))
                 matrix)
+            ((> row column)
+                (getDiagonalAux matrix
+                                (car matrix) 
+                                row
+                                '0
+                                (listOfCounters (+ row 1) '0 '())
+                                '()))
+            ((< row column)
+                (getDiagonalAux matrix
+                                (car matrix) 
+                                column
+                                '0
+                                (listOfCounters (+ column 1) '0 '())
+                                '()))
            (else
                 (getDiagonalAux matrix
                                 (car matrix) 
-                                size
+                                row
                                 '0
-                                (listOfCounters (+ size 1) '0 '())
+                                (listOfCounters (+ row 1) '0 '())
                                 '())
             ) 
     )
 )
 
 (define (getDiagonalAux matrix fila size cont listaContadores listaDiagonal)
-    (cond ((null? listaContadores)
-                '())
+    (cond  ; Se valida si hay más filas que columnas     
+           ((= cont (length (car matrix)))
+                '())   
+            ; Se valida si hay más columnas que filas    
+           ((and (= cont 0) (null? (cdr matrix)))
+                (append listaDiagonal 
+                        (list (car fila))))
+            ; Se valida si el elmento pertenece a la diagonal de la matriz            
            ((and (= cont 0) (>= (length (cdr listaContadores)) 1))
                 (append listaDiagonal 
                         (list (car fila)) 
@@ -177,21 +197,54 @@
                                         (cadr listaContadores)
                                         (cdr listaContadores)
                                         listaDiagonal)))
-           ((and (= cont 0) (= (length (cdr listaContadores)) 0))
-                (append listaDiagonal 
-                        (list (car fila)))) 
             (else
-                (getDiagonalAux matrix (cdr fila) size (- cont 1) listaContadores listaDiagonal)
+                (getDiagonalAux matrix
+                                (cdr fila) 
+                                size
+                                (- cont 1) 
+                                listaContadores 
+                                listaDiagonal)
             )            
     )
 )
 
+#|
+(getDiagonal '((1 0 0 0 0 0 0 0 0 0 0)
+               (0 2 0 0 0 0 0 0 0 0 0)
+               (0 0 5 0 0 0 0 0 0 0 0)
+               (0 0 0 1 0 0 0 0 0 0 0) 
+               (0 0 0 0 2 0 0 0 0 0 0) 
+               (0 0 0 0 0 3 0 0 0 0 0) 
+               (0 0 0 0 0 0 5 0 0 0 0) 
+               (0 0 0 0 0 0 0 3 0 0 0)
+               (0 0 0 0 0 0 0 0 1 0 0)) '8 '10)
 
-(getDiagonal '((0 0 0 0 0 0 0 0)
+;9x11
+(display '"\n")
+
+(getDiagonal '((1 0 0 0 0 0 0 0 0 0)
+               (0 2 0 0 0 0 0 0 0 0)
+               (0 0 5 0 0 0 0 0 0 0)
+               (0 0 0 1 0 0 0 0 0 0) 
+               (0 0 0 0 2 0 0 0 0 0) 
+               (0 0 0 0 0 3 0 0 0 0) 
+               (0 0 0 0 0 0 5 0 0 0) 
+               (0 0 0 0 0 0 0 3 0 0)
+               (0 0 0 0 0 0 0 0 1 0)
+               (0 0 0 0 0 0 0 0 0 2)) '9 '9)
+
+;10x10
+|#
+(display '"\n")
+
+(getDiagonal '((1 0 0 0 0 0 0 0)
                (0 2 0 0 0 0 0 0)
                (0 0 5 0 0 0 0 0)
                (0 0 0 1 0 0 0 0) 
-               (0 0 0 0 0 0 0 0) 
+               (0 0 0 0 2 0 0 0) 
                (0 0 0 0 0 3 0 0) 
-               (0 0 0 0 0 0 0 0) 
-               (0 0 0 0 0 0 0 7)) '7)
+               (0 0 0 0 0 0 5 0) 
+               (0 0 0 0 0 0 0 3)
+               (0 0 0 0 0 0 0 0)) '8 '7)
+
+;9x8
