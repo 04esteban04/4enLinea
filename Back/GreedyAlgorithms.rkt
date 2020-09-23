@@ -3,7 +3,6 @@
 ;(require racket/include)
 (require "Matriz.rkt")
 
-;Prueba commit
 
 ;hola ayuda
 
