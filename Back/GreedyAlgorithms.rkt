@@ -5,6 +5,8 @@
 
 ;Prueba commit
 
+;hola ayuda
+
 
 ;Conjunto de candidatos: posiciones 0, 1 ,2 en una matriz
 
