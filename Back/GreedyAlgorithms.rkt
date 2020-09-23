@@ -6,11 +6,16 @@
 ;Conjunto de candidatos: posiciones 0, 1 ,2 en una matriz
 
 ;Funciones para encontrar siguiente lugar en horizontal
+;------------------------------------------------------
+;------------------------------------------------------
+;------------------------------------------------------
 
+;funcion que cuenta las repeticiones de un elemento en una lista
 (define (contList element lista)
     (contListAux element lista 0)
 )
 
+;funcion auxiliar de contlist que realiza toda la recursion
 (define (contListAux element lista res)
     (cond
         ((null? lista) res)
@@ -22,21 +27,7 @@
     )
 )
 
-(define (sustitution element newElement lista res)
-    (cond
-        ((null? lista)
-            res
-        )
-        ((equal? (car lista) element)
-            (sustitution element newElement (cdr lista) (append res (list newElement)))
-        )
-        (else
-        (sustitution element newElement (cdr lista) (append res (list (car lista)))))
-    
-    )
-
-)
-
+;funcion que determina si existe algun cero posible en una lista para insertar ficha
 (define (canAdd? lista)
     (cond
         ((zero? (contList 0 lista))
@@ -48,6 +39,7 @@
     )
 )
 
+;funcion auxiliar de maxRere que realiza toda la recursion
 (define (maxRepeAux element lista repe tempRepe)
     (cond
         ((and (> tempRepe repe) (null? lista))
@@ -69,10 +61,12 @@
     )
 )
 
+;funcion que retorta el maximo de repeticiones consecutivas en una lista
 (define (maxRepe element lista)
     (maxRepeAux element lista 0 0)
 )
 
+;funcion auxiliar de findPlace que realiza toda la recursividad
 (define (findPlaceAux element lista listaPerm repe tempPos)
     (cond
         ((equal? repe (maxRepe element listaPerm))
@@ -97,29 +91,17 @@
     )
 )
 
+;funcion que encuentra la posicion para colocar la ficha en la mejor posicion
 (define (findPlace element lista)
     (findPlaceAux element lista lista 0 0)
 )
 
-(define (availableField? lista)
-    (cond
-        ((null? lista)
-            #f
-        )
-        ((zero? (car lista))
-            #t
-        )
-        (else
-        (availableField (cdr lista)))
-    
-    )
-
-)
-
+;funcion que determina las posiciones de los campos con 0
 (define (availableField lista)
     (availableFieldAux lista '() 0)
 )
 
+;funcion auxiliar de availableField
 (define (availableFieldAux lista res tempPos)
     (cond
         ((null? lista)
@@ -134,6 +116,7 @@
     )
 )
 
+;Funcion que obtiene el elemento en la pisicion determinada
 (define (getElement pos lista)
     (cond
         ((zero? pos)
@@ -144,6 +127,7 @@
 
 )
 
+;Funcion auxiliar de put
 (define (putAux pos element lista newLista)
     (cond
         ((zero? pos)
@@ -156,14 +140,19 @@
     )
 )
 
+;Funcion que inserta/remplaza un elemento en una lista
 (define (put pos element lista)
     (putAux pos element lista '())
 )
 
+;Funcion que determina el mejor espacio para colocar la siguiente ficha en una lista
 (define (selectPlace element lista)
     (cond
         ((canAdd? lista)
             (cond
+                ((< (findPlace element lista) 0)
+                    (put (car (availableField lista)) element lista) 
+                )
                 ((not (zero? (getElement (findPlace element lista) lista)))
                     (put (car (availableField lista)) element lista) 
                 )
@@ -178,4 +167,30 @@
     )
 )
 
+;Funcion que determina la fila para insertar la ficha en la matriz
+(define (findRow element matrix)
+    (findRowAux element matrix '())
+)
+
+(define (findRowAux element matrix newMatrix)
+    (cond
+        ((null? matrix)
+            #f
+        )
+        ((equal? (selectPlace element (car matrix)) #f)
+            (findRowAux element (cdr matrix) (append newMatrix (list (car matrix))))
+        )
+        (else
+            (append newMatrix (list (selectPlace element (car matrix))) (cdr matrix))
+        )
+    
+    )
+
+)
+
+(findRow 2 '((2 1 1 1 2 1) (2 2 2 2 1 2) (0 0 1 1 0 0) (0 1 1 0 0 0)))
+
+;------------------------------------------------------
+;------------------------------------------------------
+;------------------------------------------------------
 ;---------------------------------------------------------------------------
