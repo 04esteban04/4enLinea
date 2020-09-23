@@ -247,6 +247,58 @@
     )
 )
 
+
+
+
+
+
+; empezando en 0
+(define (getDiagonalInferior matrix row column)
+    (cond ((and (zero? row) (zero? column))
+                matrix)
+            ((> row column)
+                (getDiagonalInferiorAux matrix
+                                        (car matrix) 
+                                        row
+                                        '0
+                                        (listOfCounters (+ row 1) '0 '())
+                                        '()
+                                        '()))
+            ((< row column)
+                (getDiagonalInferiorAux matrix
+                                        (car matrix) 
+                                        column
+                                        '0
+                                        (listOfCounters (+ column 1) '0 '())
+                                        '()
+                                        '()))
+           (else
+                (getDiagonalInferiorAux matrix
+                                        (car matrix) 
+                                        row
+                                        '0
+                                        (listOfCounters (+ row 1) '0 '())
+                                        '()
+                                        '())
+            ) 
+    )
+)
+
+
+(define (getListaTemp fila cont listaContadores listaTemp)
+    (cond ((not(= cont 0))
+            (append listaTemp 
+                    (list (car fila))
+                    (getListaTemp (cdr fila)  
+                                    (- cont 1) 
+                                    listaContadores
+                                    listaTemp ))
+            )
+           ((= cont 0)
+                listaTemp)
+    )
+)
+
 ; Función para invertir una lista 
 ; E: lista
 ; S: lista invertida
@@ -260,5 +312,61 @@
     )
 )
 
+(define (getDiagonalInferiorAux matrix fila size cont listaContadores listaTemp listaDiagonal)
+    (cond  ; Caso en donde se encuentre en la última fila de una matriz con más filas que columnas
+            ((and (= cont (length (car matrix))) (null? (cdr matrix)))
+                (append listaDiagonal
+                        (list (car matrix)))
+            )
+            ; Caso donde se tienen más filas que columnas y se encuentran filas después de la diagonal
+            ((= cont (length (car matrix)))
+                (append listaDiagonal
+                        (list (car matrix))
+                        (getDiagonalInferiorAux (cdr matrix) 
+                                                (cadr matrix) 
+                                                (- size 1) 
+                                                cont 
+                                                listaContadores
+                                                listaTemp 
+                                                listaDiagonal))
+            )
+            ; Caso donde se tiene la última fila de una matriz cuadrada
+            ((and (= cont 0) (null? (cdr matrix)))
+                (append listaDiagonal
+                        listaTemp)
+            )
+            ; Caso donde se agregan elementos de las listas intermedias inferiores                
+            ((= cont 0)
+                (getDiagonalInferiorAux (cdr matrix) 
+                                        (cadr matrix) 
+                                        (- size 1) 
+                                        (cadr listaContadores) 
+                                        (cdr listaContadores)
+                                        '()
+                                        listaDiagonal))            
+            ; Caso en donde se agregan los elementos de cada diagonal a una lista temporal                                    
+            ((> cont 0)
+                (append listaDiagonal
+                        (list (getListaTemp fila 
+                                            cont 
+                                            listaContadores 
+                                            listaTemp)) 
+                        (getDiagonalInferiorAux (cdr matrix) 
+                                                (cadr matrix) 
+                                                (- size 1) 
+                                                (cadr listaContadores) 
+                                                (cdr listaContadores)
+                                                '()
+                                                listaDiagonal))
+            )                                             
+    )
+)
 
-
+(getDiagonalInferior '((1 0 0 0 0)
+                       (2 1 0 0 0)
+                       (3 2 1 0 0)
+                       (4 3 2 1 0)
+                       (5 4 3 2 1)
+                       (6 5 4 3 2)
+                       (7 6 5 4 3)
+                       (8 7 6 5 4)) '7 '4)
