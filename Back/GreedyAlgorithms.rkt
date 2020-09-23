@@ -3,7 +3,6 @@
 ;(require racket/include)
 (require "Matriz.rkt")
 
-;Prueba commit
 
 
 ;Conjunto de candidatos: posiciones 0, 1 ,2 en una matriz
