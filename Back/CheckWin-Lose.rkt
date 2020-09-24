@@ -1,5 +1,110 @@
 #lang racket
 
+
+#|
+*********************************************************************************************
+************************************    CÓDIGO MATRIZ    ************************************
+*********************************************************************************************
+|#
+
+
+
+; Función que crea una matriz del tamaño deseado
+; E: dos numeros enteros positivos con la cantidad de filas y columnas deseadas
+; S: matriz mxn
+(provide createMatrix)
+(define (createMatrix row column)
+    (cmAux row column 0 '())
+    
+)
+
+; Función auxiliar de createMatrix que de forma recursiva crea las filas y columnas de la matriz
+; E: dos numeros enteros positivos con la cantidad de filas y columnas deseadas
+; S: matriz mxn
+(define (cmAux row column cont matrix)
+    (cond 
+        ((= row cont) 
+            matrix)
+        (else
+            (cmAux row 
+                   column 
+                   (+ cont 1) 
+                   (append matrix (list (createList column '()))))
+        )
+    )
+)
+
+; Función que crea una lista del tamano deseado
+; E: numero entero positivo (tamaño de la lista deseada)
+; S: lista de largo n
+(define (createList size lista)
+    (cond
+        ((zero? size)
+            lista)
+        (else
+            (createList (- size 1) (append lista (list 0))) ))
+)
+
+; Función principal para reemplazar un valor de una matriz
+; E: valor a cambiar, fila y columna como valores enteros. Matriz es una lista que contiene una matriz
+; S: matriz
+(define (remplaceValue value row column matriz)
+    (cond ((>= row (length matriz))
+                matriz)
+          ((>= column (length (car matriz)))
+                matriz)
+          (else
+                (remplaceValueAux value column row matriz '())
+          )
+    )     
+)
+
+; Función auxiliar que realiza la recursion para reemplazar un valor en una matriz
+; E: valor a cambiar, fila, columna (numeros enteros) y una matriz
+; S: matriz
+(define (remplaceValueAux value row column matriz newLista)
+    (cond 
+        ((zero? column)
+            (append newLista (list (remplaceValueList value row (car matriz) '())) (cdr matriz))
+        )
+        (
+            (remplaceValueAux value row (- column 1) (cdr matriz) (append newLista (list (car matriz))))
+        ))
+)
+
+;Funcion que reemplaza un valor de una lista
+;E: valor a cambiar, posición y una lista
+;S: lista con valor reemplazado
+(define (remplaceValueList value pos lista newLista)
+    (cond
+        ((zero? pos)
+            (append newLista (list value) (cdr lista))
+        )
+        (else
+            (remplaceValueList value (- pos 1) (cdr lista) (append newLista (list (car lista))))
+        ))
+)
+
+
+
+;(remplaceValue '2 '6 '7 (createMatrix '7 '7) )
+
+
+#|
+*********************************************************************************************
+*********************************************************************************************
+*********************************************************************************************
+|#
+
+
+
+
+#|
+*********************************************************************************************
+******************************    CÓDIGO CHECK WIN-LOSE    **********************************
+*********************************************************************************************
+|#
+
 ; 
 ; E:
 ; S:
@@ -169,20 +274,6 @@
 )
 
 
-; Función para generar una lista de contadores
-; E: largo de la matriz -1, contador, lista vacía
-; S: lista con los contadores desde cero hasta el largo de la matriz -1
-(define (listOfCounters largo cont lista)
-    (cond ((zero? largo)
-                '())
-            (else
-                (append lista 
-                        (list cont) 
-                        (listOfCounters (- largo 1) (+ cont 1) lista))
-            )
-    )
-)
-
 ; Función para obtener la diagonal de una matriz
 ; E: matriz, número de filas, número de columnas
 ; S: lista con los elementos de la diagonal de la matriz ingresada
@@ -247,6 +338,19 @@
     )
 )
 
+; Función para generar una lista de contadores
+; E: largo de la matriz -1, contador, lista vacía
+; S: lista con los contadores desde cero hasta el largo de la matriz -1
+(define (listOfCounters largo cont lista)
+    (cond ((zero? largo)
+                '())
+            (else
+                (append lista 
+                        (list cont) 
+                        (listOfCounters (- largo 1) (+ cont 1) lista))
+            )
+    )
+)
 
 
 
@@ -281,34 +385,6 @@
                                         '()
                                         '())
             ) 
-    )
-)
-
-
-(define (getListaTemp fila cont listaContadores listaTemp)
-    (cond ((not(= cont 0))
-            (append listaTemp 
-                    (list (car fila))
-                    (getListaTemp (cdr fila)  
-                                    (- cont 1) 
-                                    listaContadores
-                                    listaTemp ))
-            )
-           ((= cont 0)
-                listaTemp)
-    )
-)
-
-; Función para invertir una lista 
-; E: lista
-; S: lista invertida
-(define (invertirLista lista)
-    (cond ((null? lista)
-                '())
-           (else
-                (append (invertirLista (cdr lista))
-                        (list (car lista)))
-           )     
     )
 )
 
@@ -362,6 +438,63 @@
     )
 )
 
+(define (getListaTemp fila cont listaContadores listaTemp)
+    (cond ((not(= cont 0))
+            (append listaTemp 
+                    (list (car fila))
+                    (getListaTemp (cdr fila)  
+                                    (- cont 1) 
+                                    listaContadores
+                                    listaTemp ))
+            )
+           ((= cont 0)
+                listaTemp)
+    )
+)
+
+; Función para invertir una lista 
+; E: lista
+; S: lista invertida
+(define (invertirLista lista)
+    (cond ((null? lista)
+                '())
+           (else
+                (append (invertirLista (cdr lista))
+                        (list (car lista)))
+           )     
+    )
+)
+
+(define (rellenarMatriz matrix)
+    (cond ((null? matrix)
+                matrix)
+           ((< (length (car matrix)) (length matrix))
+                (rellenarMatrizAux matrix 
+                                   (length matrix)
+                                   ))
+
+            ((> (length (car matrix)) (length matrix))
+                ;(rellenarMatrizAux))
+                ) 
+    
+    )
+)
+
+
+(define (rellenarMatrizAux matrix size)
+    (display '"")
+)
+;<>
+
+(getDiagonal '((1 0 0 0 0)
+               (2 1 0 0 0)
+               (3 2 1 0 0)
+               (4 3 2 3 0)
+               (5 4 3 2 1)
+               (6 5 4 3 2)
+               (7 6 5 4 3)
+               (8 7 6 5 4)) '7 '4)
+
 (getDiagonalInferior '((1 0 0 0 0)
                        (2 1 0 0 0)
                        (3 2 1 0 0)
@@ -370,3 +503,24 @@
                        (6 5 4 3 2)
                        (7 6 5 4 3)
                        (8 7 6 5 4)) '7 '4)
+
+
+
+#|
+*********************************************************************************************
+*********************************************************************************************
+*********************************************************************************************
+|#
+
+
+
+
+
+
+
+
+#|
+*********************************************************************************************
+*********************************************************************************************
+*********************************************************************************************
+|#
