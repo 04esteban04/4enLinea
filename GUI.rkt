@@ -78,6 +78,12 @@
 
 ;En esta parte el juego empieza segun las configuraciones con una nueva ventana
 
+(define matrixPanel (new panel% [parent gameWindow]
+                                [style (list 'border)]
+                                [alignment '(right center)]
+                                [vert-margin 50]
+                                [horiz-margin 50]))
+
 (define 4Line-board%
   (class pasteboard%
     (super-new)
@@ -87,10 +93,10 @@
 
 (define (draw-4Line-board dc)
   (define brush (send the-brush-list find-or-create-brush "gray" 'solid))
-  (define pen (send the-pen-list find-or-create-pen "black" 1 'transparent))
+  (define pen (send the-pen-list find-or-create-pen "black" 1 'solid))
   (define font (send the-font-list find-or-create-font 8 'default 'normal 'normal))
   (define-values (dc-width dc-height) (send dc get-size))
-  (define cell-width (/ dc-width 16))
+  (define cell-width (/ dc-width 16)) ;Tamano maximo **
   (define cell-height (/ dc-height 16))
   (define margin 3)
 
@@ -99,20 +105,15 @@
   (send dc set-pen pen)
   (send dc set-font font)
 
-  (for* ([row (in-range (string->number (send selectRow get-string-selection)))] [col (in-range (string->number (send selectColumn get-string-selection)))]
-         #:when (or (and (odd? row) (even? col))
-                    (and (even? row) (odd? col))))
+  (for* ([row (in-range (string->number (send selectRow get-string-selection)))] [col (in-range (string->number (send selectColumn get-string-selection)))])
     (define-values [x y] (values (* col cell-width) (* row cell-height)))
     (send dc draw-rectangle x y cell-width cell-height)))
-
-
-
 
 
 (define board (new 4Line-board%))
 
 (define canvas (new editor-canvas%
-                    [parent gameWindow]
+                    [parent matrixPanel]
                     [style '(no-hscroll no-vscroll)]
                     [horizontal-inset 0]
                     [vertical-inset 0]
