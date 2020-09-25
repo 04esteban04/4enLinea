@@ -459,55 +459,128 @@
            ((< (length (car matrix)) (length matrix))
                 (rellenarMatrizAux matrix 
                                    (createMatrix (length matrix) (length matrix))
-                                   '())
+                                   '()
+                                   '0
+                                   (listOfCounters (- (length matrix) 1) '0 '()))
             )
             ; Caso en donde se tiene más columnas que filas
             ((> (length (car matrix)) (length matrix))
                 (rellenarMatrizAux matrix 
                                    (createMatrix (length (car matrix)) (length (car matrix)))
-                                   '())
+                                   '()
+                                   '0
+                                   (listOfCounters (- (length (car matrix)) 1) '0 '()))
             ) 
             (else
                 (rellenarMatrizAux matrix 
                                    (createMatrix (length matrix) (length matrix))
-                                   '())
+                                   '()
+                                   '0
+                                   (listOfCounters (- (length matrix) 1) '0 '()))
             )                          
     )
 )
 
 
-(define (rellenarMatrizAux matrixInferior matrixCuadrada matrixNueva)
-    (cond ((null? matrixInferior)
+(define (rellenarMatrizAux matrixInferior matrixCuadrada matrixNueva cont listaCont)
+    (cond ; Caso en donde ya no hay elementos a procesar 
+           ((null? matrixInferior)
                 matrixNueva
            )
-           ((= (length (car matrixInferior)) (length (cadr matrixInferior)))
-
-           )  
+           ; Caso en donde se encuentra la última fila
+           ((null? (cdr matrixInferior))
+                (append matrixNueva
+                        (list (pegarListas (invertirLista (car matrixInferior))
+                                                          (car matrixCuadrada)
+                                                          '()
+                                                          (length (car matrixInferior))
+                                                          (length (car matrixCuadrada))
+                                                          (+ (car listaCont) 1)
+                                                          '0)))
+           )
+           ; Caso en donde hay dos filas con el mismo tamaño
+           ((and (= (length (car matrixInferior)) (length (cadr matrixInferior))) (= cont 0))
+                (append matrixNueva
+                        (list (pegarListas (invertirLista (car matrixInferior))
+                                                          (car matrixCuadrada)
+                                                          '()
+                                                          (length (car matrixInferior))
+                                                          (length (car matrixCuadrada))
+                                                          '0
+                                                          '0))
+                        (rellenarMatrizAux (cdr matrixInferior)
+                                           (cdr matrixCuadrada)
+                                           matrixNueva
+                                           '1
+                                           (cdr listaCont)))
+           ) 
+           ; Caso en donde hay dos filas con el mismo tamaño después de encontra la primera
+           ((and (= (length (car matrixInferior)) (length (cadr matrixInferior))) (= cont 1))
+                (append matrixNueva
+                        (list (pegarListas (invertirLista (car matrixInferior))
+                                                          (car matrixCuadrada)
+                                                          '()
+                                                          (length (car matrixInferior))
+                                                          (length (car matrixCuadrada))
+                                                          (+ (car listaCont) 1)
+                                                          '0))
+                        (rellenarMatrizAux (cdr matrixInferior)
+                                           (cdr matrixCuadrada)
+                                           matrixNueva
+                                           '1
+                                           (cdr listaCont)))
+           ) 
            (else
                 (append matrixNueva
                         (list (pegarListas (invertirLista (car matrixInferior))
                                                           (car matrixCuadrada)
                                                           '()
                                                           (length (car matrixInferior))
-                                                          (length (car matrixCuadrada))))
+                                                          (length (car matrixCuadrada))
+                                                          '0
+                                                          '0))
                         (rellenarMatrizAux (cdr matrixInferior)
                                            (cdr matrixCuadrada)
-                                           matrixNueva))
+                                           matrixNueva
+                                           '0
+                                           listaCont))
             )          
     )
 )
 
-(define (pegarListas lista1 lista2 nuevaLista largoLista1 largoLista2)
-    (cond ((null? lista1)
+
+(define (pegarListas lista1 lista2 nuevaLista largoLista1 largoLista2 cont largoTotal)
+    (cond   ((and (null? lista1) (not (= largoLista2 largoTotal)))
                 (append nuevaLista
-                        lista2))
-           (else
+                        (list (car lista2))
+                        (pegarListas lista1 (cdr lista2) nuevaLista largoLista1 largoLista2 '0 (+ largoTotal 1)))
+            )
+            ((= largoLista2 largoTotal)
+                (append nuevaLista
+                        '())
+            )
+            ; Caso en donde se tienen filas por debajo de la diagonal
+            ((= cont 0)
                 (append nuevaLista
                         (list (car lista1))
-                        (pegarListas (cdr lista1) (cdr lista2) nuevaLista (length lista1) (length lista2)))
-           )             
+                        (pegarListas (cdr lista1) (cdr lista2) nuevaLista largoLista1 largoLista2 '0 (+ largoTotal 1)))
+            )
+           ; Caso en donde se tienen filas del mismo tamaño 
+           ((= cont 1)
+               (append nuevaLista
+                        (list (car lista1))
+                        (pegarListas (cdr lista1) lista2 nuevaLista largoLista1 largoLista2 '0 (+ largoTotal 1)))
+           )
+           ; Caso en donde se debe rellenar con ceros           
+           ((and (> cont 0) (not(equal? cont 1)))
+                (append nuevaLista
+                        (list (car lista2))
+                        (pegarListas lista1 (cdr lista2) nuevaLista largoLista1 largoLista2 (- cont 1) (+ largoTotal 1)))
+            )            
     )
 )
+
+
 ;<>
 
 #|
@@ -529,11 +602,6 @@
                        (7 6 5 4 3)
                        (8 7 6 5 4)) '7 '4)
 
-
-
-(remplaceValueList '2 '6 '(0 1 2 3 4 5 6 7 8) '())
-
-(pegarListas '(1 2) '(0 0 0 0 0 0) '() '2 '6)
 
 |#
 
