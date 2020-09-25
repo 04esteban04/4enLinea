@@ -1,7 +1,6 @@
 #lang racket
 (require racket/gui)
-;(require racket/include)
-(require "Back/Matriz.rkt")
+(require "Back/CheckWin-Lose.rkt")
 
 
 ;    /################################################\
@@ -61,6 +60,8 @@
                                 ))
 
 ;Boton encargado de guardar las configuraciones y comenzar el juego
+
+
 (define accept(new button% [parent controlPane]
                            [label "Aceptar"]
                            [callback (lambda (button event)
@@ -77,13 +78,42 @@
 
 ;En esta parte el juego empieza segun las configuraciones con una nueva ventana
 
-;DISEÑO
-(new canvas% [parent gameWindow]
-             [paint-callback
-             (lambda (canvas dc)
-             (send dc draw-bitmap(make-object bitmap% "3enlinea/4enLinea.png") 10 1))]
-)
+(define 4Line-board%
+  (class pasteboard%
+    (super-new)
+    (define/override (on-paint before? dc . other)
+      (when before?
+        (draw-4Line-board dc)))))
 
-(define matrixPane(new pane% [parent gameWindow]
-                             [border 10]
-                             [alignment '(center center)]))
+(define (draw-4Line-board dc)
+  (define brush (send the-brush-list find-or-create-brush "gray" 'solid))
+  (define pen (send the-pen-list find-or-create-pen "black" 1 'transparent))
+  (define font (send the-font-list find-or-create-font 8 'default 'normal 'normal))
+  (define-values (dc-width dc-height) (send dc get-size))
+  (define cell-width (/ dc-width 16))
+  (define cell-height (/ dc-height 16))
+  (define margin 3)
+
+  (send dc clear)
+  (send dc set-brush brush)
+  (send dc set-pen pen)
+  (send dc set-font font)
+
+  (for* ([row (in-range (string->number (send selectRow get-string-selection)))] [col (in-range (string->number (send selectColumn get-string-selection)))]
+         #:when (or (and (odd? row) (even? col))
+                    (and (even? row) (odd? col))))
+    (define-values [x y] (values (* col cell-width) (* row cell-height)))
+    (send dc draw-rectangle x y cell-width cell-height)))
+
+
+
+
+
+(define board (new 4Line-board%))
+
+(define canvas (new editor-canvas%
+                    [parent gameWindow]
+                    [style '(no-hscroll no-vscroll)]
+                    [horizontal-inset 0]
+                    [vertical-inset 0]
+                    [editor board]))
