@@ -189,6 +189,7 @@
 ; Función para obtener la matriz transpuesta de la matriz ingresada
 ; E: matriz, número de filas, contador, lista donde se almacena la nueva matriz 
 ; S: matriz original transpuesta
+(provide columnToRow)
 (define (columnToRow matrix size tempColumn newMatrix)
     (cond 
         ((equal? tempColumn size)
@@ -495,49 +496,9 @@
            ((null? matrixInferior)
                 matrixNueva
            )
-           ; Caso en donde se encuentra la última fila
-           ((null? (cdr matrixInferior))
-                (append matrixNueva
-                        (list (pegarListas (invertirLista (car matrixInferior))
-                                                          (car matrixCuadrada)
-                                                          '()
-                                                          (length (car matrixInferior))
-                                                          (length (car matrixCuadrada))
-                                                          (+ (car listaCont) 1)
-                                                          '0)))
-           )
-           ; Caso en donde hay dos filas con el mismo tamaño
-           ((and (= (length (car matrixInferior)) (length (cadr matrixInferior))) (= cont 0))
-                (append matrixNueva
-                        (list (pegarListas (invertirLista (car matrixInferior))
-                                                          (car matrixCuadrada)
-                                                          '()
-                                                          (length (car matrixInferior))
-                                                          (length (car matrixCuadrada))
-                                                          '0
-                                                          '0))
-                        (rellenarMatrizAux (cdr matrixInferior)
-                                           (cdr matrixCuadrada)
-                                           matrixNueva
-                                           '1
-                                           (cdr listaCont)))
-           ) 
-           ; Caso en donde hay dos filas con el mismo tamaño después de encontra la primera
-           ((and (= (length (car matrixInferior)) (length (cadr matrixInferior))) (= cont 1))
-                (append matrixNueva
-                        (list (pegarListas (invertirLista (car matrixInferior))
-                                                          (car matrixCuadrada)
-                                                          '()
-                                                          (length (car matrixInferior))
-                                                          (length (car matrixCuadrada))
-                                                          (+ (car listaCont) 1)
-                                                          '0))
-                        (rellenarMatrizAux (cdr matrixInferior)
-                                           (cdr matrixCuadrada)
-                                           matrixNueva
-                                           '1
-                                           (cdr listaCont)))
-           ) 
+           ;((= (length (car matrixInferior)) (length (cadr matrixInferior)))
+
+           ;)  
            (else
                 (append matrixNueva
                         (list (pegarListas (invertirLista (car matrixInferior))
@@ -587,56 +548,3 @@
             )            
     )
 )
-
-
-;<>
-
-#|
-(getDiagonal '((1 0 0 0 0)
-               (2 1 0 0 0)
-               (3 2 1 0 0)
-               (4 3 2 3 0)
-               (5 4 3 2 1)
-               (6 5 4 3 2)
-               (7 6 5 4 3)
-               (8 7 6 5 4)) '7 '4)
-
-(getDiagonalInferior '((1 0 0 0 0)
-                       (2 1 0 0 0)
-                       (3 2 1 0 0)
-                       (4 3 2 1 0)
-                       (5 4 3 2 1)
-                       (6 5 4 3 2)
-                       (7 6 5 4 3)
-                       (8 7 6 5 4)) '7 '4)
-
-
-|#
-
-(rellenarMatriz (getDiagonalInferior '( (1 0 0 0 0)
-                                        (2 1 0 0 0)
-                                        (3 2 1 0 0)
-                                        (4 3 2 1 0)
-                                        (5 4 3 2 1)
-                                        (6 5 4 3 2)
-                                        (7 6 5 4 3)
-                                        (8 7 6 5 4)) '7 '4))
-
-#|
-*********************************************************************************************
-*********************************************************************************************
-*********************************************************************************************
-|#
-
-
-
-
-
-
-
-
-#|
-*********************************************************************************************
-*********************************************************************************************
-*********************************************************************************************
-|#
