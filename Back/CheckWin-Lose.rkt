@@ -1,14 +1,5 @@
 #lang racket
 
-
-#|
-*********************************************************************************************
-************************************    CÓDIGO MATRIZ    ************************************
-*********************************************************************************************
-|#
-
-
-
 ; Función que crea una matriz del tamaño deseado
 ; E: dos numeros enteros positivos con la cantidad de filas y columnas deseadas
 ; S: matriz mxn
@@ -336,24 +327,6 @@
             )            
     )
 )
-
-; Función para generar una lista de contadores
-; E: largo de la matriz -1, contador, lista vacía
-; S: lista con los contadores desde cero hasta el largo de la matriz -1
-(define (listOfCounters largo cont lista)
-    (cond ((zero? largo)
-                '())
-            (else
-                (append lista 
-                        (list cont) 
-                        (listOfCounters (- largo 1) (+ cont 1) lista))
-            )
-    )
-)
-
-
-
-
 
 ; empezando en 0
 (define (getDiagonalInferior matrix row column)

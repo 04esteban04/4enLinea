@@ -3,10 +3,6 @@
 ;(require racket/include)
 (require "Matriz.rkt")
 
-
-;hola ayuda
-
-
 ;Conjunto de candidatos: posiciones 0, 1 ,2 en una matriz
 
 ;Funciones para encontrar siguiente lugar en horizontal
@@ -192,7 +188,10 @@
 
 )
 
-(findRow 2 '((2 1 1 1 2 1) (2 2 2 2 1 2) (0 0 1 1 0 0) (0 1 1 0 0 0)))
+(findRow 2 '((2 1 1 1 2 1) 
+            (2 2 2 2 1 2) 
+            (0 0 1 1 0 0) 
+            (2 1 1 1 1 2)))
 
 ;------------------------------------------------------
 ;------------------------------------------------------
