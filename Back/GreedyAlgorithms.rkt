@@ -252,8 +252,7 @@
 
     (cond
         ((and (null? matrix) (null? tempList))
-            ;(findTemporalAux2 element (columnToRow matrix (- (length matrix) 1) 0 '()) -1 '())
-            (findTemporalAux2 element (columnToRow (remplaceMatrix 4 0 newMatrix) (- (length newMatrix) 1) 0 '()) repe '() '())
+            (remplaceMatrix 4 0 newMatrix)
         )
         ((canAdd? tempList)
             (cond
@@ -283,49 +282,14 @@
     )
 )
 
-(define (findTemporalAux2 element matrix repe newMatrix tempList)
-
-    (cond
-        ((and (null? matrix) (null? tempList))
-            ;(findTemporalAux22 element (columnToRow matrix (- (length matrix) 1) 0 '()) -1 '())
-            (remplaceMatrix 4 0 (columnToRow newMatrix (- (length newMatrix) 1) 0 '()))
-        )
-        ((canAdd? tempList)
-            (cond
-                ((< repe (maxRepe element (selectPlace element tempList 0)))
-                    (findTemporalAux2 element matrix (maxRepe element (selectPlace element tempList 0)) (remplaceMatrix 3 4 newMatrix) (selectPlace element (remplace 3 4 tempList) 1))
-                )
-                (else
-                    (findTemporalAux2 element matrix repe newMatrix (selectPlace element tempList 2))
-                )
-            )
-        )
-
-        ((not (canAdd? tempList))
-            (cond
-                ((null? matrix)
-                    (findTemporalAux2 element matrix repe (append newMatrix (list tempList)) '())
-                )
-                ((null? tempList)
-                    (findTemporalAux2 element (cdr matrix) repe newMatrix (car matrix))
-                )
-                (else
-                    (findTemporalAux2 element (cdr matrix) repe (append newMatrix (list tempList)) (car matrix))
-                )
-            
-            )
-        )
-    )
-)
-
-(findTemporal 2  '( (0 0 0 0 0 0 0 0) 
+ (findTemporal 2 '( (0 0 0 0 0 0 0 0) 
                     (0 0 0 0 0 0 0 0) 
                     (0 0 0 0 0 0 0 0) 
                     (2 0 0 0 0 0 0 0) 
                     (2 0 0 0 0 0 0 0) 
-                    (2 0 0 0 0 0 0 0) 
-                    (2 2 2 0 0 0 0 0) 
-                    (1 1 2 0 0 0 0 0)) )
+                    (2 0 0 2 2 2 0 0) 
+                    (2 2 2 1 1 1 1 0) 
+                    (1 1 2 1 1 2 2 2)) )
 ;------------------------------------------------------
 ;------------------------------------------------------
 ;------------------------------------------------------

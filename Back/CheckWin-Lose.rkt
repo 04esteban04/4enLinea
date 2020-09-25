@@ -182,7 +182,7 @@
 ; E: matriz, número de columnas (comenzando a contar en 0)
 ; S: elemento que se repita 4 veces
 (define (checkVertical matrix size)
-    (checkHorizontal (columnToRow matrix (- (length (car matrix)) 1) 0 '())
+    (checkHorizontal (columnToRow matrix)
                      (- (length (car matrix)) 1))
 )
 
@@ -191,13 +191,17 @@
 ; S: matriz original transpuesta
 (provide columnToRow)
 
-(define (columnToRow matrix size tempColumn newMatrix)
+(define (columnToRow matrix)
+    (columnToRowAux matrix (- (length (car matrix)) 1) 0 '())
+)
+
+(define (columnToRowAux matrix size tempColumn newMatrix)
     (cond 
         ((equal? tempColumn size)
             (append newMatrix (list (createList matrix tempColumn '())))
         )
         (else
-            (columnToRow matrix size (+ tempColumn 1 ) (append newMatrix (list (createList matrix tempColumn '()))))
+            (columnToRowAux matrix size (+ tempColumn 1 ) (append newMatrix (list (createList matrix tempColumn '()))))
         )
     )
 )
