@@ -238,6 +238,20 @@
 
 
 
+; Función para generar una lista de contadores
+; E: largo de la matriz -1, contador, lista vacía
+; S: lista con los contadores desde cero hasta el largo de la matriz -1
+(define (listOfCounters largo cont lista)
+    (cond ((zero? largo)
+                '())
+            (else
+                (append lista 
+                        (list cont) 
+                        (listOfCounters (- largo 1) (+ cont 1) lista))
+            )
+    )
+)
+
 
 ; 
 ; E:
@@ -467,7 +481,7 @@
                 matrixNueva
            )
            ((= (length (car matrixInferior)) (length (cadr matrixInferior)))
-                
+
            )  
            (else
                 (append matrixNueva
@@ -490,7 +504,7 @@
            (else
                 (append nuevaLista
                         (list (car lista1))
-                        (pegarListas (cdr lista1) (cdr lista2) nuevaLista))
+                        (pegarListas (cdr lista1) (cdr lista2) nuevaLista (length lista1) (length lista2)))
            )             
     )
 )
@@ -519,9 +533,9 @@
 
 (remplaceValueList '2 '6 '(0 1 2 3 4 5 6 7 8) '())
 
-(pegarListas '(1 2) '(0 0 0 0 0 0) '())
-|#
+(pegarListas '(1 2) '(0 0 0 0 0 0) '() '2 '6)
 
+|#
 
 (rellenarMatriz (getDiagonalInferior '( (1 0 0 0 0)
                                         (2 1 0 0 0)
