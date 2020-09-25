@@ -29,7 +29,7 @@
             (cmAux row 
                    column 
                    (+ cont 1) 
-                   (append matrix (list (createList column '()))))
+                   (append matrix (list (createList1 column '()))))
         )
     )
 )
@@ -37,12 +37,12 @@
 ; Función que crea una lista del tamano deseado
 ; E: numero entero positivo (tamaño de la lista deseada)
 ; S: lista de largo n
-(define (createList size lista)
+(define (createList1 size lista)
     (cond
         ((zero? size)
             lista)
         (else
-            (createList (- size 1) (append lista (list 0))) ))
+            (createList1 (- size 1) (append lista (list 0))) ))
 )
 
 ; Función principal para reemplazar un valor de una matriz
@@ -87,7 +87,7 @@
 
 
 
-;(remplaceValue '2 '6 '7 (createMatrix '7 '7) )
+
 
 
 #|
@@ -257,8 +257,7 @@
            (else
                 (checkDiagonalAux matrix 
                                     size
-                                    (listOfCounters (- (length (car matrix)) 1) '0 '())
-                                    )
+                                    (listOfCounters (- (length (car matrix)) 1) '0 '()))
            ) 
     )
 )
@@ -467,25 +466,64 @@
 
 (define (rellenarMatriz matrix)
     (cond ((null? matrix)
-                matrix)
+                matrix
+            )
+           ; Caso en donde se tienen más filas que columnas    
            ((< (length (car matrix)) (length matrix))
                 (rellenarMatrizAux matrix 
-                                   (length matrix)
-                                   ))
-
+                                   (createMatrix (length matrix) (length matrix))
+                                   '())
+            )
+            ; Caso en donde se tiene más columnas que filas
             ((> (length (car matrix)) (length matrix))
-                ;(rellenarMatrizAux))
-                ) 
-    
+                (rellenarMatrizAux matrix 
+                                   (createMatrix (length (car matrix)) (length (car matrix)))
+                                   '())
+            ) 
+            (else
+                (rellenarMatrizAux matrix 
+                                   (createMatrix (length matrix) (length matrix))
+                                   '())
+            )                          
     )
 )
 
 
-(define (rellenarMatrizAux matrix size)
-    (display '"")
+(define (rellenarMatrizAux matrixInferior matrixCuadrada matrixNueva)
+    (cond ((null? matrixInferior)
+                matrixNueva
+           )
+           ((= (length (car matrixInferior)) (length (cadr matrixInferior)))
+                
+           )  
+           (else
+                (append matrixNueva
+                        (list (pegarListas (invertirLista (car matrixInferior))
+                                                          (car matrixCuadrada)
+                                                          '()
+                                                          (length (car matrixInferior))
+                                                          (length (car matrixCuadrada))))
+                        (rellenarMatrizAux (cdr matrixInferior)
+                                           (cdr matrixCuadrada)
+                                           matrixNueva))
+            )          
+    )
+)
+
+(define (pegarListas lista1 lista2 nuevaLista largoLista1 largoLista2)
+    (cond ((null? lista1)
+                (append nuevaLista
+                        lista2))
+           (else
+                (append nuevaLista
+                        (list (car lista1))
+                        (pegarListas (cdr lista1) (cdr lista2) nuevaLista))
+           )             
+    )
 )
 ;<>
 
+#|
 (getDiagonal '((1 0 0 0 0)
                (2 1 0 0 0)
                (3 2 1 0 0)
@@ -505,6 +543,21 @@
                        (8 7 6 5 4)) '7 '4)
 
 
+
+(remplaceValueList '2 '6 '(0 1 2 3 4 5 6 7 8) '())
+
+(pegarListas '(1 2) '(0 0 0 0 0 0) '())
+|#
+
+
+(rellenarMatriz (getDiagonalInferior '( (1 0 0 0 0)
+                                        (2 1 0 0 0)
+                                        (3 2 1 0 0)
+                                        (4 3 2 1 0)
+                                        (5 4 3 2 1)
+                                        (6 5 4 3 2)
+                                        (7 6 5 4 3)
+                                        (8 7 6 5 4)) '7 '4))
 
 #|
 *********************************************************************************************
