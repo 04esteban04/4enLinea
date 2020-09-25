@@ -1,5 +1,13 @@
 #lang racket
 
+
+#|
+*********************************************************************************************
+***********************************    CÓDIGO MATRIZ   **************************************
+*********************************************************************************************
+|#
+
+
 ; Función que crea una matriz del tamaño deseado
 ; E: dos numeros enteros positivos con la cantidad de filas y columnas deseadas
 ; S: matriz mxn
@@ -489,9 +497,49 @@
            ((null? matrixInferior)
                 matrixNueva
            )
-           ;((= (length (car matrixInferior)) (length (cadr matrixInferior)))
-
-           ;)  
+           ; Caso en donde se encuentra la última fila
+           ((null? (cdr matrixInferior))
+      	                (append matrixNueva
+                        (list (pegarListas (invertirLista (car matrixInferior))
+                                                          (car matrixCuadrada)
+                                                          '()
+                                                          (length (car matrixInferior))
+                                                          (length (car matrixCuadrada))
+                                                          (+ (car listaCont) 1)
+                                                          '0)))
+           )
+           ; Caso en donde hay dos filas con el mismo tamaño
+           ((and (= (length (car matrixInferior)) (length (cadr matrixInferior))) (= cont 0))
+                (append matrixNueva
+                        (list (pegarListas (invertirLista (car matrixInferior))
+                                                          (car matrixCuadrada)
+                                                          '()
+                                                          (length (car matrixInferior))
+                                                          (length (car matrixCuadrada))
+                                                          '0
+                                                          '0))
+                        (rellenarMatrizAux (cdr matrixInferior)
+                                           (cdr matrixCuadrada)
+                                           matrixNueva
+                                           '1
+                                           (cdr listaCont)))
+           ) 
+           ; Caso en donde hay dos filas con el mismo tamaño después de encontra la primera
+           ((and (= (length (car matrixInferior)) (length (cadr matrixInferior))) (= cont 1))
+                (append matrixNueva
+                        (list (pegarListas (invertirLista (car matrixInferior))
+                                                          (car matrixCuadrada)
+                                                          '()
+                                                          (length (car matrixInferior))
+                                                          (length (car matrixCuadrada))
+                                                          (+ (car listaCont) 1)
+                                                          '0))
+                        (rellenarMatrizAux (cdr matrixInferior)
+                                           (cdr matrixCuadrada)
+                                           matrixNueva
+                                           '1
+                                           (cdr listaCont)))
+           )  
            (else
                 (append matrixNueva
                         (list (pegarListas (invertirLista (car matrixInferior))
@@ -541,3 +589,31 @@
             )            
     )
 )
+
+
+#|
+*********************************************************************************************
+*********************************************************************************************
+*********************************************************************************************
+|#
+
+
+
+(rellenarMatriz (getDiagonalInferior '( (1 0 0 0 0)
+                                        (2 1 0 0 0)
+                                        (3 2 1 0 0)
+                                        (4 3 2 3 0)
+                                        (5 4 3 2 1)
+                                        (6 5 4 3 2)
+                                        (7 6 5 4 3)
+                                        (8 7 6 5 4)) '7 '4))
+
+
+
+
+#|
+*********************************************************************************************
+*********************************************************************************************
+*********************************************************************************************
+|#
+
