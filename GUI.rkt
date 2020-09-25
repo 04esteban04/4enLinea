@@ -1,7 +1,6 @@
 #lang racket
 (require racket/gui)
-;(require racket/include)
-(require "Back/Matriz.rkt")
+(require "Back/CheckWin-Lose.rkt")
 
 
 ;    /################################################\
@@ -77,13 +76,55 @@
 
 ;En esta parte el juego empieza segun las configuraciones con una nueva ventana
 
-;DISEÑO
-(new canvas% [parent gameWindow]
-             [paint-callback
-             (lambda (canvas dc)
-             (send dc draw-bitmap(make-object bitmap% "3enlinea/4enLinea.png") 10 1))]
-)
+;Panel encargado de mostrar el tablero
+(define matrixPanel (new panel% [parent gameWindow]
+                                [style (list 'border)]
+                                [alignment '(center center)]
+                                [vert-margin 50]
+                                [horiz-margin 50]))
 
-(define matrixPane(new pane% [parent gameWindow]
-                             [border 10]
-                             [alignment '(center center)]))
+;Override de la clase pasteboard%, de manera que sea posible dibujar el tablero con la funcion draw-4Line-board
+(define 4Line-board%
+  (class pasteboard%
+    (super-new)
+    (define/override (on-paint before? dc . other)
+      (when before?
+        (draw-4Line-board dc)))))
+
+;Funcion encargada de dibujar el tablero
+(define (draw-4Line-board dc)
+  (define brush (send the-brush-list find-or-create-brush "gray" 'solid))
+  (define pen (send the-pen-list find-or-create-pen "white" 1 'solid))
+  (define font (send the-font-list find-or-create-font 8 'default 'normal 'normal))
+  (define-values (dc-width dc-height) (send dc get-size))
+  (define cell-width (/ dc-width 16)) ;Tamano maximo **
+  (define cell-height (/ dc-height 16))
+  (define margin 3)
+
+  (send dc clear)
+  (send dc set-brush brush)
+  (send dc set-pen pen)
+  (send dc set-font font)
+
+  (for* ([row (in-range (string->number (send selectRow get-string-selection)))] [col (in-range (string->number (send selectColumn get-string-selection)))])
+    (define-values [x y] (values (* col cell-width) (* row cell-height)))
+    (send dc draw-rectangle x y cell-width cell-height)))
+
+;Tablero
+(define board (new 4Line-board%))
+
+;Canvas de clase editor%, encargado de contener el pasteboard correspondiente
+(define boardContainer (new editor-canvas%
+                       [parent matrixPanel]
+                       [style '(no-hscroll no-vscroll)]
+                       [horizontal-inset 0]
+                       [vertical-inset 0]
+                       [editor board]))
+
+(define token-snip-class
+  (make-object
+   (class snip-class%
+     (super-new)
+     (send this set-classname "token-snip"))))
+
+
