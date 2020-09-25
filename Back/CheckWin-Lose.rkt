@@ -247,11 +247,6 @@
     )
 )
 
-
-
-
-
-
 ; empezando en 0
 (define (getDiagonalInferior matrix row column)
     (cond ((and (zero? row) (zero? column))
