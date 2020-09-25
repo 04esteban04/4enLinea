@@ -182,6 +182,7 @@
 ; E: matriz, número de filas, contador, lista donde se almacena la nueva matriz 
 ; S: matriz original transpuesta
 (provide columnToRow)
+
 (define (columnToRow matrix size tempColumn newMatrix)
     (cond 
         ((equal? tempColumn size)
