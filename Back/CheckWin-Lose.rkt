@@ -181,6 +181,7 @@
 ; Función para obtener la matriz transpuesta de la matriz ingresada
 ; E: matriz, número de filas, contador, lista donde se almacena la nueva matriz 
 ; S: matriz original transpuesta
+(provide columnToRow)
 (define (columnToRow matrix size tempColumn newMatrix)
     (cond 
         ((equal? tempColumn size)
@@ -480,9 +481,9 @@
     (cond ((null? matrixInferior)
                 matrixNueva
            )
-           ((= (length (car matrixInferior)) (length (cadr matrixInferior)))
+           ;((= (length (car matrixInferior)) (length (cadr matrixInferior)))
 
-           )  
+           ;)  
            (else
                 (append matrixNueva
                         (list (pegarListas (invertirLista (car matrixInferior))
@@ -508,59 +509,3 @@
            )             
     )
 )
-;<>
-
-#|
-(getDiagonal '((1 0 0 0 0)
-               (2 1 0 0 0)
-               (3 2 1 0 0)
-               (4 3 2 3 0)
-               (5 4 3 2 1)
-               (6 5 4 3 2)
-               (7 6 5 4 3)
-               (8 7 6 5 4)) '7 '4)
-
-(getDiagonalInferior '((1 0 0 0 0)
-                       (2 1 0 0 0)
-                       (3 2 1 0 0)
-                       (4 3 2 1 0)
-                       (5 4 3 2 1)
-                       (6 5 4 3 2)
-                       (7 6 5 4 3)
-                       (8 7 6 5 4)) '7 '4)
-
-
-
-(remplaceValueList '2 '6 '(0 1 2 3 4 5 6 7 8) '())
-
-(pegarListas '(1 2) '(0 0 0 0 0 0) '() '2 '6)
-
-|#
-
-(rellenarMatriz (getDiagonalInferior '( (1 0 0 0 0)
-                                        (2 1 0 0 0)
-                                        (3 2 1 0 0)
-                                        (4 3 2 1 0)
-                                        (5 4 3 2 1)
-                                        (6 5 4 3 2)
-                                        (7 6 5 4 3)
-                                        (8 7 6 5 4)) '7 '4))
-
-#|
-*********************************************************************************************
-*********************************************************************************************
-*********************************************************************************************
-|#
-
-
-
-
-
-
-
-
-#|
-*********************************************************************************************
-*********************************************************************************************
-*********************************************************************************************
-|#

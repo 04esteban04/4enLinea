@@ -1,9 +1,60 @@
 #lang racket
 
-;(require racket/include)
-(require "Matriz.rkt")
+;(require racket/includ(require "CheckWin-Lose.rkt")
 
 ;Conjunto de candidatos: posiciones 0, 1 ,2 en una matriz
+
+(define (remplace element newElement lista)
+    (remplaceAux element newElement lista '())
+)
+
+(define (remplaceAux element newElement lista res)
+    (cond
+        ((null? lista)
+            res
+        )
+        ((equal? (car lista) element)
+            (remplaceAux
+         element newElement (cdr lista) (append res (list newElement)))
+        )
+        (else
+        (remplaceAux
+     element newElement (cdr lista) (append res (list (car lista)))))
+
+    )
+)
+
+(define (remplaceMatrix element newElement matrix)
+    (remplaceMatrixAux element newElement matrix '())
+)
+
+(define (remplaceMatrixAux element newElement matrix newMatrix)
+    (cond
+        ((null? matrix)
+            newMatrix
+        )
+        (else
+            (remplaceMatrixAux element newElement (cdr matrix) (append newMatrix (list (remplace element newElement (car matrix)))))
+        )
+    
+    )
+
+)
+
+(define (turnMatrix matrix)
+    (turnMatrixAux matrix '())
+)
+
+(define (turnMatrixAux matrix newMatrix)
+    (cond
+        ((null? matrix)
+            newMatrix
+        )
+        (else
+            (turnMatrixAux (cdr matrix) (append (list (car matrix)) newMatrix))
+        )
+    )
+)
 
 ;Funciones para encontrar siguiente lugar en horizontal
 ;------------------------------------------------------
@@ -146,18 +197,21 @@
 )
 
 ;Funcion que determina el mejor espacio para colocar la siguiente ficha en una lista
-(define (selectPlace element lista)
+(define (selectPlace element lista altElement)
     (cond
         ((canAdd? lista)
             (cond
+                ;caso cuando inserta fuera de la lista a la izquierda
                 ((< (findPlace element lista) 0)
-                    (put (car (availableField lista)) element lista) 
+                    (put (car (availableField lista)) (+ element altElement) lista) 
                 )
+                ;Cuando no hay campo disponible en el mayor numero de repeticiones
                 ((not (zero? (getElement (findPlace element lista) lista)))
-                    (put (car (availableField lista)) element lista) 
+                    (put (car (availableField lista)) (+ element altElement) lista) 
                 )
+                ;cuando encuentra campo optimo en la lista horizontal
                 (else
-                    (put (findPlace element lista) element lista)
+                    (put (findPlace element lista) (+ element altElement) lista)
                 )
             )
         )
@@ -166,7 +220,7 @@
         )
     )
 )
-
+#|
 ;Funcion que determina la fila para insertar la ficha en la matriz
 (define (findRow element matrix)
     (findRowAux element matrix '())
@@ -187,12 +241,55 @@
     )
 
 )
+|#
+(define (findTemporal element matrix)
+    (findTemporalAux element matrix 0 '() '())
+)
 
-(findRow 2 '((2 1 1 1 2 1) 
-            (2 2 2 2 1 2) 
-            (0 0 1 1 0 0) 
-            (2 1 1 1 1 2)))
+;tempList primer fila de la matriz
+(define (findTemporalAux element matrix repe newMatrix tempList)
 
+    (cond
+        ((and (null? matrix) (null? tempList))
+            ;(findTemporalAux2 element (columnToRow matrix (- (length matrix) 1) 0 '()) -1 '())
+            newMatrix
+        )
+        ((canAdd? tempList)
+            (cond
+                ((< repe (maxRepe element (selectPlace element tempList 0)))
+                    (findTemporalAux element matrix (maxRepe element (selectPlace element tempList 0)) (remplaceMatrix 3 4 newMatrix) (selectPlace element (remplace 3 4 tempList) 1))
+                )
+                (else
+                    (findTemporalAux element matrix repe newMatrix (selectPlace element tempList 2))
+                )
+            )
+        )
+
+        ((not (canAdd? tempList))
+            (cond
+                ((null? matrix)
+                    (findTemporalAux element matrix repe (append newMatrix (list tempList)) '())
+                )
+                ((null? tempList)
+                    (findTemporalAux element (cdr matrix) repe newMatrix (car matrix))
+                )
+                (else
+                    (findTemporalAux element (cdr matrix) repe (append newMatrix (list tempList)) (car matrix))
+                )
+            
+            )
+        )
+    )
+)
+
+(findTemporal 2  '( (0 0 0 0 0 0 0 0) 
+                    (0 0 0 0 0 0 0 0) 
+                    (0 0 0 0 0 0 0 0) 
+                    (0 0 0 0 0 0 0 0) 
+                    (0 0 0 0 0 0 0 0) 
+                    (0 0 0 0 0 0 0 0) 
+                    (2 2 0 0 0 0 0 0) 
+                    (1 1 2 0 0 0 0 0)) )
 ;------------------------------------------------------
 ;------------------------------------------------------
 ;------------------------------------------------------
