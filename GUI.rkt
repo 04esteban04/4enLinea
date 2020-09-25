@@ -60,8 +60,6 @@
                                 ))
 
 ;Boton encargado de guardar las configuraciones y comenzar el juego
-
-
 (define accept(new button% [parent controlPane]
                            [label "Aceptar"]
                            [callback (lambda (button event)
@@ -78,12 +76,14 @@
 
 ;En esta parte el juego empieza segun las configuraciones con una nueva ventana
 
+;Panel encargado de mostrar el tablero
 (define matrixPanel (new panel% [parent gameWindow]
                                 [style (list 'border)]
-                                [alignment '(right center)]
+                                [alignment '(center center)]
                                 [vert-margin 50]
                                 [horiz-margin 50]))
 
+;Override de la clase pasteboard%, de manera que sea posible dibujar el tablero con la funcion draw-4Line-board
 (define 4Line-board%
   (class pasteboard%
     (super-new)
@@ -91,9 +91,10 @@
       (when before?
         (draw-4Line-board dc)))))
 
+;Funcion encargada de dibujar el tablero
 (define (draw-4Line-board dc)
   (define brush (send the-brush-list find-or-create-brush "gray" 'solid))
-  (define pen (send the-pen-list find-or-create-pen "black" 1 'solid))
+  (define pen (send the-pen-list find-or-create-pen "white" 1 'solid))
   (define font (send the-font-list find-or-create-font 8 'default 'normal 'normal))
   (define-values (dc-width dc-height) (send dc get-size))
   (define cell-width (/ dc-width 16)) ;Tamano maximo **
@@ -109,12 +110,21 @@
     (define-values [x y] (values (* col cell-width) (* row cell-height)))
     (send dc draw-rectangle x y cell-width cell-height)))
 
-
+;Tablero
 (define board (new 4Line-board%))
 
-(define canvas (new editor-canvas%
-                    [parent matrixPanel]
-                    [style '(no-hscroll no-vscroll)]
-                    [horizontal-inset 0]
-                    [vertical-inset 0]
-                    [editor board]))
+;Canvas de clase editor%, encargado de contener el pasteboard correspondiente
+(define boardContainer (new editor-canvas%
+                       [parent matrixPanel]
+                       [style '(no-hscroll no-vscroll)]
+                       [horizontal-inset 0]
+                       [vertical-inset 0]
+                       [editor board]))
+
+(define token-snip-class
+  (make-object
+   (class snip-class%
+     (super-new)
+     (send this set-classname "token-snip"))))
+
+
