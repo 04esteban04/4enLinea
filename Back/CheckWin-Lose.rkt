@@ -317,7 +317,13 @@
                                 (rellenarMatriz (getDiagonalInferior matrix (length matrix) (length (car matrix)))
                                                 #f)
                                 (rellenarMatriz (getDiagonalSuperior matrix (length matrix) (length (car matrix)))
+                                                #t)
+                                (list (getDiagonal (invertirFilasMatriz matrix) (length matrix) (length (car matrix))))
+                                (rellenarMatriz (getDiagonalInferior (invertirFilasMatriz matrix) (length matrix) (length (car matrix)))
+                                                #f)
+                                (rellenarMatriz (getDiagonalSuperior (invertirFilasMatriz matrix) (length matrix) (length (car matrix)))
                                                 #t))
+
            ) 
     )
 )
@@ -325,27 +331,64 @@
 ; Función auxiliar de checkDiagonal
 ; E: diagonal principal de la matriz, diagonales inferiores, diagonales superiores
 ; S: número repetido 4 veces,  en caso de no repetirse devuelve 0
-(define (checkDiagonalAux diagonal inferiores superiores)
-    (checkDiagonalAux2 (checkHorizontal diagonal '0)
-                       (checkVertical inferiores (- (length inferiores) 1))
-                       (checkVertical superiores (- (length superiores) 1)) 
+(define (checkDiagonalAux diagonal1 inferiores1 superiores1 diagonal2 inferiores2 superiores2)
+    (checkDiagonalAux2 (checkHorizontal diagonal1 '0)
+                       (checkVertical inferiores1 (- (length inferiores1) 1))
+                       (checkVertical superiores1 (- (length superiores1) 1))
+                       (checkHorizontal diagonal2 '0)
+                       (checkVertical inferiores2 (- (length inferiores2) 1))
+                       (checkVertical superiores2 (- (length superiores2) 1)) 
     )
 )
 
 ; Función auxiliar de checkDiagonalAux 
 ; E: número repetido en diagonal principal, número repetido en diagonales inferiores, número repetido en diagonales superiores
+;    número repetido en diagonal principal invertida, número repetido en diagonales inferiores invertidas, número repetido en diagonales superiores invertidas
 ; S: número repetido 4 veces,  en caso de no repetirse devuelve 0
-(define (checkDiagonalAux2 num1 num2 num3)
+(define (checkDiagonalAux2 num1 num2 num3 num4 num5 num6)
     (cond ((not (zero? num1))
                 num1)
            ((not (zero? num2))
                 num2)
            ((not (zero? num3))
                 num3)
-            (else
+           ((not (zero? num4))
+                num4)
+           ((not (zero? num5))
+                num5)
+           ((not (zero? num6))
+                num6)    
+           (else
                 '0)     
     )
+)
 
+; Función para invertir las filas de una matriz
+; E: matriz
+; S: matriz con filas invertidas
+(define (invertirFilasMatriz matriz)
+    (cond ((zero? (length matriz))
+                matriz)
+            (else
+                (invertirFilasMatrizAux matriz '())
+            )
+    )
+)
+
+; Función auxiliar de invertirFilasMatriz
+; E: matriz, matriz vacía
+; S: matriz con filas invertidas
+(define (invertirFilasMatrizAux matriz matrizNueva)
+    (cond ((null? (cdr matriz))
+                (append matrizNueva
+                        (list (invertirLista (car matriz))))
+            )
+            (else
+                (append matrizNueva
+                            (list (invertirLista (car matriz)))
+                            (invertirFilasMatrizAux (cdr matriz) matrizNueva))
+            )
+    )
 )
 
 
@@ -1050,12 +1093,10 @@
 
 
 
-
-
 #|
 (checkDiagonal '(   (1 1 0 0 0)
-                    (2 1 1 1 1)
-                    (0 0 1 0 2)
+                    (2 1 1 1 2)
+                    (0 0 1 2 2)
                     (0 1 2 0 1)
                     (0 0 1 2 0)
                     (0 0 0 0 0)
