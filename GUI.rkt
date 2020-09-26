@@ -77,6 +77,7 @@
 ;En esta parte el juego empieza segun las configuraciones con una nueva ventana
 
 (define token (send selectToken get-string-selection))
+(define empty_space "gray")
 
 ;Panel encargado de mostrar el tablero
 (define matrixPanel (new panel% [parent gameWindow]
@@ -94,11 +95,11 @@
         (draw-4Line-board dc)))
         
     (define/augment (after-interactive-move event)
-      (drawRectangl(canvas dc)))
+      (placeToken event))))
 
 ;Funcion encargada de dibujar el tablero
 (define (draw-4Line-board dc)
-  (define brush (send the-brush-list find-or-create-brush "gray" 'solid))
+  (define brush (send the-brush-list find-or-create-brush empty_space 'solid))
   (define pen (send the-pen-list find-or-create-pen "white" 1 'solid))
   (define font (send the-font-list find-or-create-font 8 'default 'normal 'normal))
   (define-values (dc-width dc-height) (send dc get-size))
@@ -194,4 +195,8 @@
   (for ([id (in-hash-keys token-piece-data)])
             (define piece (make-token-piece id))
             (send board insert piece 695 470)))
-;####
+
+;##########
+
+(define (placeToken event)
+  (set! empty_space "red"))
