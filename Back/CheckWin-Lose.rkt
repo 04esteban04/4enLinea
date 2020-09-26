@@ -305,28 +305,47 @@
 )
 
 
-; 
-; E:
-; S:
-(define (checkDiagonal matrix size)
-    (cond ((and (zero? (- (length matrix) 1)) (zero? size))
+; Función que verifica la matriz diagonalmente
+; E: matriz
+; S: elemento repetido 4 veces, en caso de no repetirse devuelve 0
+(define (checkDiagonal matrix)
+    (cond ((zero? (- (length matrix) 1))
                 matrix)
            (else
-                (checkDiagonalAux matrix 
-                                    size
-                                    (listOfCounters (- (length (car matrix)) 1) '0 '()))
+                (checkDiagonalAux 
+                                (list (getDiagonal matrix (length matrix) (length (car matrix))))
+                                (rellenarMatriz (getDiagonalInferior matrix (length matrix) (length (car matrix)))
+                                                #f)
+                                (rellenarMatriz (getDiagonalSuperior matrix (length matrix) (length (car matrix)))
+                                                #t))
            ) 
     )
 )
 
-; 
-; E:
-; S:
-(define (checkDiagonalAux matrix size listaContadores)
-    (cond ((zero? size)
-                '0)
-    
+; Función auxiliar de checkDiagonal
+; E: diagonal principal de la matriz, diagonales inferiores, diagonales superiores
+; S: número repetido 4 veces,  en caso de no repetirse devuelve 0
+(define (checkDiagonalAux diagonal inferiores superiores)
+    (checkDiagonalAux2 (checkHorizontal diagonal '0)
+                       (checkVertical inferiores (- (length inferiores) 1))
+                       (checkVertical superiores (- (length superiores) 1)) 
     )
+)
+
+; Función auxiliar de checkDiagonalAux 
+; E: número repetido en diagonal principal, número repetido en diagonales inferiores, número repetido en diagonales superiores
+; S: número repetido 4 veces,  en caso de no repetirse devuelve 0
+(define (checkDiagonalAux2 num1 num2 num3)
+    (cond ((not (zero? num1))
+                num1)
+           ((not (zero? num2))
+                num2)
+           ((not (zero? num3))
+                num3)
+            (else
+                '0)     
+    )
+
 )
 
 
@@ -645,53 +664,96 @@
     )
 )
 
-
-(define (rellenarMatriz matrix)
-    (cond ((null? matrix)
-                matrix
+; Función para irellenar una matriz y volverla una matriz cuadrada
+; E: matriz no cuadrada, boolean que indica si se buscan diagonales inferiores o superiores
+; S: matriz cuadrada de la matriz ingresada
+(define (rellenarMatriz matrix bool)
+    (cond   ; Se buscan diagonales inferiores
+            ((equal? bool #f)
+                (cond
+                    ((null? matrix)
+                        matrix
+                    )
+                    ; Caso en donde se tienen más filas que columnas    
+                    ((< (length (car matrix)) (length matrix))
+                            (rellenarMatrizAux matrix 
+                                            (createMatrix (length matrix) (length matrix))
+                                            '()
+                                            '0
+                                            (listOfCounters (- (length matrix) 1) '0 '())
+                                            #f)
+                    )
+                    ; Caso en donde se tiene más columnas que filas
+                    ((> (length (car matrix)) (length matrix))
+                        (rellenarMatrizAux matrix 
+                                        (createMatrix (length (car matrix)) (length (car matrix)))
+                                        '()
+                                        '0
+                                        (listOfCounters (- (length (car matrix)) 1) '0 '())
+                                        #t)
+                    ) 
+                    (else
+                        (rellenarMatrizAux matrix 
+                                        (createMatrix (length matrix) (length matrix))
+                                        '()
+                                        '0
+                                        (listOfCounters (- (length matrix) 1) '0 '())
+                                        #f)
+                    )
+                )
             )
-           ; Caso en donde se tienen más filas que columnas    
-           ((< (length (car matrix)) (length matrix))
-                (rellenarMatrizAux matrix 
-                                   (createMatrix (length matrix) (length matrix))
-                                   '()
-                                   '0
-                                   (listOfCounters (- (length matrix) 1) '0 '())
-                                   #f)
-            )
-            ; Caso en donde se tiene más columnas que filas
-            ((> (length (car matrix)) (length matrix))
-                (rellenarMatrizAux matrix 
-                                   (createMatrix (length (car matrix)) (length (car matrix)))
-                                   '()
-                                   '0
-                                   (listOfCounters (- (length (car matrix)) 1) '0 '())
-                                   #t)
-            ) 
-            (else
-                (rellenarMatrizAux matrix 
-                                   (createMatrix (length matrix) (length matrix))
-                                   '()
-                                   '0
-                                   (listOfCounters (- (length matrix) 1) '0 '())
-                                   #f)
-            )                          
+            ; se buscan diagonales superiores  
+            ((equal? bool #t)
+                (cond
+                    ((null? matrix)
+                        matrix
+                    )
+                    ; Caso en donde se tienen más filas que columnas    
+                    ((< (length (car matrix)) (length matrix))
+                            (rellenarMatrizAux2 matrix 
+                                            (createMatrix (length matrix) (length matrix))
+                                            '()
+                                            '0
+                                            (listOfCounters (- (length matrix) 1) '0 '())
+                                            #f)
+                    )
+                    ; Caso en donde se tiene más columnas que filas
+                    ((> (length (car matrix)) (length matrix))
+                        (rellenarMatrizAux2 matrix 
+                                        (createMatrix (length (car matrix)) (length (car matrix)))
+                                        '()
+                                        '0
+                                        (listOfCounters (- (length (car matrix)) 1) '0 '())
+                                        #t)
+                    ) 
+                    (else
+                        (rellenarMatrizAux2 matrix 
+                                        (createMatrix (length matrix) (length matrix))
+                                        '()
+                                        '0
+                                        (listOfCounters (- (length matrix) 1) '0 '())
+                                        #f)
+                    )
+                )
+            )                        
     )
 )
 
+; Función auxiliar de rellenarMatriz que rellena las diagonales inferiores
+; E: matrixActual, matrixCuadrada, matrix vacía, contador,  lista de contadores,  boolean que indica que se trata de diagonales inferiores
+; S: matriz cuadrada de la matriz ingresada
 (define (rellenarMatrizAux matrixActual matrixCuadrada matrixNueva cont listaCont bool)
     (cond   ; Caso en donde hay más filas o es matriz cuadrada
             ((equal? bool #f)
-                (cond   ; Se buscan diagonales superiores
-                        ((= (length (car matrixActual)) (length matrixCuadrada))
-                            (cond ; Caso en donde ya no hay elementos a procesar 
-                                    ((null? matrixActual)
-                                            matrixNueva
-                                    )
-                                    ; Caso en donde se encuentra la última fila
-                                    ((null? (cdr matrixActual))
-                                            (append matrixNueva
-                                            (list (pegarListas (car matrixActual)
+                (cond   
+                    ; Caso en donde ya no hay elementos a procesar 
+                    ((null? matrixActual)
+                            matrixNueva
+                    )
+                    ; Caso en donde se encuentra la última fila
+                    ((null? (cdr matrixActual))
+                            (append matrixNueva
+                            (list (pegarListas (invertirLista (car matrixActual))
                                                                 (car matrixCuadrada)
                                                                 '()
                                                                 (length (car matrixActual))
@@ -699,135 +761,60 @@
                                                                 (+ (car listaCont) 1)
                                                                 '0
                                                                 #f)))
-                                    )
-                                    ; Caso en donde hay dos filas con el mismo tamaño
-                                    ((and (= (length (car matrixActual)) (length (cadr matrixActual))) (= cont 0))
-                                            (append matrixNueva
-                                                    (list (pegarListas (car matrixActual)
-                                                                        (car matrixCuadrada)
-                                                                        '()
-                                                                        (length (car matrixActual))
-                                                                        (length (car matrixCuadrada))
-                                                                        '0
-                                                                        '0
-                                                                        #f))
-                                                    (rellenarMatrizAux (cdr matrixActual)
-                                                                    (cdr matrixCuadrada)
-                                                                    matrixNueva
-                                                                    '1
-                                                                    (cdr listaCont)
-                                                                    bool))
-                                    ) 
-                                    ; Caso en donde hay dos filas con el mismo tamaño después de encontra la primera
-                                    ((and (= (length (car matrixActual)) (length (cadr matrixActual))) (= cont 1))
-                                            (append matrixNueva
-                                                    (list (pegarListas (car matrixActual)
-                                                                        (car matrixCuadrada)
-                                                                        '()
-                                                                        (length (car matrixActual))
-                                                                        (length (car matrixCuadrada))
-                                                                        (+ (car listaCont) 1)
-                                                                        '0
-                                                                        #f))
-                                                    (rellenarMatrizAux (cdr matrixActual)
-                                                                    (cdr matrixCuadrada)
-                                                                    matrixNueva
-                                                                    '1
-                                                                    (cdr listaCont)
-                                                                    bool))
-                                    )  
-                                    (else
-                                        (append matrixNueva
-                                                (list (pegarListas (car matrixActual)
+                    )
+                    ; Caso en donde hay dos filas con el mismo tamaño
+                    ((and (= (length (car matrixActual)) (length (cadr matrixActual))) (= cont 0))
+                            (append matrixNueva
+                                    (list (pegarListas (invertirLista (car matrixActual))
                                                                     (car matrixCuadrada)
                                                                     '()
                                                                     (length (car matrixActual))
                                                                     (length (car matrixCuadrada))
-                                                                    '0
+                                                                    (+ (car listaCont) 1)
                                                                     '0
                                                                     #f))
-                                                (rellenarMatrizAux (cdr matrixActual)
-                                                                (cdr matrixCuadrada)
-                                                                matrixNueva
+                                    (rellenarMatrizAux (cdr matrixActual)
+                                                    (cdr matrixCuadrada)
+                                                    matrixNueva
+                                                    '1
+                                                    (cdr listaCont)
+                                                    #f))
+                    ) 
+                    ; Caso en donde hay dos filas con el mismo tamaño después de encontra la primera
+                    ((and (= (length (car matrixActual)) (length (cadr matrixActual))) (= cont 1))
+                            (append matrixNueva
+                                    (list (pegarListas (invertirLista (car matrixActual))
+                                                                    (car matrixCuadrada)
+                                                                    '()
+                                                                    (length (car matrixActual))
+                                                                    (length (car matrixCuadrada))
+                                                                    (+ (car listaCont) 1)
+                                                                    '0
+                                                                    #f))
+                                    (rellenarMatrizAux (cdr matrixActual)
+                                                    (cdr matrixCuadrada)
+                                                    matrixNueva
+                                                    '1
+                                                    (cdr listaCont)
+                                                    #f))
+                    )  
+                    (else
+                        (append matrixNueva
+                                (list (pegarListas (invertirLista (car matrixActual))
+                                                                (car matrixCuadrada)
+                                                                '()
+                                                                (length (car matrixActual))
+                                                                (length (car matrixCuadrada))
                                                                 '0
-                                                                listaCont
-                                                                bool))
-                                    )
-                            )
-                        )
-                        (else
-                            (cond 
-                                ; Caso en donde ya no hay elementos a procesar 
-                                ((null? matrixActual)
-                                        matrixNueva
-                                )
-                                ; Caso en donde se encuentra la última fila
-                                ((null? (cdr matrixActual))
-                                        (append matrixNueva
-                                        (list (pegarListas (invertirLista (car matrixActual))
-                                                                            (car matrixCuadrada)
-                                                                            '()
-                                                                            (length (car matrixActual))
-                                                                            (length (car matrixCuadrada))
-                                                                            (+ (car listaCont) 1)
-                                                                            '0
-                                                                            #f)))
-                                )
-                                ; Caso en donde hay dos filas con el mismo tamaño
-                                ((and (= (length (car matrixActual)) (length (cadr matrixActual))) (= cont 0))
-                                        (append matrixNueva
-                                                (list (pegarListas (invertirLista (car matrixActual))
-                                                                                (car matrixCuadrada)
-                                                                                '()
-                                                                                (length (car matrixActual))
-                                                                                (length (car matrixCuadrada))
-                                                                                '0
-                                                                                '0
-                                                                                #f))
-                                                (rellenarMatrizAux (cdr matrixActual)
-                                                                (cdr matrixCuadrada)
-                                                                matrixNueva
-                                                                '1
-                                                                (cdr listaCont)
-                                                                bool))
-                                ) 
-                                ; Caso en donde hay dos filas con el mismo tamaño después de encontra la primera
-                                ((and (= (length (car matrixActual)) (length (cadr matrixActual))) (= cont 1))
-                                        (append matrixNueva
-                                                (list (pegarListas (invertirLista (car matrixActual))
-                                                                                (car matrixCuadrada)
-                                                                                '()
-                                                                                (length (car matrixActual))
-                                                                                (length (car matrixCuadrada))
-                                                                                (+ (car listaCont) 1)
-                                                                                '0
-                                                                                #f))
-                                                (rellenarMatrizAux (cdr matrixActual)
-                                                                (cdr matrixCuadrada)
-                                                                matrixNueva
-                                                                '1
-                                                                (cdr listaCont)
-                                                                bool))
-                                )  
-                                (else
-                                    (append matrixNueva
-                                            (list (pegarListas (invertirLista (car matrixActual))
-                                                                            (car matrixCuadrada)
-                                                                            '()
-                                                                            (length (car matrixActual))
-                                                                            (length (car matrixCuadrada))
-                                                                            '0
-                                                                            '0
-                                                                            #f))
-                                            (rellenarMatrizAux (cdr matrixActual)
-                                                            (cdr matrixCuadrada)
-                                                            matrixNueva
-                                                            '0
-                                                            listaCont
-                                                            bool))
-                                )
-                            )
-                        )
+                                                                '0
+                                                                #f))
+                                (rellenarMatrizAux (cdr matrixActual)
+                                                (cdr matrixCuadrada)
+                                                matrixNueva
+                                                '0
+                                                listaCont
+                                                #f))
+                    )
                 )
             )
             ; Caso en donde hay más columnas
@@ -874,62 +861,33 @@
     )
 )
 
+; Función auxiliar de rellenarMatriz que rellena las diagonales superiores
+; E: matrixActual, matrixCuadrada, matrix vacía, contador,  lista de contadores,  boolean que indica que se trata de diagonales superiores
+; S: matriz cuadrada de la matriz ingresada
 (define (rellenarMatrizAux2 matrixActual matrixCuadrada matrixNueva cont listaCont bool)
-    (cond   ; Caso en donde hay más filas o es matriz cuadrada
+    (cond 
+            ; Caso en donde hay más filas o es matriz cuadrada
             ((equal? bool #f)
-                (cond   ; Caso en donde ya no hay elementos a procesar 
-                        ((null? matrixActual)
-                                matrixNueva
-                        )
-                        ; Caso en donde se encuentra la última fila
-                        ((null? (cdr matrixActual))
-                                (append matrixNueva
-                                (list (pegarListas (car matrixActual)
-                                                    (car matrixCuadrada)
-                                                    '()
-                                                    (length (car matrixActual))
-                                                    (length (car matrixCuadrada))
-                                                    (+ (car listaCont) 1)
-                                                    '0
-                                                    #f)))
-                        )
-                        ; Caso en donde hay dos filas con el mismo tamaño
-                        ((and (= (length (car matrixActual)) (length (cadr matrixActual))) (= cont 0))
-                                (append matrixNueva
-                                        (list (pegarListas (car matrixActual)
-                                                            (car matrixCuadrada)
-                                                            '()
-                                                            (length (car matrixActual))
-                                                            (length (car matrixCuadrada))
-                                                            '0
-                                                            '0
-                                                            #f))
-                                        (rellenarMatrizAux2 (cdr matrixActual)
-                                                        (cdr matrixCuadrada)
-                                                        matrixNueva
-                                                        '1
-                                                        (cdr listaCont)
-                                                        bool))
-                        ) 
-                        ; Caso en donde hay dos filas con el mismo tamaño después de encontra la primera
-                        ((and (= (length (car matrixActual)) (length (cadr matrixActual))) (= cont 1))
-                                (append matrixNueva
-                                        (list (pegarListas (car matrixActual)
-                                                            (car matrixCuadrada)
-                                                            '()
-                                                            (length (car matrixActual))
-                                                            (length (car matrixCuadrada))
-                                                            (+ (car listaCont) 1)
-                                                            '0
-                                                            #f))
-                                        (rellenarMatrizAux2 (cdr matrixActual)
-                                                        (cdr matrixCuadrada)
-                                                        matrixNueva
-                                                        '1
-                                                        (cdr listaCont)
-                                                        bool))
-                        )  
-                        (else
+
+                (cond  
+                    ; Caso en donde ya no hay elementos a procesar 
+                    ((null? matrixActual)
+                            matrixNueva
+                    )
+                    ; Caso en donde se encuentra la última fila
+                    ((null? (cdr matrixActual))
+                            (append matrixNueva
+                            (list (pegarListas (car matrixActual)
+                                                (car matrixCuadrada)
+                                                '()
+                                                (length (car matrixActual))
+                                                (length (car matrixCuadrada))
+                                                (+ (car listaCont) 1)
+                                                '0
+                                                #f)))
+                    )
+                    ; Caso en donde hay dos filas con el mismo tamaño
+                    ((and (= (length (car matrixActual)) (length (cadr matrixActual))) (= cont 0))
                             (append matrixNueva
                                     (list (pegarListas (car matrixActual)
                                                         (car matrixCuadrada)
@@ -942,15 +900,50 @@
                                     (rellenarMatrizAux2 (cdr matrixActual)
                                                     (cdr matrixCuadrada)
                                                     matrixNueva
+                                                    '1
+                                                    (cdr listaCont)
+                                                    #f))
+                    ) 
+                    ; Caso en donde hay dos filas con el mismo tamaño después de encontra la primera
+                    ((and (= (length (car matrixActual)) (length (cadr matrixActual))) (= cont 1))
+                            (append matrixNueva
+                                    (list (pegarListas (car matrixActual)
+                                                        (car matrixCuadrada)
+                                                        '()
+                                                        (length (car matrixActual))
+                                                        (length (car matrixCuadrada))
+                                                        (+ (car listaCont) 1)
+                                                        '0
+                                                        #f))
+                                    (rellenarMatrizAux2 (cdr matrixActual)
+                                                    (cdr matrixCuadrada)
+                                                    matrixNueva
+                                                    '1
+                                                    (cdr listaCont)
+                                                    #f))
+                    )  
+                    (else
+                        (append matrixNueva
+                                (list (pegarListas (car matrixActual)
+                                                    (car matrixCuadrada)
+                                                    '()
+                                                    (length (car matrixActual))
+                                                    (length (car matrixCuadrada))
                                                     '0
-                                                    listaCont
-                                                    bool))
-                        )
+                                                    '0
+                                                    #f))
+                                (rellenarMatrizAux2 (cdr matrixActual)
+                                                (cdr matrixCuadrada)
+                                                matrixNueva
+                                                '0
+                                                listaCont
+                                                #f))
+                    )
                 )
             )
             ; Caso en donde hay más columnas
             ((equal? bool #t)
-                (cond   ((and (null? matrixActual) (= cont (+ (length matrixCuadrada) 1)))
+                (cond ((and (null? matrixActual) (= cont (+ (length matrixCuadrada) 1)))
                             matrixNueva
                         )
                         ((and (null? matrixActual) (not(= cont (+ (length matrixCuadrada) 1))))
@@ -963,15 +956,13 @@
                                                         (+ (car listaCont) 1)
                                                         '0
                                                         #t))
-                                    (rellenarMatrizAux2 matrixActual
+                                    (rellenarMatrizAux matrixActual
                                                         (cdr matrixCuadrada)
                                                         matrixNueva
                                                         (+ (car listaCont) 1)
                                                         listaCont
                                                         #t))
                         )
-
-                        
                         (else
                             (append matrixNueva
                                     (list (pegarListas (car matrixActual)
@@ -982,7 +973,7 @@
                                                         (+ (car listaCont) 1)
                                                         '0
                                                         #t))
-                                    (rellenarMatrizAux2 (cdr matrixActual)
+                                    (rellenarMatrizAux (cdr matrixActual)
                                                         (cdr matrixCuadrada)
                                                         matrixNueva
                                                         (+ (car listaCont) 1)
@@ -990,10 +981,13 @@
                                                         #t))
                         )
                 )
-            )            
+            ) 
     )
 )
 
+; Función para concatenar dos listas
+; E: lista1, lista2, lista vacía, largo de lista 1, largo de lista 2, contador, largo total, boolean que indica cuando se terminan de agregar elementos)
+; S: listas ingresadas concatenadas
 (define (pegarListas lista1 lista2 nuevaLista largoLista1 largoLista2 cont largoTotal bool)
     (cond   ; Casos de matriz cuadrada y con más filas 
             ((equal? bool #f)
@@ -1054,14 +1048,25 @@
 *********************************************************************************************
 |#
 
-;<>
+
+
+
+
+#|
+(checkDiagonal '(   (1 1 0 0 0)
+                    (2 1 1 1 1)
+                    (0 0 1 0 2)
+                    (0 1 2 0 1)
+                    (0 0 1 2 0)
+                    (0 0 0 0 0)
+                    (0 0 0 0 0)))
 
 
 (rellenarMatriz (getDiagonalSuperior '( (1 0 0 0 0)
                                         (2 1 2 3 1)
                                         (3 2 1 0 2)
                                         (4 3 2 3 1)
-                                        (5 4 3 2 1)) '4 '4))
+                                        (5 4 3 2 1)) '4 '4) #t)
 
 (rellenarMatriz (getDiagonalSuperior '( (1 0 0 0 0)
                                         (2 1 2 3 1)
@@ -1070,16 +1075,16 @@
                                         (5 4 3 2 1)
                                         (6 5 4 3 2)
                                         (7 6 5 4 3)
-                                        (8 7 6 5 4)) '7 '4))
+                                        (8 7 6 5 4)) '7 '4) #t)
 
 
 (rellenarMatriz (getDiagonalSuperior '( (1 0 0 0 0 0 0 0 0 0)
                                         (2 1 3 2 1 4 5 0 0 0)
                                         (3 2 1 0 0 2 1 0 0 0)
-                                        (4 3 2 3 0 4 0 0 0 0)) '3 '9))
+                                        (4 3 2 3 0 4 0 0 0 0)) '3 '9) #t)
 
                      
-
+|#
 
 
 #|
