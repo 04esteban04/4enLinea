@@ -215,20 +215,20 @@
 ;##########
 
 (define (position-piece board piece)
+  (print "x")
+  ;(define-values (canvas-width canvas-height)
+    ;(let ((c (send board get-canvas)))
+      ;(send c get-size)))
+  ;(define-values (square-width square-height)
+    ;(values (/ canvas-width 16) (/ canvas-height 16)))
+  ;(define-values (square-x square-y)
+    ;(values square-width square-height))
+  ;(define piece-width (snip-width piece))
+  ;(define piece-height (snip-height piece))
   
-  (define-values (canvas-width canvas-height)
-    (let ((c (send board get-canvas)))
-      (send c get-size)))
-  (define-values (square-width square-height)
-    (values (/ canvas-width 16) (/ canvas-height 16)))
-  (define-values (square-x square-y)
-    (values square-width square-height))
-  (define piece-width (snip-width piece))
-  (define piece-height (snip-height piece))
-  
-  (send board move-to piece
-        (+ square-x (/ (- square-width piece-width) 2))
-        (+ square-y (/ (- square-height piece-height) 2)))
+  ;(send board move-to piece
+        ;(+ square-x (/ (- square-width piece-width) 2))
+        ;(+ square-y (/ (- square-height piece-height) 2)))
 )
 
 
