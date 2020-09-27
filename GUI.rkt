@@ -1,6 +1,7 @@
 #lang racket
 (require racket/gui)
 (require "Back/CheckWin-Lose.rkt")
+(require embedded-gui)
 
 
 ;    /################################################\
@@ -77,14 +78,19 @@
 ;En esta parte el juego empieza segun las configuraciones con una nueva ventana
 
 (define token (send selectToken get-string-selection))
+(define matrixRows (string->number (send selectRow get-string-selection)))
+(define matrixCols (string->number (send selectColumn get-string-selection)))
+
 (define empty_space "gray")
 
+
+
 ;Panel encargado de mostrar el tablero
-(define matrixPanel (new panel% [parent gameWindow]
-                                [style (list 'border)]
-                                [alignment '(center center)]
-                                [vert-margin 30]
-                                [horiz-margin 30]))
+;(define matrixPanel (new panel% [parent gameWindow]
+                                ;[style (list 'border)]
+                                ;[alignment '(center center)]
+                                ;[vert-margin 30]
+                                ;[horiz-margin 30]))
 
 ;Override de la clase pasteboard%, de manera que sea posible dibujar el tablero con la funcion draw-4Line-board
 (define 4Line-board%
@@ -95,7 +101,10 @@
         (draw-4Line-board dc)))
         
     (define/augment (after-interactive-move event)
-      (placeToken event))))
+        (define piece (send this find-next-selected-snip #f))
+        (position-piece this piece))
+  )
+)
 
 ;Funcion encargada de dibujar el tablero
 (define (draw-4Line-board dc)
@@ -121,7 +130,7 @@
 
 ;Canvas de clase editor%, encargado de contener el pasteboard correspondiente
 (define boardContainer (new editor-canvas%
-                       [parent matrixPanel]
+                       [parent gameWindow]
                        [style '(no-hscroll no-vscroll)]
                        [horizontal-inset 0]
                        [vertical-inset 0]
@@ -146,9 +155,12 @@
 ;Define al objeto Token, de tipo snip class
 (define token-piece%
   (class snip%
-    (init-field glyph font size)
+    (init-field glyph font size [location #f])
     (super-new)
     (send this set-snipclass token-piece-snip-class)
+
+
+
 
     ;Configura el tamano del Token
     (define/override (get-extent dc x y width height descent space lspace rspace)
@@ -182,21 +194,42 @@
             (oy (/ (- size glyph-height 2))))
        
         (send dc draw-text glyph (+ x ox) (+ y oy))))
-    ))))
+    ))
+  )
+)
 
  ;Crea el Token piece       
 (define (make-token-piece id)
   (define glyph (hash-ref token-piece-data id))
   (define font (send the-font-list find-or-create-font 20 'default 'normal 'normal))
-  (new token-piece% [glyph (string glyph)] [font font] [size 35]))
+  (new token-piece% [glyph (string glyph)] [font font] [size 35])
+)
 
 ;Crea un total de 16x16 tokens para el jugador
 (for* ([row (in-range (string->number (send selectRow get-string-selection)))] [col (in-range (string->number (send selectColumn get-string-selection)))])
   (for ([id (in-hash-keys token-piece-data)])
             (define piece (make-token-piece id))
-            (send board insert piece 695 470)))
+            (send board insert piece 695 470))
+)
 
 ;##########
 
-(define (placeToken event)
-  (set! empty_space "red"))
+(define (position-piece board piece)
+  
+  (define-values (canvas-width canvas-height)
+    (let ((c (send board get-canvas)))
+      (send c get-size)))
+  (define-values (square-width square-height)
+    (values (/ canvas-width 16) (/ canvas-height 16)))
+  (define-values (square-x square-y)
+    (values square-width square-height))
+  (define piece-width (snip-width piece))
+  (define piece-height (snip-height piece))
+  
+  (send board move-to piece
+        (+ square-x (/ (- square-width piece-width) 2))
+        (+ square-y (/ (- square-height piece-height) 2)))
+)
+
+
+
