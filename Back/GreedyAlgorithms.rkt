@@ -282,14 +282,135 @@
     )
 )
 
+; Función solución que verifica la posición correcta de la ficha ingresada
+; E: matriz
+; S: matriz con la posición deseada cambiada por un 2
+(define (checkCorrectSolution matrix)
+    (cond ((null? matrix)
+                '())
+           (else
+                (checkCorrectSolutionAux matrix matrix (car matrix) (cadr matrix) '0 '0)
+           )
+    )
+)
+ 
+; Función auxiliar de checkCorrectSolution
+; E: matriz, matriz, primera fila de matriz, segunda fila de matriz, número de fila, número de columna
+; S: matriz con la posición deseada cambiada por un 2
+(define (checkCorrectSolutionAux matrix matrixOriginal fila1 fila2 numFila numPos)
+    (cond   ; Caso en donde se tiene solo una fila en la matrixOriginal
+            ((null? (cdr matrixOriginal))
+                (cond   ((null? fila1)
+                            matrix
+                        )
+                        ; Caso en donde se busca en la última fila
+                        ((not(equal? (car fila1) '3))
+                            (checkCorrectSolutionAux matrix matrixOriginal (cdr fila1) fila2 numFila (+ numPos 1))
+                        )
+                        (else   
+                            (remplaceMatrix '3 '2 matrix)
+                        )
+                )
+            )
+            ; Se realiza la búsqueda en la siguiente fila de la matriz
+            ((and (null? fila1) (>= (length matrixOriginal) 3))
+                (checkCorrectSolutionAux matrix (cdr matrixOriginal) (cadr matrixOriginal) (caddr matrixOriginal) (+ numFila 1) '0)
+            )
+            ; Se realiza la búsqueda en la siguiente fila de la matriz cuando solo se tienen 2 filas
+            ((and (null? fila1) (= (length matrixOriginal) 2))
+                (checkCorrectSolutionAux matrix (cdr matrixOriginal) (cadr matrixOriginal) '() (+ numFila 1) '0)
+            )
+            ; Caso en donde se tienen más de 2 filas
+            ((and (not(equal? (car fila1) '3)) (>= (length matrixOriginal) 2))
+                (checkCorrectSolutionAux matrix matrixOriginal (cdr fila1) (cdr fila2) numFila (+ numPos 1))
+            )
+            ; Caso en donde se encuentra la posición deseada
+            ((and (equal? (car fila1) '3) (equal? (car fila2) '0))
+                (checkCorrectSolutionAux (changeTempValue matrix numFila numPos '0 '() #f)
+                                         (changeTempValue matrix numFila numPos '0 '() #f)
+                                         (car (changeTempValue matrix numFila numPos '0 '() #f))
+                                         (cadr (changeTempValue matrix numFila numPos '0 '() #f))
+                                         '0
+                                         '0)
+            )
+            (else
+                (remplaceMatrix '3 '2 matrix)
+            )
+    
+    )
+)
+
+; Función que cambia un valor temporal en una fila de la matriz dada
+; E: matriz, posición de fila, posición de columna, contador, matriz vacía, boolean que indica si ya se cambió el elemento de la matriz 
+; S: matriz con el elemento buscado cambiado de posición
+(define (changeTempValue matrix rowPos columnPos cont newMatrix bool)
+    (cond   ((null? matrix)
+                newMatrix
+            )
+            ; Caso en donde se debe cambiar el 3
+            ((equal? cont rowPos)
+                (append newMatrix
+                        (list (put columnPos '0 (car matrix)))
+                        (changeTempValue (cdr matrix)
+                                          rowPos
+                                          columnPos
+                                          (+ cont 1)
+                                          newMatrix
+                                          #t))
+            )
+            ; Caso en donde se cambia el 0 por un 3
+            ((equal? bool #t)
+                (append newMatrix
+                        (list (put columnPos '3 (car matrix)))
+                        (changeTempValue (cdr matrix)
+                                          rowPos
+                                          columnPos
+                                          (+ cont 1)
+                                          newMatrix
+                                          #f))
+            )
+            (else
+                (append newMatrix
+                        (list (car matrix))
+                        (changeTempValue (cdr matrix)
+                                          rowPos
+                                          columnPos
+                                          (+ cont 1)
+                                          newMatrix
+                                          #f))
+            )
+    )
+)
+
+#|
  (findTemporal 2 '( (0 0 0 0 0 0 0 0) 
                     (0 0 0 0 0 0 0 0) 
                     (0 0 0 0 0 0 0 0) 
                     (2 0 0 0 0 0 0 0) 
                     (2 0 0 0 0 0 0 0) 
                     (2 0 0 2 2 2 0 0) 
-                    (2 2 2 1 1 1 1 0) 
+                    (2 2 2 1 1 1 0 0) 
                     (1 1 2 1 1 2 2 2)) )
+
+|#
+
+
+
+
+
+(checkCorrectSolution '((0 0 0 0 0 0 0 0) 
+                        (0 0 0 0 0 0 0 0) 
+                        (0 0 0 0 0 0 0 0) 
+                        (2 0 0 0 0 0 0 0) 
+                        (2 0 0 3 0 0 0 0) 
+                        (2 0 0 2 2 2 0 0) 
+                        (2 2 2 1 1 1 0 0) 
+                        (1 1 2 1 1 2 2 2)))
+
+(display '"\n")
+
+
+;(maxRepe '2 '(2 0 0 0 2 2 0 0))
 ;------------------------------------------------------
 ;------------------------------------------------------
 ;------------------------------------------------------
