@@ -11,6 +11,7 @@
 ;LA MATRIZ PRINCIPAL
 (define matrix '(()))
 
+
 ;FRAME DEL JUEGO
 (define gameWindow (new frame% 
                 [label "4 en Linea"]
@@ -272,7 +273,7 @@
 ;################################################
 
 (define (position-piece board pieceBOT event)
-  (define-values (x y) (values (send event get-x) (send event get-y)))
+  (define-values (x y) (values (send event get-x) (+ 20 (send event get-y))))
   
   (cond
     ;######################################
@@ -395,7 +396,6 @@
 
     ((and (>= x 480) (<= x 520) (>= y 40) (<= y 80)
       (set! matrix (remplaceValue 1 1 12 matrix))
-      
     ))
 
     ((and (>= x 520) (<= x 560) (>= y 40) (<= y 80)
@@ -810,7 +810,7 @@
       (set! matrix (remplaceValue 1 7 14 matrix))
     ))
 
-    ((and (>= x 600) (<= x 640) (>= y 280) (<= y 320)
+    ((and (>= x 600) (<= x 640) (>= y 270) (<= y 320)
       (set! matrix (remplaceValue 1 7 15 matrix))
     ))
 
@@ -879,7 +879,6 @@
 
     ((and (>= x 600) (<= x 640) (>= y 320) (<= y 360)
       (set! matrix (remplaceValue 1 8 15 matrix))
-      (print matrix)
     ))
 
     ;###########################################
@@ -929,25 +928,25 @@
       (set! matrix (remplaceValue 1 9 10 matrix))
     ))
 
-    ((and (>= x 440) (<= x 480) (>= y 360) (<= y 400)
+    ((and (>= x 440) (<= x 480) (>= y 350) (<= y 400)
       (set! matrix (remplaceValue 1 9 11 matrix))
     ))
 
-    ((and (>= x 480) (<= x 520) (>= y 360) (<= y 400)
+    ((and (>= x 480) (<= x 520) (>= y 350) (<= y 400)
       (set! matrix (remplaceValue 1 9 12 matrix))
     ))
 
-    ((and (>= x 520) (<= x 560) (>= y 360) (<= y 400)
+    ((and (>= x 520) (<= x 560) (>= y 350) (<= y 400)
       (set! matrix (remplaceValue 1 9 13 matrix))
     ))
 
-    ((and (>= x 560) (<= x 600) (>= y 360) (<= y 400)
+    ((and (>= x 560) (<= x 600) (>= y 350) (<= y 400)
       (set! matrix (remplaceValue 1 9 14 matrix))
+      
     ))
 
     ((and (>= x 600) (<= x 640) (>= y 350) (<= y 400)
       (set! matrix (remplaceValue 1 9 15 matrix))
-      (print matrix)
     ))
 
     ;###########################################
@@ -1013,9 +1012,10 @@
       (set! matrix (remplaceValue 1 10 14 matrix))
     ))
 
+    ;REVISAR
     ((and (>= x 600) (<= x 640) (>= y 400) (<= y 440)
       (set! matrix (remplaceValue 1 10 15 matrix))
-     
+      (print matrix)
     ))
 
     ;###########################################
@@ -1150,8 +1150,6 @@
 
     ((and (>= x 600) (<= x 640) (>= y 480) (<= y 520)
       (set! matrix (remplaceValue 1 12 15 matrix))
-            (print matrix)
-
     ))
 
   
@@ -1220,6 +1218,7 @@
 
     ((and (>= x 600) (<= x 640) (>= y 520) (<= y 560)
       (set! matrix (remplaceValue 1 13 15 matrix))
+
     ))
 
     ;###########################################
@@ -1350,21 +1349,19 @@
 
     ((and (>= x 560) (<= x 600) (>= y 600) (<= y 640)
       (set! matrix (remplaceValue 1 15 14 matrix))
+          
     ))
 
-    ((and (>= x 600) (<= x 640) (>= y 600) (<= y 640)
+    ((and (>= x 600) (<= x 640) (> y 580) (<= y 640)
       (set! matrix (remplaceValue 1 15 15 matrix))
+                (print matrix)
     ))
-
-
-
-
   
   )
-  (print x)
-  (print y)
   ;(send board insert pieceBOT 1 1)
   ;(print(checkWin-Lose matrix))
+(print x)
+(print y)
 
 )
 
