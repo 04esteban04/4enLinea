@@ -47,6 +47,7 @@
 ; Función principal para reemplazar un valor de una matriz
 ; E: valor a cambiar, fila y columna como valores enteros, matriz 
 ; S: matriz
+(provide remplaceValue)
 (define (remplaceValue value row column matriz)
     (cond ((>= row (length matriz))
                 matriz)
@@ -1175,4 +1176,3 @@
 *********************************************************************************************
 *********************************************************************************************
 |#
-

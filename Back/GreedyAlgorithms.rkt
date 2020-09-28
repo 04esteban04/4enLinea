@@ -227,7 +227,6 @@
 (define (findRow element matrix)
     (findRowAux element matrix '())
 )
-
 (define (findRowAux element matrix newMatrix)
     (cond
         ((null? matrix)
@@ -241,7 +240,6 @@
         )
     
     )
-
 )
 |#
 
@@ -453,4 +451,3 @@
             )
     )
 )
-
