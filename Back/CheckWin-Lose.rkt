@@ -45,7 +45,7 @@
 )
 
 ; Función principal para reemplazar un valor de una matriz
-; E: valor a cambiar, fila y columna como valores enteros. Matriz es una lista que contiene una matriz
+; E: valor a cambiar, fila y columna como valores enteros, matriz 
 ; S: matriz
 (define (remplaceValue value row column matriz)
     (cond ((>= row (length matriz))
@@ -104,36 +104,95 @@
 *********************************************************************************************
 |#
 
-; 
-; E:
-; S:
-(define (checkWin-Lose matrix)
+; Función para verificar si algún jugador ganó
+; E: matriz
+; S: número del jugador ganador (0 = no hay ganador aún, 1 = jugador1, 2 = greedyAlgorithm, 3 = empate)
+(define (checkWinLose matrix)
 
-    (cond 
-        ((equal? (4inLine matrix (length matrix) 0 0) 1)
-            ;codigo del ganador 1
-            1
-        )
-        ((equal? (4inLine matrix (length matrix) 0 0) 2)
-            ;codigo del ganador 2
-            2
-        )
-        (else
-            ;codigo de empate
-            0
-        )
+    (cond  ; Caso en donde gana el jugador 1
+            ((equal? (fourInLine matrix (- (length matrix) 1)  (- (length (car matrix)) 1)  '()) '1)
+                '1
+            )
+            ; Caso en donde gana el algoritmo
+            ((equal? (fourInLine matrix (- (length matrix) 1)  (- (length (car matrix)) 1)  '()) '2)
+                '2
+            )
+            ; Caso en donde se da un empate
+            ((equal? (verificarMatrizLlena matrix) '3)
+                '3
+            )
+            ; Caso en donde nadie ha ganado y todavía se puede seguir jugando 
+            (else
+                '0
+            )
     )
 
 )
 
-; 
-; E:
-; S:
-(define (4inLine matrix size temp cont)
-    (display '" ")
+; Función que verifica cuatro fichas en línea horizontal, vertical y diagonal 
+; E: matriz, número de filas de la matriz, número de columnas de la matriz, lista vacía
+; S: lista con los resultados de checkHorizontal, checkVertical y checkDiagonal
+(define (fourInLine matrix numFilas numColumnas lista)
+    (fourInLineAux (append lista
+                            (list (checkHorizontal matrix numFilas))
+                            (list (checkVertical matrix numColumnas))
+                            (list (checkDiagonal matrix)))
+    )
 )
 
+; Función auxiliar de fourInLine
+; E: lista
+; S: elemento de la lista de los resultados de checkHorizontal, checkVertical y checkDiagonal
+(define (fourInLineAux lista)  
+    (cond ((not (zero? (car lista)))
+                (car lista)
+            )
+           ((not (zero? (cadr lista)))
+                (cadr lista)
+            )
+           ((not (zero? (caddr lista)))
+                (caddr lista)
+            )   
+           (else
+                '0)     
+    )
+)
 
+; Función que verifica si aún hay espacios disponibles en la matriz
+; E: matriz
+; S: número que indica si hay espacios vacíos (0 = si, 3 = no)
+(define (verificarMatrizLlena matrix)
+    (verificarMatrizLlenaAux matrix (car matrix))
+)
+
+; Función auxiliar de verificarMatrizLlena
+; E: matriz, fila de la matriz
+; S: número que indica si hay espacios vacíos (0 = si, 3 = no)
+(define (verificarMatrizLlenaAux matrix fila)
+    (cond ((null? (cdr matrix))
+                (cond  ((null? fila)
+                            '3
+                        )
+                        ((equal? (car fila) '0)
+                                '0
+                        )
+                        ((not (equal? (car fila) '0))
+                                (verificarMatrizLlenaAux matrix (cdr fila))
+                        )
+                )
+          )
+          ((null? fila)
+                (verificarMatrizLlenaAux (cdr matrix) (cadr matrix))
+          )
+          ((equal? (car fila) '0)
+                '0
+          )
+          ((not (equal? (car fila) '0))
+                (verificarMatrizLlenaAux matrix (cdr fila))
+          )
+    
+    )
+)
 
 #|
 *********************************************************************************************
@@ -1093,75 +1152,22 @@
 
 
 
-#|
-(checkDiagonal '(   (1 1 0 0 0)
-                    (2 1 1 1 2)
-                    (0 0 1 2 2)
-                    (0 1 2 0 1)
-                    (0 0 1 2 0)
-                    (0 0 0 0 0)
-                    (0 0 0 0 0)))
 
 
-(rellenarMatriz (getDiagonalSuperior '( (1 0 0 0 0)
-                                        (2 1 2 3 1)
-                                        (3 2 1 0 2)
-                                        (4 3 2 3 1)
-                                        (5 4 3 2 1)) '4 '4) #t)
+(checkWinLose '((0 0 0 0 0 0 0 0) 
+                (0 0 0 0 0 0 0 0) 
+                (0 0 0 0 0 0 0 0) 
+                (0 0 0 0 0 0 0 0) 
+                (2 0 0 0 0 0 0 0) 
+                (2 0 0 2 2 2 0 0) 
+                (2 2 2 1 1 1 0 0) 
+                (1 1 2 1 1 2 2 2)) )
 
-(rellenarMatriz (getDiagonalSuperior '( (1 0 0 0 0)
-                                        (2 1 2 3 1)
-                                        (3 2 1 0 8)
-                                        (4 3 2 3 5)
-                                        (5 4 3 2 1)
-                                        (6 5 4 3 2)
-                                        (7 6 5 4 3)
-                                        (8 7 6 5 4)) '7 '4) #t)
+(checkWinLose '((2 1 1 2 2 2 1 2) 
+                (2 2 2 1 1 1 2 2) 
+                (1 1 2 1 1 2 2 2)))
 
 
-(rellenarMatriz (getDiagonalSuperior '( (1 0 0 0 0 0 0 0 0 0)
-                                        (2 1 3 2 1 4 5 0 0 0)
-                                        (3 2 1 0 0 2 1 0 0 0)
-                                        (4 3 2 3 0 4 0 0 0 0)) '3 '9) #t)
-
-                     
-|#
-
-
-#|
-(getDiagonal '((1 0 0 0 0)
-               (2 1 0 0 0)
-               (3 2 1 0 0)
-               (4 3 2 3 0)
-               (5 4 3 2 1)
-               (6 5 4 3 2)
-               (7 6 5 4 3)
-               (8 7 6 5 4)) '7 '4)
-
-(rellenarMatriz (getDiagonalInferior '( (1 0 0 0 0 1) 
-                                        (2 1 0 0 0 1)
-                                        (3 2 1 0 0 1)
-                                        (4 3 2 1 0 1)
-                                        (5 4 3 2 1 2)
-                                        (6 5 4 3 2 1)) '5 '5))               
-
-(rellenarMatriz (getDiagonalInferior '( (1 0 0 0 0 1 2 3) 
-                                        (2 1 0 0 0 1 2 3)
-                                        (3 2 1 0 0 1 2 3)
-                                        (4 3 2 1 0 1 2 3)
-                                        (5 4 3 2 1 2 2 3)
-                                        (6 5 4 3 2 1 2 3)) '5 '7))
-
-(rellenarMatriz (getDiagonalInferior '( (1 0 0 0 0)
-                                        (2 1 0 0 0)
-                                        (3 2 1 0 0)
-                                        (4 3 2 3 0)
-                                        (5 4 3 2 1)
-                                        (6 5 4 3 2)
-                                        (7 6 5 4 3)
-                                        (8 7 6 5 4)) '7 '4))
-
-|#
 
 
 #|

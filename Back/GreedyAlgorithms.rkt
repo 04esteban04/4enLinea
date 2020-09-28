@@ -221,6 +221,7 @@
         )
     )
 )
+
 #|
 ;Funcion que determina la fila para insertar la ficha en la matriz
 (define (findRow element matrix)
@@ -243,11 +244,25 @@
 
 )
 |#
+
+; Función que ejecuta el algoritmo codicioso
+; E: matriz
+; S: matriz con el elemento insertado en la mejor posición encontrada por el algoritmo
+(define (greedyAlgorithm matrix)
+    (findBestSolution matrix)
+)
+
+; Función que busca un solución temporal al algoritmo
+; E: elemento a buscar, matriz
+; S: matriz con una solución parcial
 (define (findTemporal element matrix)
     (findTemporalAux element matrix 0 '() '())
 )
 
 ;tempList primer fila de la matriz
+; Función auxiliar de findTemporalAux
+; E: elemento a buscar, matriz, número de repeticiones, matriz vacía, lista vacía
+; S: matriz con una solución parcial
 (define (findTemporalAux element matrix repe newMatrix tempList)
 
     (cond
@@ -278,6 +293,63 @@
                 )
             
             )
+        )
+    )
+)
+
+; Función para obtener la solución más óptima
+; E: matriz
+; S: matriz con la solución final
+(define (findBestSolution matrix)
+    (findBestSolutionAux (findTemporal '2 matrix)
+                         (findTemporal '2 (columnToRow matrix))
+                         (getTempRow (findTemporal '2 matrix) (car (findTemporal '2 matrix)))
+                         (getTempRow (findTemporal '2 (columnToRow matrix)) (car (findTemporal '2 (columnToRow matrix))))
+    )
+)
+
+; Función auxiliar de findBestSolution
+; E: matriz horizontal, matriz vertical, fila de solución parcial de matriz horizontal,
+;    fila de solución parcial de matriz vertical
+; S: matriz con la solución final
+(define (findBestSolutionAux matrix1 matrix2 fila1 fila2)
+    (cond ; Caso en donde es mejor vertical
+          ((< (maxRepe '2 fila1) (maxRepe '2 fila2))
+                (checkCorrectSolution (columnToRow matrix2))  
+          )
+          ; Caso en donde es mejor horizontal
+          ((>= (maxRepe '2 fila1) (maxRepe '2 fila2))
+                (checkCorrectSolution matrix1)
+          )      
+    )
+)
+
+; Función para obtener la fila de la solución parcial
+; E: matriz, fila de la matriz ingresada
+; S: fila de la matriz con la solución parcial
+(define (getTempRow matrix fila)
+    (cond
+        ((null? (cdr matrix))
+           (cond
+                ((null? fila)
+                    '()
+                )
+                ((not (equal? (car fila) '3))
+                    (getTempRow matrix (cdr fila))
+                )
+                (else
+                    (car matrix)
+                )
+           ) 
+        )
+        ((null? fila)
+            (getTempRow (cdr matrix) (cadr matrix))
+        )
+        ((not (equal? (car fila) '3))
+            (getTempRow matrix (cdr fila))
+        )
+        (else
+            (car matrix)
         )
     )
 )
@@ -382,36 +454,3 @@
     )
 )
 
-#|
- (findTemporal 2 '( (0 0 0 0 0 0 0 0) 
-                    (0 0 0 0 0 0 0 0) 
-                    (0 0 0 0 0 0 0 0) 
-                    (2 0 0 0 0 0 0 0) 
-                    (2 0 0 0 0 0 0 0) 
-                    (2 0 0 2 2 2 0 0) 
-                    (2 2 2 1 1 1 0 0) 
-                    (1 1 2 1 1 2 2 2)) )
-
-|#
-
-
-
-
-
-(checkCorrectSolution '((0 0 0 0 0 0 0 0) 
-                        (0 0 0 0 0 0 0 0) 
-                        (0 0 0 0 0 0 0 0) 
-                        (2 0 0 0 0 0 0 0) 
-                        (2 0 0 3 0 0 0 0) 
-                        (2 0 0 2 2 2 0 0) 
-                        (2 2 2 1 1 1 0 0) 
-                        (1 1 2 1 1 2 2 2)))
-
-(display '"\n")
-
-
-;(maxRepe '2 '(2 0 0 0 2 2 0 0))
-;------------------------------------------------------
-;------------------------------------------------------
-;------------------------------------------------------
-;---------------------------------------------------------------------------
