@@ -1110,10 +1110,12 @@
       (exit))
 
     ((equal? 2 (checkWinLose matrix))
-      (send loserAlert show #t))
+      (send loserAlert show #t)
+      (exit))
   
     ((equal? 3 (checkWinLose matrix))
-      (send tieAlert show #t))
+      (send tieAlert show #t)
+      (exit))
     )
 )
 
@@ -1234,9 +1236,7 @@
 ;############### TABLERO CON LOGICA Y GUI ####################
 ;#############################################################
 
-
-
-;Override de la clase pasteboard%, de manera que sea posible dibujar el tablero con la funcion draw-4Line-board
+;Override de la clase pasteboard%, de manera que sea posible dibujar el tablero con la funcion draw-4Line-board y pegar las fichitas
 (define 4Line-board%
   (class pasteboard%
     (super-new)
@@ -1244,6 +1244,7 @@
       (when before?
         (draw-4Line-board dc)))
     
+    ;Button mouseclick izquierdo donde empieza el game
     (define/override (on-event e)
       (when (eq? (send e get-event-type) 'left-down)
 
@@ -1258,12 +1259,12 @@
 
         (for ([id (in-hash-keys token-piece-data)])
         (define piece (make-token-piece id))
-        (define piece1 (make-tokenBOT-piece id))
         (send board insert piece (- window-x 15) (- window-y 15))
 
 ;###########################################################################
 ;############### POSICIONES PARA LA FICHA DE LA MAQUINA ####################
 
+    ;1 segundo por turno
     (sleep/yield 1)
     (define rows (length matrix))
     (define columns (length (list-ref matrix 0)))
@@ -2536,10 +2537,12 @@
       (exit))
 
     ((equal? 2 (checkWinLose matrix))
-      (send loserAlert show #t))
+      (send loserAlert show #t)
+      (exit))
   
     ((equal? 3 (checkWinLose matrix))
-      (send tieAlert show #t)))
+      (send tieAlert show #t))
+      (exit))
    ) 
   )
  )
