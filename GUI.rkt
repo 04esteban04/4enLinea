@@ -1345,75 +1345,75 @@
     ;###############SEGUNDA FILA###################
     (when (equal? 2 (list-ref(list-ref matrix 1) 0))
     (define piece (make-tokenBOT-piece id))
-    (send board insert piece 0 30))
+    (send board insert piece 0 35))
     
     (when (equal? 2 (list-ref(list-ref matrix 1) 1)) 
     (define piece (make-tokenBOT-piece id))
-    (send board insert piece 40 30))
+    (send board insert piece 40 35))
     
     (when (equal? 2 (list-ref(list-ref matrix 1) 2)) 
     (define piece (make-tokenBOT-piece id))
-    (send board insert piece 80 30))
+    (send board insert piece 80 35))
     
     (when (equal? 2 (list-ref(list-ref matrix 1) 3)) 
     (define piece (make-tokenBOT-piece id))
-    (send board insert piece 120 30))
+    (send board insert piece 120 35))
     
     (when (equal? 2 (list-ref(list-ref matrix 1) 4)) 
     (define piece (make-tokenBOT-piece id))
-    (send board insert piece 160 30))
+    (send board insert piece 160 35))
     
     (when (equal? 2 (list-ref(list-ref matrix 1) 5)) 
     (define piece (make-tokenBOT-piece id))
-    (send board insert piece 200 30))
+    (send board insert piece 200 35))
 
     (when (equal? 2 (list-ref(list-ref matrix 1) 6)) 
     (define piece (make-tokenBOT-piece id))
-    (send board insert piece 240 30))
+    (send board insert piece 240 35))
 
     (when (equal? 2 (list-ref(list-ref matrix 1) 7)) 
     (define piece (make-tokenBOT-piece id))
-    (send board insert piece 280 30))
+    (send board insert piece 280 35))
 
     (when (>= columns 9) 
       (when (equal? 2 (list-ref(list-ref matrix 1) 8)) 
         (define piece (make-tokenBOT-piece id))
-        (send board insert piece 320 30)))
+        (send board insert piece 320 35)))
     
     (when (>= columns 10) 
       (when (equal? 2 (list-ref(list-ref matrix 1) 9)) 
         (define piece (make-tokenBOT-piece id))
-        (send board insert piece 360 30)))
+        (send board insert piece 360 35)))
 
     (when (>= columns 11) 
       (when (equal? 2 (list-ref(list-ref matrix 1) 10)) 
         (define piece (make-tokenBOT-piece id))
-        (send board insert piece 400 30)))     
+        (send board insert piece 400 35)))     
     
     (when (>= columns 12) 
       (when (equal? 2 (list-ref(list-ref matrix 1) 11)) 
         (define piece (make-tokenBOT-piece id))
-        (send board insert piece 440 30)))
+        (send board insert piece 440 35)))
 
     (when (>= columns 13) 
       (when (equal? 2 (list-ref(list-ref matrix 1) 12)) 
         (define piece (make-tokenBOT-piece id))
-        (send board insert piece 480 30)))
+        (send board insert piece 480 35)))
 
     (when (>= columns 14) 
       (when (equal? 2 (list-ref(list-ref matrix 1) 13)) 
         (define piece (make-tokenBOT-piece id))
-        (send board insert piece 520 30)))
+        (send board insert piece 520 35)))
     
     (when (>= columns 15) 
       (when (equal? 2 (list-ref(list-ref matrix 1) 14)) 
         (define piece (make-tokenBOT-piece id))
-        (send board insert piece 560 30)))
+        (send board insert piece 560 35)))
       
     (when (= columns 16) 
       (when (equal? 2 (list-ref(list-ref matrix 1) 15)) 
         (define piece (make-tokenBOT-piece id))
-        (send board insert piece 600 30)))
+        (send board insert piece 600 35)))
 
     
     ;###############TERCERA FILA###################
