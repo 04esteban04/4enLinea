@@ -108,6 +108,7 @@
 ; Función para verificar si algún jugador ganó
 ; E: matriz
 ; S: número del jugador ganador (0 = no hay ganador aún, 1 = jugador1, 2 = greedyAlgorithm, 3 = empate)
+(provide checkWinLose)
 (define (checkWinLose matrix)
 
     (cond  ; Caso en donde gana el jugador 1

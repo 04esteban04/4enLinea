@@ -246,6 +246,7 @@
 ; Función que ejecuta el algoritmo codicioso
 ; E: matriz
 ; S: matriz con el elemento insertado en la mejor posición encontrada por el algoritmo
+(provide greedyAlgorithm)
 (define (greedyAlgorithm matrix)
     (findBestSolution matrix)
 )

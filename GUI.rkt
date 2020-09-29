@@ -1,6 +1,8 @@
 #lang racket
 (require racket/gui)
 (require "Back/CheckWin-Lose.rkt")
+(require "Back/GreedyAlgorithms.rkt")
+(require "Machine.rkt")
 (require embedded-gui)
 
 
@@ -11,268 +13,7 @@
 ;LA MATRIZ PRINCIPAL
 (define matrix '(()))
 
-
-;FRAME DEL JUEGO
-(define gameWindow (new frame% 
-                [label "4 en Linea"]
-                [width 640]
-                [height 640]
-                [style (list 'no-resize-border)]))
-
-;FRAME DE CONFIGURACIONES
-(define topWindow (new frame% 
-                [label "4 en Linea"]
-                [width 350]
-                [height 310]
-                [style (list 'no-resize-border)]))
-                (send topWindow show #t)
-
-
-(define(drawTitle canvas dc)
-  (send dc set-font (make-object font% 20 "Century Gothic" 'decorative 'normal 'bold))
-  (send dc draw-text "4 EN LINEA" 100 10))
-
-(define title(new canvas% [parent topWindow]
-                           [paint-callback drawTitle]
-                           [style (list 'transparent)]))
-
-;PANEL PARA CONFIGURACIONES
-(define controlPane (new vertical-pane% [parent topWindow]
-                                        [spacing 25]
-                                        [alignment '(center top)]))
-;CONFIGURACIONES PARA LA MATRIZ
-(new message% [parent controlPane]
-              [label "Configuraciones: "])
-
-(define sizePane (new horizontal-pane% [parent controlPane]
-                                       [spacing 5]
-                                       [alignment '(center top)]))
-                           
-
-(define selectRow(new choice% [parent sizePane]
-                              [label "Filas:  "]
-                              [choices '("8" "9" "10" "11" "12" "13" "14" "15" "16")]
-                              ))
-
-(define selectColumn(new choice% [parent sizePane]
-                                 [label "Columnas:  "]
-                                 [choices '("8" "9" "10" "11" "12" "13" "14" "15" "16")]
-                                 ))
-
-(define selectToken(new choice% [parent controlPane]
-                                [label "Ficha:  "]
-                                [choices '("Rojo" "Azul")]
-                                ))
-
-;Boton encargado de guardar las configuraciones y comenzar el juego
-(define accept(new button% [parent controlPane]
-                           [label "Aceptar"]
-                           [callback (lambda (button event)
-                           (define matrixRows (string->number (send selectRow get-string-selection)))
-                           (define matrixCols (string->number (send selectColumn get-string-selection)))
-                           (set! matrix (createMatrix matrixRows matrixCols))
-
-                           (send gameWindow show #t)
-                           (send topWindow show #f))]))
-
-
-;    /################################################\
-;   ||                 SEGUNDA VENTANA                ||
-;    \################################################/
-
-;En esta parte el juego empieza segun las configuraciones con una nueva ventana
-
-(define token (send selectToken get-string-selection))
-
-;Override de la clase pasteboard%, de manera que sea posible dibujar el tablero con la funcion draw-4Line-board
-(define 4Line-board%
-  (class pasteboard%
-    (super-new)
-    (define/override (on-paint before? dc . other)
-      (when before?
-        (draw-4Line-board dc)))
-    
-    (define/override (on-event e)
-      (when (eq? (send e get-event-type) 'left-down)
-        (define window-x (send e get-x))
-        (define window-y (send e get-y))
-        ;(define pToken (send this find-next-selected-snip #f))
-        (for ([id (in-hash-keys token-piece-data)])
-        (define piece (make-token-piece id))
-        (define pieceBOT (make-tokenBOT-piece id))
-        (send board insert piece (- window-x 15) (- window-y 15))
-        (position-piece this pieceBOT e)
-      )
-    )
-  )
-))
-
-;Funcion encargada de dibujar el tablero
-(define (draw-4Line-board dc)
-  (define brush (send the-brush-list find-or-create-brush "gray" 'solid))
-  (define pen (send the-pen-list find-or-create-pen "white" 1 'solid))
-  (define font (send the-font-list find-or-create-font 8 'default 'normal 'normal))
-  (define-values (dc-width dc-height) (send dc get-size))
-  (define cell-width (/ dc-width 16)) ;Tamano maximo **
-  (define cell-height (/ dc-height 16))
-  (define margin 3)
-
-  (send dc clear)
-  (send dc set-brush brush)
-  (send dc set-pen pen)
-  (send dc set-font font)
-
-  (for* ([row (in-range (string->number (send selectRow get-string-selection)))] [col (in-range (string->number (send selectColumn get-string-selection)))])
-    (define-values [x y] (values (* col cell-width) (* row cell-height)))
-    (send dc draw-ellipse x y cell-width cell-height)))
-
-;Tablero
-(define board (new 4Line-board%))
-
-;Canvas de clase editor%, encargado de contener el pasteboard correspondiente
-(define boardContainer (new editor-canvas%
-                       [parent gameWindow]
-                       [style '(no-hscroll no-vscroll)]
-                       [horizontal-inset 0]
-                       [vertical-inset 0]
-                       [editor board]))
-
-;###########################################
-
-;Unicode del Token de los dos jugadores
-(define token-piece-data
-  (hash
-   "Token" #\u2b55))
-
-;Define a la clase tipo snip, para poder pegarlo en el pasteboard
-(define token-piece-snip-class
-  (make-object
-   (class snip-class%
-     (super-new)
-     (send this set-classname "token-snip"))))
-
-(send (get-the-snip-class-list) add token-piece-snip-class)
-
-;
-(define tokenBOT-piece-snip-class
-  (make-object
-   (class snip-class%
-     (super-new)
-     (send this set-classname "tokenBOT-snip"))))
-
-(send (get-the-snip-class-list) add tokenBOT-piece-snip-class)
-
-;Define al objeto Token, de tipo snip class
-(define token-piece%
-  (class snip%
-    (init-field glyph font size [location #f])
-    (super-new)
-    (send this set-snipclass token-piece-snip-class)
-    
-    ;Configura el tamano del Token
-    (define/override (get-extent dc x y width height descent space lspace rspace)
-      (when width (set-box! width size))
-      (when height (set-box! height size))
-      (when descent (set-box! descent 1.0))
-      (when space (set-box! space 1.0))
-      (when lspace (set-box! lspace 1.0))
-      (when rspace (set-box! rspace 1.0)))
-
-     ;Dibuja el token en el board segun el color que eligio el jugador 
-    (define/override (draw dc x y . other)
-    (cond 
-      ((equal? "Rojo" (send selectToken get-string-selection))
-
-      (send dc set-font font)
-      (send dc set-text-foreground "red")
-      (define-values (glyph-width glyph-height baseline extra-space)
-      (send dc get-text-extent glyph font #t))
-      (let ((ox (/ (- size glyph-width) 2))
-            (oy (/ (- size glyph-height 2))))
-        (send dc draw-text glyph (+ x ox) (+ y oy))))
-      
-      ((equal? "Azul" (send selectToken get-string-selection))
-      
-      (send dc set-font font)
-      (send dc set-text-foreground "blue")
-      (define-values (glyph-width glyph-height baseline extra-space)
-      (send dc get-text-extent glyph font #t))
-      (let ((ox (/ (- size glyph-width) 2))
-            (oy (/ (- size glyph-height 2))))
-       
-        (send dc draw-text glyph (+ x ox) (+ y oy))))
-    ))
-  )
-)
-
-(define tokenBOT-piece%
-  (class snip%
-    (init-field glyph font size [location #f])
-    (super-new)
-    (send this set-snipclass tokenBOT-piece-snip-class)
-    
-    ;Configura el tamano del bot Token
-    (define/override (get-extent dc x y width height descent space lspace rspace)
-      (when width (set-box! width size))
-      (when height (set-box! height size))
-      (when descent (set-box! descent 1.0))
-      (when space (set-box! space 1.0))
-      (when lspace (set-box! lspace 1.0))
-      (when rspace (set-box! rspace 1.0)))
-
-     ;Dibuja el token del bot en el board segun el color que eligio el jugador 
-    (define/override (draw dc x y . other)
-    (cond 
-      ((equal? "Rojo" (send selectToken get-string-selection))
-
-      (send dc set-font font)
-      (send dc set-text-foreground "blue")
-      (define-values (glyph-width glyph-height baseline extra-space)
-      (send dc get-text-extent glyph font #t))
-      (let ((ox (/ (- size glyph-width) 2))
-            (oy (/ (- size glyph-height 2))))
-        (send dc draw-text glyph (+ x ox) (+ y oy))))
-      
-      ((equal? "Azul" (send selectToken get-string-selection))
-      
-      (send dc set-font font)
-      (send dc set-text-foreground "red")
-      (define-values (glyph-width glyph-height baseline extra-space)
-      (send dc get-text-extent glyph font #t))
-      (let ((ox (/ (- size glyph-width) 2))
-            (oy (/ (- size glyph-height 2))))
-       
-        (send dc draw-text glyph (+ x ox) (+ y oy))))
-    ))
-  )
-)
-
- ;Crea el Token piece       
-(define (make-token-piece id)
-  (define glyph (hash-ref token-piece-data id))
-  (define font (send the-font-list find-or-create-font 20 'default 'normal 'normal))
-  (new token-piece% [glyph (string glyph)] [font font] [size 35])
-)
-
-(define (make-tokenBOT-piece id)
-  (define glyph (hash-ref token-piece-data id))
-  (define font (send the-font-list find-or-create-font 20 'default 'normal 'normal))
-  (new tokenBOT-piece% [glyph (string glyph)] [font font] [size 35])
-)
-
-
-
-;Crea un total de 16x16 tokens para el jugador
-;(for* ([row (in-range (string->number (send selectRow get-string-selection)))] [col (in-range (string->number (send selectColumn get-string-selection)))])
-  ;(for ([id (in-hash-keys token-piece-data)])
-
-;)
-
-;################################################
-;########## IMPLEMENTACION CON LA LOGICA ########
-;################################################
-
-(define (position-piece board pieceBOT event)
+(define (position-piece event)
   (define-values (x y) (values (send event get-x) (+ 20 (send event get-y))))
   
   (cond
@@ -1011,11 +752,9 @@
     ((and (>= x 560) (<= x 600) (>= y 400) (<= y 440)
       (set! matrix (remplaceValue 1 10 14 matrix))
     ))
-
-    ;REVISAR
+    
     ((and (>= x 600) (<= x 640) (>= y 400) (<= y 440)
       (set! matrix (remplaceValue 1 10 15 matrix))
-      (print matrix)
     ))
 
     ;###########################################
@@ -1354,15 +1093,381 @@
 
     ((and (>= x 600) (<= x 640) (> y 580) (<= y 640)
       (set! matrix (remplaceValue 1 15 15 matrix))
-                (print matrix)
+      (print matrix)
     ))
+
+    (else
+      (print "Error")
   
   )
-  ;(send board insert pieceBOT 1 1)
-  ;(print(checkWin-Lose matrix))
-(print x)
-(print y)
-
+  
 )
+    
+;######################################
+;####  CHECK WIN-LOSE #################
+;######################################
+    (cond
+    ((equal? 1 (checkWinLose matrix))
+      (send winnerAlert show #t)
+      (exit))
+
+    ((equal? 2 (checkWinLose matrix))
+      (send loserAlert show #t))
+  
+    ((equal? 3 (checkWinLose matrix))
+      (send tieAlert show #t))
+    )
+)
+
+
+
+
+;FRAME DEL JUEGO
+(define gameWindow (new frame% 
+                [label "4 en Linea"]
+                [width 640]
+                [height 640]
+                [style (list 'no-resize-border)]))
+
+(define winnerAlert (new dialog% [label "Alerta"]
+                 [parent gameWindow]
+                 [width 300]
+                 [height 300]))
+
+(define loserAlert (new dialog% [label "Alerta"]
+                 [parent gameWindow]
+                 [width 300]
+                 [height 300]))
+
+(define tieAlert (new dialog% [label "Alerta"]
+                 [parent gameWindow]
+                 [width 300]
+                 [height 300]))
+
+(define winnerCanvas (new canvas% [parent winnerAlert]
+                                  [paint-callback 
+                                  (lambda (canvas dc)
+                                  (send dc set-font (make-object font% 20 "Century Gothic" 'decorative 'normal 'bold))
+                                  (send dc draw-text "GANASTE!" 10 10)
+                                  (let ((winnerPicture (make-object bitmap% "3enlinea/4enLinea.png")))
+                                  (send dc draw-bitmap winnerPicture 30 50)))]))
+
+
+(define loserCanvas (new canvas% [parent loserAlert]
+                                  [paint-callback 
+                                  (lambda (canvas dc)
+                                  (send dc set-font (make-object font% 20 "Century Gothic" 'decorative 'normal 'bold))
+                                  (send dc draw-text "PERDISTE!" 10 10)
+                                  (let ((winnerPicture (make-object bitmap% "3enlinea/4enLinea.png")))
+                                  (send dc draw-bitmap winnerPicture 30 50)))]))
+
+
+(define tieCanvas (new canvas% [parent tieAlert]
+                                  [paint-callback 
+                                  (lambda (canvas dc)
+                                  (send dc set-font (make-object font% 20 "Century Gothic" 'decorative 'normal 'bold))
+                                  (send dc draw-text "EMPATE!" 10 10)
+                                  (let ((winnerPicture (make-object bitmap% "3enlinea/4enLinea.png")))
+                                  (send dc draw-bitmap winnerPicture 30 50)))]))
+
+
+;FRAME DE CONFIGURACIONES
+(define topWindow (new frame% 
+                [label "4 en Linea"]
+                [width 350]
+                [height 310]
+                [style (list 'no-resize-border)]))
+                (send topWindow show #t)
+
+
+(define(drawTitle canvas dc)
+  (send dc set-font (make-object font% 20 "Century Gothic" 'decorative 'normal 'bold))
+  (send dc draw-text "4 EN LINEA" 100 10))
+
+(define title(new canvas% [parent topWindow]
+                           [paint-callback drawTitle]
+                           [style (list 'transparent)]))
+
+;PANEL PARA CONFIGURACIONES
+(define controlPane (new vertical-pane% [parent topWindow]
+                                        [spacing 25]
+                                        [alignment '(center top)]))
+;CONFIGURACIONES PARA LA MATRIZ
+(new message% [parent controlPane]
+              [label "Configuraciones: "])
+
+(define sizePane (new horizontal-pane% [parent controlPane]
+                                       [spacing 5]
+                                       [alignment '(center top)]))
+                           
+
+(define selectRow(new choice% [parent sizePane]
+                              [label "Filas:  "]
+                              [choices '("8" "9" "10" "11" "12" "13" "14" "15" "16")]
+                              ))
+
+(define selectColumn(new choice% [parent sizePane]
+                                 [label "Columnas:  "]
+                                 [choices '("8" "9" "10" "11" "12" "13" "14" "15" "16")]
+                                 ))
+
+(define selectToken(new choice% [parent controlPane]
+                                [label "Ficha:  "]
+                                [choices '("Rojo" "Azul")]
+                                ))
+
+;Boton encargado de guardar las configuraciones y comenzar el juego
+(define accept(new button% [parent controlPane]
+                           [label "Aceptar"]
+                           [callback (lambda (button event)
+                           (define matrixRows (string->number (send selectRow get-string-selection)))
+                           (define matrixCols (string->number (send selectColumn get-string-selection)))
+                           (set! matrix (createMatrix matrixRows matrixCols))
+                           (send gameWindow show #t)
+                           (send topWindow show #f))]))
+
+
+;    /################################################\
+;   ||                 SEGUNDA VENTANA                ||
+;    \################################################/
+
+;En esta parte el juego empieza segun las configuraciones con una nueva ventana
+
+(define token (send selectToken get-string-selection))
+
+;Override de la clase pasteboard%, de manera que sea posible dibujar el tablero con la funcion draw-4Line-board
+
+(define 4Line-board%
+  (class pasteboard%
+    (super-new)
+    (define/override (on-paint before? dc . other)
+      (when before?
+        (draw-4Line-board dc)))
+    
+    (define/override (on-event e)
+      (when (eq? (send e get-event-type) 'left-down)
+
+        (position-piece e)
+
+        (sleep/yield 2)
+        (set! matrix (greedyAlgorithm matrix))
+        (print matrix)
+       
+        (define window-x (send e get-x))
+        (define window-y (send e get-y))
+
+        (for ([id (in-hash-keys token-piece-data)])
+        (define piece (make-token-piece id))
+        (define pieceBOT (make-tokenBOT-piece id))
+        (send board insert piece (- window-x 15) (- window-y 15))
+
+    ;#####################
+
+    (sleep/yield 1)
+    (define rows (length matrix))
+    (define columns (length (list-ref matrix 0)))
+
+    (define x_bot 0)
+    (define y_bot 0)
+
+    (when (equal? 2 (list-ref(list-ref matrix 6) 0))
+    (set! x_bot 0) (set! y_bot 230))
+    
+    (when (equal? 2 (list-ref(list-ref matrix 6) 1)) 
+    (set! x_bot 40) (set! y_bot 230))
+    
+    (when (equal? 2 (list-ref(list-ref matrix 6) 2)) 
+    (set! x_bot 80) (set! y_bot 230))
+    
+    (when (equal? 2 (list-ref(list-ref matrix 6) 3)) 
+    (set! x_bot 120) (set! y_bot 230))
+    
+    (when (equal? 2 (list-ref(list-ref matrix 6) 4)) 
+    (set! x_bot 160) (set! y_bot 230))
+
+    (when (equal? 2 (list-ref(list-ref matrix 6) 5)) 
+    (set! x_bot 200) (set! y_bot 230))
+
+    (when (equal? 2 (list-ref(list-ref matrix 6) 6)) 
+    (set! x_bot 240) (set! y_bot 230))
+
+    (when (equal? 2 (list-ref(list-ref matrix 6) 7)) 
+    (set! x_bot 280) (set! y_bot 230))
+
+    ;(cond
+      ;((equal? 9 columns)
+        ;(when (equal? 2 (list-ref(list-ref matrix 6) 8)) 
+        ;(set! x_bot 320) (set! y_bot 230)))
+   ; )
+    ;(when (equal? 2 (list-ref(list-ref matrix 6) 7)) 
+    ;(set! x_bot 400) (set! y_bot 230))
+    
+    (send board insert pieceBOT x_bot y_bot)
+    )
+  ) 
+)
+)
+)
+
+;Funcion encargada de dibujar el tablero
+(define (draw-4Line-board dc)
+  (define brush (send the-brush-list find-or-create-brush "gray" 'solid))
+  (define pen (send the-pen-list find-or-create-pen "white" 1 'solid))
+  (define font (send the-font-list find-or-create-font 8 'default 'normal 'normal))
+  (define-values (dc-width dc-height) (send dc get-size))
+  (define cell-width (/ dc-width 16)) ;Tamano maximo **
+  (define cell-height (/ dc-height 16))
+  (define margin 3)
+
+  (send dc clear)
+  (send dc set-brush brush)
+  (send dc set-pen pen)
+  (send dc set-font font)
+
+  (for* ([row (in-range (string->number (send selectRow get-string-selection)))] [col (in-range (string->number (send selectColumn get-string-selection)))])
+    (define-values [x y] (values (* col cell-width) (* row cell-height)))
+    (send dc draw-ellipse x y cell-width cell-height)))
+
+;Tablero
+(define board (new 4Line-board%))
+
+;Canvas de clase editor%, encargado de contener el pasteboard correspondiente
+(define boardContainer (new editor-canvas%
+                       [parent gameWindow]
+                       [style '(no-hscroll no-vscroll)]
+                       [horizontal-inset 0]
+                       [vertical-inset 0]
+                       [editor board]))
+
+;###########################################
+
+;Unicode del Token de los dos jugadores
+(define token-piece-data
+  (hash
+   "Token" #\u2b55))
+
+;Define a la clase tipo snip, para poder pegarlo en el pasteboard
+(define token-piece-snip-class
+  (make-object
+   (class snip-class%
+     (super-new)
+     (send this set-classname "token-snip"))))
+
+(send (get-the-snip-class-list) add token-piece-snip-class)
+
+;
+(define tokenBOT-piece-snip-class
+  (make-object
+   (class snip-class%
+     (super-new)
+     (send this set-classname "tokenBOT-snip"))))
+
+(send (get-the-snip-class-list) add tokenBOT-piece-snip-class)
+
+;Define al objeto Token, de tipo snip class
+(define token-piece%
+  (class snip%
+    (init-field glyph font size [location #f])
+    (super-new)
+    (send this set-snipclass token-piece-snip-class)
+    
+    ;Configura el tamano del Token
+    (define/override (get-extent dc x y width height descent space lspace rspace)
+      (when width (set-box! width size))
+      (when height (set-box! height size))
+      (when descent (set-box! descent 1.0))
+      (when space (set-box! space 1.0))
+      (when lspace (set-box! lspace 1.0))
+      (when rspace (set-box! rspace 1.0)))
+
+     ;Dibuja el token en el board segun el color que eligio el jugador 
+    (define/override (draw dc x y . other)
+    (cond 
+      ((equal? "Rojo" (send selectToken get-string-selection))
+
+      (send dc set-font font)
+      (send dc set-text-foreground "red")
+      (define-values (glyph-width glyph-height baseline extra-space)
+      (send dc get-text-extent glyph font #t))
+      (let ((ox (/ (- size glyph-width) 2))
+            (oy (/ (- size glyph-height 2))))
+        (send dc draw-text glyph (+ x ox) (+ y oy))))
+      
+      ((equal? "Azul" (send selectToken get-string-selection))
+      
+      (send dc set-font font)
+      (send dc set-text-foreground "blue")
+      (define-values (glyph-width glyph-height baseline extra-space)
+      (send dc get-text-extent glyph font #t))
+      (let ((ox (/ (- size glyph-width) 2))
+            (oy (/ (- size glyph-height 2))))
+       
+        (send dc draw-text glyph (+ x ox) (+ y oy))))
+    ))
+  )
+)
+
+(define tokenBOT-piece%
+  (class snip%
+    (init-field glyph font size [location #f])
+    (super-new)
+    (send this set-snipclass tokenBOT-piece-snip-class)
+    
+    ;Configura el tamano del bot Token
+    (define/override (get-extent dc x y width height descent space lspace rspace)
+      (when width (set-box! width size))
+      (when height (set-box! height size))
+      (when descent (set-box! descent 1.0))
+      (when space (set-box! space 1.0))
+      (when lspace (set-box! lspace 1.0))
+      (when rspace (set-box! rspace 1.0)))
+
+     ;Dibuja el token del bot en el board segun el color que eligio el jugador 
+    (define/override (draw dc x y . other)
+    (cond 
+      ((equal? "Rojo" (send selectToken get-string-selection))
+
+      (send dc set-font font)
+      (send dc set-text-foreground "blue")
+      (define-values (glyph-width glyph-height baseline extra-space)
+      (send dc get-text-extent glyph font #t))
+      (let ((ox (/ (- size glyph-width) 2))
+            (oy (/ (- size glyph-height 2))))
+        (send dc draw-text glyph (+ x ox) (+ y oy))))
+      
+      ((equal? "Azul" (send selectToken get-string-selection))
+      
+      (send dc set-font font)
+      (send dc set-text-foreground "red")
+      (define-values (glyph-width glyph-height baseline extra-space)
+      (send dc get-text-extent glyph font #t))
+      (let ((ox (/ (- size glyph-width) 2))
+            (oy (/ (- size glyph-height 2))))
+       
+        (send dc draw-text glyph (+ x ox) (+ y oy))))
+    ))
+  )
+)
+
+ ;Crea el Token piece       
+(define (make-token-piece id)
+  (define glyph (hash-ref token-piece-data id))
+  (define font (send the-font-list find-or-create-font 20 'default 'normal 'normal))
+  (new token-piece% [glyph (string glyph)] [font font] [size 35])
+)
+
+(define (make-tokenBOT-piece id)
+  (define glyph (hash-ref token-piece-data id))
+  (define font (send the-font-list find-or-create-font 20 'default 'normal 'normal))
+  (new tokenBOT-piece% [glyph (string glyph)] [font font] [size 35])
+)
+
+
+;################################################
+;########## IMPLEMENTACION CON LA LOGICA ########
+;################################################
+
+
+
 
 
