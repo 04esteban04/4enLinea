@@ -11,1112 +11,320 @@
 ;LA MATRIZ PRINCIPAL
 (define matrix '(()))
 
-(define (position-piece event)
-  (define-values (x y) (values (send event get-x) (+ 20 (send event get-y))))
-  
-  (cond
-    ;######################################
-    ;########### PRIMERA FILA #############
+(define changeValue #f)
 
-    ((and (>= x 0) (<= x 40) (>= y 0) (<= y 40)
-      (set! matrix (remplaceValue 1 0 0 matrix))
-    ))
-      
-    ((and (>= x 40) (<= x 80) (>= y 0) (<= y 40)
-      (set! matrix (remplaceValue 1 0 1 matrix))
-    ))
+(define-values (mouseX mouseY) (values '0 '0))
 
-    ((and (>= x 80) (<= x 120) (>= y 0) (<= y 40)
-      (set! matrix (remplaceValue 1 0 2 matrix))
-    ))
+(define listaMatrizTemp '())
 
-    ((and (>= x 120) (<= x 160) (>= y 0) (<= y 40)
-      (set! matrix (remplaceValue 1 0 3 matrix))
-    ))
-
-    ((and (>= x 160) (<= x 200) (>= y 0) (<= y 40)
-      (set! matrix (remplaceValue 1 0 4 matrix))
-    ))
-
-    ((and (>= x 200) (<= x 240) (>= y 0) (<= y 40)
-      (set! matrix (remplaceValue 1 0 5 matrix))
-    ))
-    
-    ((and (>= x 240) (<= x 280) (>= y 0) (<= y 40)
-      (set! matrix (remplaceValue 1 0 6 matrix))
-    ))
-    
-    ((and (>= x 280) (<= x 320) (>= y 0) (<= y 40)
-      (set! matrix (remplaceValue 1 0 7 matrix))
-    ))
-    
-    ((and (>= x 320) (<= x 360) (>= y 0) (<= y 40)
-      (set! matrix (remplaceValue 1 0 8 matrix))
-    ))
-
-    ((and (>= x 360) (<= x 400) (>= y 0) (<= y 40)
-      (set! matrix (remplaceValue 1 0 9 matrix))
-    ))
-
-    ((and (>= x 400) (<= x 440) (>= y 0) (<= y 40)
-      (set! matrix (remplaceValue 1 0 10 matrix))
-    ))
-
-    ((and (>= x 440) (<= x 480) (>= y 0) (<= y 40)
-      (set! matrix (remplaceValue 1 0 11 matrix))
-    ))
-
-    ((and (>= x 480) (<= x 520) (>= y 0) (<= y 40)
-      (set! matrix (remplaceValue 1 0 12 matrix))
-    ))
-
-    ((and (>= x 520) (<= x 560) (>= y 0) (<= y 40)
-      (set! matrix (remplaceValue 1 0 13 matrix))
-    ))
-
-    ((and (>= x 560) (<= x 600) (>= y 0) (<= y 40)
-      (set! matrix (remplaceValue 1 0 14 matrix))
-    ))
-
-    ((and (>= x 600) (<= x 640) (>= y 0) (<= y 40)
-      (set! matrix (remplaceValue 1 0 15 matrix))
-    ))
-
-    ;######################################
-    ;########### SEGUNDA FILA #############
-
-    ((and (>= x 0) (<= x 40) (>= y 40) (<= y 80)
-      (set! matrix (remplaceValue 1 1 0 matrix))
-    ))
-      
-    ((and (>= x 40) (<= x 80) (>= y 40) (<= y 80)
-      (set! matrix (remplaceValue 1 1 1 matrix))
-    ))
-
-    ((and (>= x 80) (<= x 120) (>= y 40) (<= y 80)
-      (set! matrix (remplaceValue 1 1 2 matrix))
-    ))
-
-    ((and (>= x 120) (<= x 160) (>= y 40) (<= y 80)
-      (set! matrix (remplaceValue 1 1 3 matrix))
-    ))
-
-    ((and (>= x 160) (<= x 200) (>= y 40) (<= y 80)
-      (set! matrix (remplaceValue 1 1 4 matrix))
-    ))
-
-    ((and (>= x 200) (<= x 240) (>= y 40) (<= y 80)
-      (set! matrix (remplaceValue 1 1 5 matrix))
-    ))
-    
-    ((and (>= x 240) (<= x 280) (>= y 40) (<= y 80)
-      (set! matrix (remplaceValue 1 1 6 matrix))
-    ))
-    
-    ((and (>= x 280) (<= x 320) (>= y 40) (<= y 80)
-      (set! matrix (remplaceValue 1 1 7 matrix))
-    ))
-    
-    ((and (>= x 320) (<= x 360) (>= y 40) (<= y 80)
-      (set! matrix (remplaceValue 1 1 8 matrix))
-    ))
-
-    ((and (>= x 360) (<= x 400) (>= y 40) (<= y 80)
-      (set! matrix (remplaceValue 1 1 9 matrix))
-    ))
-
-    ((and (>= x 400) (<= x 440) (>= y 40) (<= y 80)
-      (set! matrix (remplaceValue 1 1 10 matrix))
-    ))
-
-    ((and (>= x 440) (<= x 480) (>= y 40) (<= y 80)
-      (set! matrix (remplaceValue 1 1 11 matrix))
-    ))
-
-    ((and (>= x 480) (<= x 520) (>= y 40) (<= y 80)
-      (set! matrix (remplaceValue 1 1 12 matrix))
-    ))
-
-    ((and (>= x 520) (<= x 560) (>= y 40) (<= y 80)
-      (set! matrix (remplaceValue 1 1 13 matrix))
-    ))
-
-    ((and (>= x 560) (<= x 600) (>= y 40) (<= y 80)
-      (set! matrix (remplaceValue 1 1 14 matrix))
-    ))
-
-    ((and (>= x 600) (<= x 640) (>= y 40) (<= y 80)
-      (set! matrix (remplaceValue 1 1 15 matrix))
-    ))
-    
-    ;######################################
-    ;########### TERCERA FILA #############
-
-     ((and (>= x 0) (<= x 40) (>= y 80) (<= y 120)
-      (set! matrix (remplaceValue 1 2 0 matrix))
-    ))
-      
-    ((and (>= x 40) (<= x 80) (>= y 80) (<= y 120)
-      (set! matrix (remplaceValue 1 2 1 matrix))
-    ))
-
-    ((and (>= x 80) (<= x 120) (>= y 80) (<= y 120)
-      (set! matrix (remplaceValue 1 2 2 matrix))
-      
-    ))
-
-    ((and (>= x 120) (<= x 160) (>= y 80) (<= y 120)
-      (set! matrix (remplaceValue 1 2 3 matrix))
-    ))
-
-    ((and (>= x 160) (<= x 200) (>= y 80) (<= y 120)
-      (set! matrix (remplaceValue 1 2 4 matrix))
-    ))
-
-    ((and (>= x 200) (<= x 240) (>= y 80) (<= y 120)
-      (set! matrix (remplaceValue 1 2 5 matrix))
-    ))
-    
-    ((and (>= x 240) (<= x 280) (>= y 80) (<= y 120)
-      (set! matrix (remplaceValue 1 2 6 matrix))
-    ))
-    
-    ((and (>= x 280) (<= x 320) (>= y 80) (<= y 120)
-      (set! matrix (remplaceValue 1 2 7 matrix))
-    ))
-    
-    ((and (>= x 320) (<= x 360) (>= y 80) (<= y 120)
-      (set! matrix (remplaceValue 1 2 8 matrix))
-    ))
-
-    ((and (>= x 360) (<= x 400) (>= y 80) (<= y 120)
-      (set! matrix (remplaceValue 1 2 9 matrix))
-    ))
-
-    ((and (>= x 400) (<= x 440) (>= y 80) (<= y 120)
-      (set! matrix (remplaceValue 1 2 10 matrix))
-    ))
-
-    ((and (>= x 440) (<= x 480) (>= y 80) (<= y 120)
-      (set! matrix (remplaceValue 1 2 11 matrix))
-    ))
-
-    ((and (>= x 480) (<= x 520) (>= y 80) (<= y 120)
-      (set! matrix (remplaceValue 1 2 12 matrix))
-    ))
-
-    ((and (>= x 520) (<= x 560) (>= y 80) (<= y 120)
-      (set! matrix (remplaceValue 1 2 13 matrix))
-    ))
-
-    ((and (>= x 560) (<= x 600) (>= y 80) (<= y 120)
-      (set! matrix (remplaceValue 1 2 14 matrix))
-    ))
-
-    ((and (>= x 600) (<= x 640) (>= y 80) (<= y 120)
-      (set! matrix (remplaceValue 1 2 15 matrix))
-    ))
-    ;######################################
-    ;########### CUARTA FILA ##############
-
-    ((and (>= x 0) (<= x 40) (>= y 120) (<= y 160)
-      (set! matrix (remplaceValue 1 3 0 matrix))
-    ))
-      
-    ((and (>= x 40) (<= x 80) (>= y 120) (<= y 160)
-      (set! matrix (remplaceValue 1 3 1 matrix))
-    ))
-
-    ((and (>= x 80) (<= x 120) (>= y 120) (<= y 160)
-      (set! matrix (remplaceValue 1 3 2 matrix))
-    ))
-
-    ((and (>= x 120) (<= x 160) (>= y 120) (<= y 160)
-      (set! matrix (remplaceValue 1 3 3 matrix))
-    ))
-
-    ((and (>= x 160) (<= x 200) (>= y 120) (<= y 160)
-      (set! matrix (remplaceValue 1 3 4 matrix))
-    ))
-
-    ((and (>= x 200) (<= x 240) (>= y 120) (<= y 160)
-      (set! matrix (remplaceValue 1 3 5 matrix))
-    ))
-    
-    ((and (>= x 240) (<= x 280) (>= y 120) (<= y 160)
-      (set! matrix (remplaceValue 1 3 6 matrix))
-    ))
-    
-    ((and (>= x 280) (<= x 320) (>= y 120) (<= y 160)
-      (set! matrix (remplaceValue 1 3 7 matrix))
-    ))
-    
-    ((and (>= x 320) (<= x 360) (>= y 120) (<= y 160)
-      (set! matrix (remplaceValue 1 3 8 matrix))
-    ))
-
-    ((and (>= x 360) (<= x 400) (>= y 120) (<= y 160)
-      (set! matrix (remplaceValue 1 3 9 matrix))
-    ))
-
-    ((and (>= x 400) (<= x 440) (>= y 120) (<= y 160)
-      (set! matrix (remplaceValue 1 3 10 matrix))
-    ))
-
-    ((and (>= x 440) (<= x 480) (>= y 120) (<= y 160)
-      (set! matrix (remplaceValue 1 3 11 matrix))
-    ))
-
-    ((and (>= x 480) (<= x 520) (>= y 120) (<= y 160)
-      (set! matrix (remplaceValue 1 3 12 matrix))
-    ))
-
-    ((and (>= x 520) (<= x 560) (>= y 120) (<= y 160)
-      (set! matrix (remplaceValue 1 3 13 matrix))
-    ))
-
-    ((and (>= x 560) (<= x 600) (>= y 120) (<= y 160)
-      (set! matrix (remplaceValue 1 3 14 matrix))
-    ))
-
-    ((and (>= x 600) (<= x 640) (>= y 120) (<= y 160)
-      (set! matrix (remplaceValue 1 3 15 matrix))
-    ))
-
-    ;######################################
-    ;########### QUINTA FILA ##############
-
-    ((and (>= x 0) (<= x 40) (>= y 160) (<= y 200)
-      (set! matrix (remplaceValue 1 4 0 matrix))
-    ))
-      
-    ((and (>= x 40) (<= x 80) (>= y 160) (<= y 200)
-      (set! matrix (remplaceValue 1 4 1 matrix))
-    ))
-
-    ((and (>= x 80) (<= x 120) (>= y 160) (<= y 200)
-      (set! matrix (remplaceValue 1 4 2 matrix))
-    ))
-
-    ((and (>= x 120) (<= x 160) (>= y 160) (<= y 200)
-      (set! matrix (remplaceValue 1 4 3 matrix))
-    ))
-
-    ((and (>= x 160) (<= x 200) (>= y 160) (<= y 200)
-      (set! matrix (remplaceValue 1 4 4 matrix))
-    ))
-
-    ((and (>= x 200) (<= x 240) (>= y 160) (<= y 200)
-      (set! matrix (remplaceValue 1 4 5 matrix))
-    ))
-    
-    ((and (>= x 240) (<= x 280) (>= y 160) (<= y 200)
-      (set! matrix (remplaceValue 1 4 6 matrix))
-    ))
-    
-    ((and (>= x 280) (<= x 320) (>= y 160) (<= y 200)
-      (set! matrix (remplaceValue 1 4 7 matrix))
-    ))
-    
-    ((and (>= x 320) (<= x 360) (>= y 160) (<= y 200)
-      (set! matrix (remplaceValue 1 4 8 matrix))
-    ))
-
-    ((and (>= x 360) (<= x 400) (>= y 160) (<= y 200)
-      (set! matrix (remplaceValue 1 4 9 matrix))
-    ))
-
-    ((and (>= x 400) (<= x 440) (>= y 160) (<= y 200)
-      (set! matrix (remplaceValue 1 4 10 matrix))
-    ))
-
-    ((and (>= x 440) (<= x 480) (>= y 160) (<= y 200)
-      (set! matrix (remplaceValue 1 4 11 matrix))
-    ))
-
-    ((and (>= x 480) (<= x 520) (>= y 160) (<= y 200)
-      (set! matrix (remplaceValue 1 4 12 matrix))
-    ))
-
-    ((and (>= x 520) (<= x 560) (>= y 160) (<= y 200)
-      (set! matrix (remplaceValue 1 4 13 matrix))
-    ))
-
-    ((and (>= x 560) (<= x 600) (>= y 160) (<= y 200)
-      (set! matrix (remplaceValue 1 4 14 matrix))
-    ))
-
-    ((and (>= x 600) (<= x 640) (>= y 160) (<= y 200)
-      (set! matrix (remplaceValue 1 4 15 matrix))
-    ))
-
-    
-    ;###########################################
-    ;########### SEXTA FILA ###################
-
-    ((and (>= x 0) (<= x 40) (>= y 200) (<= y 240)
-      (set! matrix (remplaceValue 1 5 0 matrix))
-    ))
-      
-    ((and (>= x 40) (<= x 80) (>= y 200) (<= y 240)
-      (set! matrix (remplaceValue 1 5 1 matrix))
-    ))
-
-    ((and (>= x 80) (<= x 120) (>= y 200) (<= y 240)
-      (set! matrix (remplaceValue 1 5 2 matrix))
-    ))
-
-    ((and (>= x 120) (<= x 160) (>= y 200) (<= y 240)
-      (set! matrix (remplaceValue 1 5 3 matrix))
-    ))
-
-    ((and (>= x 160) (<= x 200) (>= y 200) (<= y 240)
-      (set! matrix (remplaceValue 1 5 4 matrix))
-    ))
-
-    ((and (>= x 200) (<= x 240) (>= y 200) (<= y 240)
-      (set! matrix (remplaceValue 1 5 5 matrix))
-    ))
-    
-    ((and (>= x 240) (<= x 280) (>= y 200) (<= y 240)
-      (set! matrix (remplaceValue 1 5 6 matrix))
-    ))
-    
-    ((and (>= x 280) (<= x 320) (>= y 200) (<= y 240)
-      (set! matrix (remplaceValue 1 5 7 matrix))
-    ))
-    
-    ((and (>= x 320) (<= x 360) (>= y 200) (<= y 240)
-      (set! matrix (remplaceValue 1 5 8 matrix))
-    ))
-
-    ((and (>= x 360) (<= x 400) (>= y 200) (<= y 240)
-      (set! matrix (remplaceValue 1 5 9 matrix))
-    ))
-
-    ((and (>= x 400) (<= x 440) (>= y 200) (<= y 240)
-      (set! matrix (remplaceValue 1 5 10 matrix))
-    ))
-
-    ((and (>= x 440) (<= x 480) (>= y 200) (<= y 240)
-      (set! matrix (remplaceValue 1 5 11 matrix))
-    ))
-
-    ((and (>= x 480) (<= x 520) (>= y 200) (<= y 240)
-      (set! matrix (remplaceValue 1 5 12 matrix))
-    ))
-
-    ((and (>= x 520) (<= x 560) (>= y 200) (<= y 240)
-      (set! matrix (remplaceValue 1 5 13 matrix))
-    ))
-
-    ((and (>= x 560) (<= x 600) (>= y 200) (<= y 240)
-      (set! matrix (remplaceValue 1 5 14 matrix))
-    ))
-
-    ((and (>= x 600) (<= x 640) (>= y 200) (<= y 240)
-      (set! matrix (remplaceValue 1 5 15 matrix))
-    ))
-
-    ;###########################################
-    ;########### SEPTIMA FILA ###################
-
-    ((and (>= x 0) (<= x 40) (>= y 240) (<= y 280)
-      (set! matrix (remplaceValue 1 6 0 matrix))
-    ))
-      
-    ((and (>= x 40) (<= x 80) (>= y 240) (<= y 280)
-      (set! matrix (remplaceValue 1 6 1 matrix))
-    ))
-
-    ((and (>= x 80) (<= x 120) (>= y 240) (<= y 280)
-      (set! matrix (remplaceValue 1 6 2 matrix))
-    ))
-
-    ((and (>= x 120) (<= x 160) (>= y 240) (<= y 280)
-      (set! matrix (remplaceValue 1 6 3 matrix))
-    ))
-
-    ((and (>= x 160) (<= x 200) (>= y 240) (<= y 280)
-      (set! matrix (remplaceValue 1 6 4 matrix))
-    ))
-
-    ((and (>= x 200) (<= x 240) (>= y 240) (<= y 280)
-      (set! matrix (remplaceValue 1 6 5 matrix))
-    ))
-    
-    ((and (>= x 240) (<= x 280) (>= y 240) (<= y 280)
-      (set! matrix (remplaceValue 1 6 6 matrix))
-    ))
-    
-    ((and (>= x 280) (<= x 320) (>= y 240) (<= y 280)
-      (set! matrix (remplaceValue 1 6 7 matrix))
-    ))
-    
-    ((and (>= x 320) (<= x 360) (>= y 240) (<= y 280)
-      (set! matrix (remplaceValue 1 6 8 matrix))
-    ))
-
-    ((and (>= x 360) (<= x 400) (>= y 240) (<= y 280)
-      (set! matrix (remplaceValue 1 6 9 matrix))
-    ))
-
-    ((and (>= x 400) (<= x 440) (>= y 240) (<= y 280)
-      (set! matrix (remplaceValue 1 6 10 matrix))
-    ))
-
-    ((and (>= x 440) (<= x 480) (>= y 240) (<= y 280)
-      (set! matrix (remplaceValue 1 6 11 matrix))
-    ))
-
-    ((and (>= x 480) (<= x 520) (>= y 240) (<= y 280)
-      (set! matrix (remplaceValue 1 6 12 matrix))
-    ))
-
-    ((and (>= x 520) (<= x 560) (>= y 240) (<= y 280)
-      (set! matrix (remplaceValue 1 6 13 matrix))
-    ))
-
-    ((and (>= x 560) (<= x 600) (>= y 240) (<= y 280)
-      (set! matrix (remplaceValue 1 6 14 matrix))
-    ))
-
-    ((and (>= x 600) (<= x 640) (>= y 240) (<= y 280)
-      (set! matrix (remplaceValue 1 6 15 matrix))
-    ))
-
-  
-    ;###########################################
-    ;########### OCTAVA FILA ###################
-
-    ((and (>= x 0) (<= x 40) (>= y 280) (<= y 320)
-      (set! matrix (remplaceValue 1 7 0 matrix))
-    ))
-      
-    ((and (>= x 40) (<= x 80) (>= y 280) (<= y 320)
-      (set! matrix (remplaceValue 1 7 1 matrix))
-    ))
-
-    ((and (>= x 80) (<= x 120) (>= y 280) (<= y 320)
-      (set! matrix (remplaceValue 1 7 2 matrix))
-    ))
-
-    ((and (>= x 120) (<= x 160) (>= y 280) (<= y 320)
-      (set! matrix (remplaceValue 1 7 3 matrix))
-    ))
-
-    ((and (>= x 160) (<= x 200) (>= y 280) (<= y 320)
-      (set! matrix (remplaceValue 1 7 4 matrix))
-    ))
-
-    ((and (>= x 200) (<= x 240) (>= y 280) (<= y 320)
-      (set! matrix (remplaceValue 1 7 5 matrix))
-    ))
-    
-    ((and (>= x 240) (<= x 280) (>= y 280) (<= y 320)
-      (set! matrix (remplaceValue 1 7 6 matrix))
-    ))
-    
-    ((and (>= x 280) (<= x 320) (>= y 280) (<= y 320)
-      (set! matrix (remplaceValue 1 7 7 matrix))
-    ))
-    
-    ((and (>= x 320) (<= x 360) (>= y 280) (<= y 320)
-      (set! matrix (remplaceValue 1 7 8 matrix))
-    ))
-
-    ((and (>= x 360) (<= x 400) (>= y 280) (<= y 320)
-      (set! matrix (remplaceValue 1 7 9 matrix))
-    ))
-
-    ((and (>= x 400) (<= x 440) (>= y 280) (<= y 320)
-      (set! matrix (remplaceValue 1 7 10 matrix))
-    ))
-
-    ((and (>= x 440) (<= x 480) (>= y 280) (<= y 320)
-      (set! matrix (remplaceValue 1 7 11 matrix))
-    ))
-
-    ((and (>= x 480) (<= x 520) (>= y 280) (<= y 320)
-      (set! matrix (remplaceValue 1 7 12 matrix))
-    ))
-
-    ((and (>= x 520) (<= x 560) (>= y 280) (<= y 320)
-      (set! matrix (remplaceValue 1 7 13 matrix))
-    ))
-
-    ((and (>= x 560) (<= x 600) (>= y 280) (<= y 320)
-      (set! matrix (remplaceValue 1 7 14 matrix))
-    ))
-
-    ((and (>= x 600) (<= x 640) (>= y 270) (<= y 320)
-      (set! matrix (remplaceValue 1 7 15 matrix))
-    ))
-
-    ;###########################################
-    ;########### NOVENA FILA ###################
-
-    ((and (>= x 0) (<= x 40) (>= y 320) (<= y 360)
-      (set! matrix (remplaceValue 1 8 0 matrix))
-    ))
-      
-    ((and (>= x 40) (<= x 80) (>= y 320) (<= y 360)
-      (set! matrix (remplaceValue 1 8 1 matrix))
-    ))
-
-    ((and (>= x 80) (<= x 120) (>= y 320) (<= y 360)
-      (set! matrix (remplaceValue 1 8 2 matrix))
-    ))
-
-    ((and (>= x 120) (<= x 160) (>= y 320) (<= y 360)
-      (set! matrix (remplaceValue 1 8 3 matrix))
-    ))
-
-    ((and (>= x 160) (<= x 200) (>= y 320) (<= y 360)
-      (set! matrix (remplaceValue 1 8 4 matrix))
-    ))
-
-    ((and (>= x 200) (<= x 240) (>= y 320) (<= y 360)
-      (set! matrix (remplaceValue 1 8 5 matrix))
-    ))
-    
-    ((and (>= x 240) (<= x 280) (>= y 320) (<= y 360)
-      (set! matrix (remplaceValue 1 8 6 matrix))
-    ))
-    
-    ((and (>= x 280) (<= x 320) (>= y 320) (<= y 360)
-      (set! matrix (remplaceValue 1 8 7 matrix))
-    ))
-    
-    ((and (>= x 320) (<= x 360) (>= y 320) (<= y 360)
-      (set! matrix (remplaceValue 1 8 8 matrix))
-    ))
-
-    ((and (>= x 360) (<= x 400) (>= y 320) (<= y 360)
-      (set! matrix (remplaceValue 1 8 9 matrix))
-    ))
-
-    ((and (>= x 400) (<= x 440) (>= y 320) (<= y 360)
-      (set! matrix (remplaceValue 1 8 10 matrix))
-    ))
-
-    ((and (>= x 440) (<= x 480) (>= y 320) (<= y 360)
-      (set! matrix (remplaceValue 1 8 11 matrix))
-    ))
-
-    ((and (>= x 480) (<= x 520) (>= y 320) (<= y 360)
-      (set! matrix (remplaceValue 1 8 12 matrix))
-    ))
-
-    ((and (>= x 520) (<= x 560) (>= y 320) (<= y 360)
-      (set! matrix (remplaceValue 1 8 13 matrix))
-    ))
-
-    ((and (>= x 560) (<= x 600) (>= y 320) (<= y 360)
-      (set! matrix (remplaceValue 1 8 14 matrix))
-    ))
-
-    ((and (>= x 600) (<= x 640) (>= y 320) (<= y 360)
-      (set! matrix (remplaceValue 1 8 15 matrix))
-    ))
-
-    ;###########################################
-    ;########### DECIMA FILA ###################
-
-    ((and (>= x 0) (<= x 40) (>= y 360) (<= y 400)
-      (set! matrix (remplaceValue 1 9 0 matrix))
-    ))
-      
-    ((and (>= x 40) (<= x 80) (>= y 360) (<= y 400)
-      (set! matrix (remplaceValue 1 9 1 matrix))
-    ))
-
-    ((and (>= x 80) (<= x 120) (>= y 360) (<= y 400)
-      (set! matrix (remplaceValue 1 9 2 matrix))
-    ))
-
-    ((and (>= x 120) (<= x 160) (>= y 360) (<= y 400)
-      (set! matrix (remplaceValue 1 9 3 matrix))
-    ))
-
-    ((and (>= x 160) (<= x 200) (>= y 360) (<= y 400)
-      (set! matrix (remplaceValue 1 9 4 matrix))
-    ))
-
-    ((and (>= x 200) (<= x 240) (>= y 360) (<= y 400)
-      (set! matrix (remplaceValue 1 9 5 matrix))
-    ))
-    
-    ((and (>= x 240) (<= x 280) (>= y 360) (<= y 400)
-      (set! matrix (remplaceValue 1 9 6 matrix))
-    ))
-    
-    ((and (>= x 280) (<= x 320) (>= y 360) (<= y 400)
-      (set! matrix (remplaceValue 1 9 7 matrix))
-    ))
-    
-    ((and (>= x 320) (<= x 360) (>= y 360) (<= y 400)
-      (set! matrix (remplaceValue 1 9 8 matrix))
-    ))
-
-    ((and (>= x 360) (<= x 400) (>= y 360) (<= y 400)
-      (set! matrix (remplaceValue 1 9 9 matrix))
-    ))
-
-    ((and (>= x 400) (<= x 440) (>= y 360) (<= y 400)
-      (set! matrix (remplaceValue 1 9 10 matrix))
-    ))
-
-    ((and (>= x 440) (<= x 480) (>= y 350) (<= y 400)
-      (set! matrix (remplaceValue 1 9 11 matrix))
-    ))
-
-    ((and (>= x 480) (<= x 520) (>= y 350) (<= y 400)
-      (set! matrix (remplaceValue 1 9 12 matrix))
-    ))
-
-    ((and (>= x 520) (<= x 560) (>= y 350) (<= y 400)
-      (set! matrix (remplaceValue 1 9 13 matrix))
-    ))
-
-    ((and (>= x 560) (<= x 600) (>= y 350) (<= y 400)
-      (set! matrix (remplaceValue 1 9 14 matrix))
-      
-    ))
-
-    ((and (>= x 600) (<= x 640) (>= y 350) (<= y 400)
-      (set! matrix (remplaceValue 1 9 15 matrix))
-    ))
-
-    ;###########################################
-    ;########### UNDECIMA FILA ###################
-
-    ((and (>= x 0) (<= x 40) (>= y 400) (<= y 440)
-      (set! matrix (remplaceValue 1 10 0 matrix))
-    ))
-      
-    ((and (>= x 40) (<= x 80) (>= y 400) (<= y 440)
-      (set! matrix (remplaceValue 1 10 1 matrix))
-    ))
-
-    ((and (>= x 80) (<= x 120) (>= y 400) (<= y 440)
-      (set! matrix (remplaceValue 1 10 2 matrix))
-    ))
-
-    ((and (>= x 120) (<= x 160) (>= y 400) (<= y 440)
-      (set! matrix (remplaceValue 1 10 3 matrix))
-    ))
-
-    ((and (>= x 160) (<= x 200) (>= y 400) (<= y 440)
-      (set! matrix (remplaceValue 1 10 4 matrix))
-    ))
-
-    ((and (>= x 200) (<= x 240) (>= y 400) (<= y 440)
-      (set! matrix (remplaceValue 1 10 5 matrix))
-    ))
-    
-    ((and (>= x 240) (<= x 280) (>= y 400) (<= y 440)
-      (set! matrix (remplaceValue 1 10 6 matrix))
-    ))
-    
-    ((and (>= x 280) (<= x 320) (>= y 400) (<= y 440)
-      (set! matrix (remplaceValue 1 10 7 matrix))
-    ))
-    
-    ((and (>= x 320) (<= x 360) (>= y 400) (<= y 440)
-      (set! matrix (remplaceValue 1 10 8 matrix))
-    ))
-
-    ((and (>= x 360) (<= x 400) (>= y 400) (<= y 440)
-      (set! matrix (remplaceValue 1 10 9 matrix))
-    ))
-
-    ((and (>= x 400) (<= x 440) (>= y 400) (<= y 440)
-      (set! matrix (remplaceValue 1 10 10 matrix))
-    ))
-
-    ((and (>= x 440) (<= x 480) (>= y 400) (<= y 440)
-      (set! matrix (remplaceValue 1 10 11 matrix))
-    ))
-
-    ((and (>= x 480) (<= x 520) (>= y 400) (<= y 440)
-      (set! matrix (remplaceValue 1 10 12 matrix))
-    ))
-
-    ((and (>= x 520) (<= x 560) (>= y 400) (<= y 440)
-      (set! matrix (remplaceValue 1 10 13 matrix))
-    ))
-
-    ((and (>= x 560) (<= x 600) (>= y 400) (<= y 440)
-      (set! matrix (remplaceValue 1 10 14 matrix))
-    ))
-    
-    ((and (>= x 600) (<= x 640) (>= y 400) (<= y 440)
-      (set! matrix (remplaceValue 1 10 15 matrix))
-    ))
-
-    ;###########################################
-    ;########### DOCEAVA FILA ###################
-
-    ((and (>= x 0) (<= x 40) (>= y 440) (<= y 480)
-      (set! matrix (remplaceValue 1 11 0 matrix))
-    ))
-      
-    ((and (>= x 40) (<= x 80) (>= y 440) (<= y 480)
-      (set! matrix (remplaceValue 1 11 1 matrix))
-    ))
-
-    ((and (>= x 80) (<= x 120) (>= y 440) (<= y 480)
-      (set! matrix (remplaceValue 1 11 2 matrix))
-    ))
-
-    ((and (>= x 120) (<= x 160) (>= y 440) (<= y 480)
-      (set! matrix (remplaceValue 1 11 3 matrix))
-    ))
-
-    ((and (>= x 160) (<= x 200) (>= y 440) (<= y 480)
-      (set! matrix (remplaceValue 1 11 4 matrix))
-    ))
-
-    ((and (>= x 200) (<= x 240) (>= y 440) (<= y 480)
-      (set! matrix (remplaceValue 1 11 5 matrix))
-    ))
-    
-    ((and (>= x 240) (<= x 280) (>= y 440) (<= y 480)
-      (set! matrix (remplaceValue 1 11 6 matrix))
-    ))
-    
-    ((and (>= x 280) (<= x 320) (>= y 440) (<= y 480)
-      (set! matrix (remplaceValue 1 11 7 matrix))
-    ))
-    
-    ((and (>= x 320) (<= x 360) (>= y 440) (<= y 480)
-      (set! matrix (remplaceValue 1 11 8 matrix))
-    ))
-
-    ((and (>= x 360) (<= x 400) (>= y 440) (<= y 480)
-      (set! matrix (remplaceValue 1 11 9 matrix))
-    ))
-
-    ((and (>= x 400) (<= x 440) (>= y 440) (<= y 480)
-      (set! matrix (remplaceValue 1 11 10 matrix))
-    ))
-
-    ((and (>= x 440) (<= x 480) (>= y 440) (<= y 480)
-      (set! matrix (remplaceValue 1 11 11 matrix))
-    ))
-
-    ((and (>= x 480) (<= x 520) (>= y 440) (<= y 480)
-      (set! matrix (remplaceValue 1 11 12 matrix))
-    ))
-
-    ((and (>= x 520) (<= x 560) (>= y 440) (<= y 480)
-      (set! matrix (remplaceValue 1 11 13 matrix))
-    ))
-
-    ((and (>= x 560) (<= x 600) (>= y 440) (<= y 480)
-      (set! matrix (remplaceValue 1 11 14 matrix))
-    ))
-
-    ((and (>= x 600) (<= x 640) (>= y 440) (<= y 480)
-      (set! matrix (remplaceValue 1 11 15 matrix))
-    ))
-
-    ;###########################################
-    ;########### TRECEAVA FILA ###################
-
-    ((and (>= x 0) (<= x 40) (>= y 480) (<= y 520)
-      (set! matrix (remplaceValue 1 12 0 matrix))
-    ))
-      
-    ((and (>= x 40) (<= x 80) (>= y 480) (<= y 520)
-      (set! matrix (remplaceValue 1 12 1 matrix))
-    ))
-
-    ((and (>= x 80) (<= x 120) (>= y 480) (<= y 520)
-      (set! matrix (remplaceValue 1 12 2 matrix))
-    ))
-
-    ((and (>= x 120) (<= x 160) (>= y 480) (<= y 520)
-      (set! matrix (remplaceValue 1 12 3 matrix))
-    ))
-
-    ((and (>= x 160) (<= x 200) (>= y 480) (<= y 520)
-      (set! matrix (remplaceValue 1 12 4 matrix))
-    ))
-
-    ((and (>= x 200) (<= x 240) (>= y 480) (<= y 520)
-      (set! matrix (remplaceValue 1 12 5 matrix))
-    ))
-    
-    ((and (>= x 240) (<= x 280) (>= y 480) (<= y 520)
-      (set! matrix (remplaceValue 1 12 6 matrix))
-    ))
-    
-    ((and (>= x 280) (<= x 320) (>= y 480) (<= y 520)
-      (set! matrix (remplaceValue 1 12 7 matrix))
-    ))
-    
-    ((and (>= x 320) (<= x 360) (>= y 480) (<= y 520)
-      (set! matrix (remplaceValue 1 12 8 matrix))
-    ))
-
-    ((and (>= x 360) (<= x 400) (>= y 480) (<= y 520)
-      (set! matrix (remplaceValue 1 12 9 matrix))
-    ))
-
-    ((and (>= x 400) (<= x 440) (>= y 480) (<= y 520)
-      (set! matrix (remplaceValue 1 12 10 matrix))
-    ))
-
-    ((and (>= x 440) (<= x 480) (>= y 480) (<= y 520)
-      (set! matrix (remplaceValue 1 12 11 matrix))
-    ))
-
-    ((and (>= x 480) (<= x 520) (>= y 480) (<= y 520)
-      (set! matrix (remplaceValue 1 12 12 matrix))
-    ))
-
-    ((and (>= x 520) (<= x 560) (>= y 480) (<= y 520)
-      (set! matrix (remplaceValue 1 12 13 matrix))
-    ))
-
-    ((and (>= x 560) (<= x 600) (>= y 480) (<= y 520)
-      (set! matrix (remplaceValue 1 12 14 matrix))
-    ))
-
-    ((and (>= x 600) (<= x 640) (>= y 480) (<= y 520)
-      (set! matrix (remplaceValue 1 12 15 matrix))
-    ))
-
-  
-    ;###########################################
-    ;########### CATORCEAVA FILA ###################
-
-    ((and (>= x 0) (<= x 40) (>= y 520) (<= y 560)
-      (set! matrix (remplaceValue 1 13 0 matrix))
-    ))
-      
-    ((and (>= x 40) (<= x 80) (>= y 520) (<= y 560)
-      (set! matrix (remplaceValue 1 13 1 matrix))
-    ))
-
-    ((and (>= x 80) (<= x 120) (>= y 520) (<= y 560)
-      (set! matrix (remplaceValue 1 13 2 matrix))
-    ))
-
-    ((and (>= x 120) (<= x 160) (>= y 520) (<= y 560)
-      (set! matrix (remplaceValue 1 13 3 matrix))
-    ))
-
-    ((and (>= x 160) (<= x 200) (>= y 520) (<= y 560)
-      (set! matrix (remplaceValue 1 13 4 matrix))
-    ))
-
-    ((and (>= x 200) (<= x 240) (>= y 520) (<= y 560)
-      (set! matrix (remplaceValue 1 13 5 matrix))
-    ))
-    
-    ((and (>= x 240) (<= x 280) (>= y 520) (<= y 560)
-      (set! matrix (remplaceValue 1 13 6 matrix))
-    ))
-    
-    ((and (>= x 280) (<= x 320) (>= y 520) (<= y 560)
-      (set! matrix (remplaceValue 1 13 7 matrix))
-    ))
-    
-    ((and (>= x 320) (<= x 360) (>= y 520) (<= y 560)
-      (set! matrix (remplaceValue 1 13 8 matrix))
-    ))
-
-    ((and (>= x 360) (<= x 400) (>= y 520) (<= y 560)
-      (set! matrix (remplaceValue 1 13 9 matrix))
-    ))
-
-    ((and (>= x 400) (<= x 440) (>= y 520) (<= y 560)
-      (set! matrix (remplaceValue 1 13 10 matrix))
-    ))
-
-    ((and (>= x 440) (<= x 480) (>= y 520) (<= y 560)
-      (set! matrix (remplaceValue 1 13 11 matrix))
-    ))
-
-    ((and (>= x 480) (<= x 520) (>= y 520) (<= y 560)
-      (set! matrix (remplaceValue 1 13 12 matrix))
-    ))
-
-    ((and (>= x 520) (<= x 560) (>= y 520) (<= y 560)
-      (set! matrix (remplaceValue 1 13 13 matrix))
-    ))
-
-    ((and (>= x 560) (<= x 600) (>= y 520) (<= y 560)
-      (set! matrix (remplaceValue 1 13 14 matrix))
-    ))
-
-    ((and (>= x 600) (<= x 640) (>= y 520) (<= y 560)
-      (set! matrix (remplaceValue 1 13 15 matrix))
-
-    ))
-
-    ;###########################################
-    ;########### QUINCEAVA FILA ###################
-
-    ((and (>= x 0) (<= x 40) (>= y 560) (<= y 600)
-      (set! matrix (remplaceValue 1 14 0 matrix))
-    ))
-      
-    ((and (>= x 40) (<= x 80) (>= y 560) (<= y 600)
-      (set! matrix (remplaceValue 1 14 1 matrix))
-    ))
-
-    ((and (>= x 80) (<= x 120) (>= y 560) (<= y 600)
-      (set! matrix (remplaceValue 1 14 2 matrix))
-    ))
-
-    ((and (>= x 120) (<= x 160) (>= y 560) (<= y 600)
-      (set! matrix (remplaceValue 1 14 3 matrix))
-    ))
-
-    ((and (>= x 160) (<= x 200) (>= y 560) (<= y 600)
-      (set! matrix (remplaceValue 1 14 4 matrix))
-    ))
-
-    ((and (>= x 200) (<= x 240) (>= y 560) (<= y 600)
-      (set! matrix (remplaceValue 1 14 5 matrix))
-    ))
-    
-    ((and (>= x 240) (<= x 280) (>= y 560) (<= y 600)
-      (set! matrix (remplaceValue 1 14 6 matrix))
-    ))
-    
-    ((and (>= x 280) (<= x 320) (>= y 560) (<= y 600)
-      (set! matrix (remplaceValue 1 14 7 matrix))
-    ))
-    
-    ((and (>= x 320) (<= x 360) (>= y 560) (<= y 600)
-      (set! matrix (remplaceValue 1 14 8 matrix))
-    ))
-
-    ((and (>= x 360) (<= x 400) (>= y 560) (<= y 600)
-      (set! matrix (remplaceValue 1 14 9 matrix))
-    ))
-
-    ((and (>= x 400) (<= x 440) (>= y 560) (<= y 600)
-      (set! matrix (remplaceValue 1 14 10 matrix))
-    ))
-
-    ((and (>= x 440) (<= x 480) (>= y 560) (<= y 600)
-      (set! matrix (remplaceValue 1 14 11 matrix))
-    ))
-
-    ((and (>= x 480) (<= x 520) (>= y 560) (<= y 600)
-      (set! matrix (remplaceValue 1 14 12 matrix))
-    ))
-
-    ((and (>= x 520) (<= x 560) (>= y 560) (<= y 600)
-      (set! matrix (remplaceValue 1 14 13 matrix))
-    ))
-
-    ((and (>= x 560) (<= x 600) (>= y 560) (<= y 600)
-      (set! matrix (remplaceValue 1 14 14 matrix))
-    ))
-
-    ((and (>= x 600) (<= x 640) (>= y 560) (<= y 600)
-      (set! matrix (remplaceValue 1 14 15 matrix))
-    ))
-
-    ;###########################################
-    ;########### DECIMOSEXTA FILA ###################
-
-    ((and (>= x 0) (<= x 40) (>= y 600) (<= y 640)
-      (set! matrix (remplaceValue 1 15 0 matrix))
-    ))
-      
-    ((and (>= x 40) (<= x 80) (>= y 600) (<= y 640)
-      (set! matrix (remplaceValue 1 15 1 matrix))
-    ))
-
-    ((and (>= x 80) (<= x 120) (>= y 600) (<= y 640)
-      (set! matrix (remplaceValue 1 15 2 matrix))
-    ))
-
-    ((and (>= x 120) (<= x 160) (>= y 600) (<= y 640)
-      (set! matrix (remplaceValue 1 15 3 matrix))
-    ))
-
-    ((and (>= x 160) (<= x 200) (>= y 600) (<= y 640)
-      (set! matrix (remplaceValue 1 15 4 matrix))
-    ))
-
-    ((and (>= x 200) (<= x 240) (>= y 600) (<= y 640)
-      (set! matrix (remplaceValue 1 15 5 matrix))
-    ))
-    
-    ((and (>= x 240) (<= x 280) (>= y 600) (<= y 640)
-      (set! matrix (remplaceValue 1 15 6 matrix))
-    ))
-    
-    ((and (>= x 280) (<= x 320) (>= y 600) (<= y 640)
-      (set! matrix (remplaceValue 1 15 7 matrix))
-    ))
-    
-    ((and (>= x 320) (<= x 360) (>= y 600) (<= y 640)
-      (set! matrix (remplaceValue 1 15 8 matrix))
-    ))
-
-    ((and (>= x 360) (<= x 400) (>= y 600) (<= y 640)
-      (set! matrix (remplaceValue 1 15 9 matrix))
-    ))
-
-    ((and (>= x 400) (<= x 440) (>= y 600) (<= y 640)
-      (set! matrix (remplaceValue 1 15 10 matrix))
-    ))
-
-    ((and (>= x 440) (<= x 480) (>= y 600) (<= y 640)
-      (set! matrix (remplaceValue 1 15 11 matrix))
-    ))
-
-    ((and (>= x 480) (<= x 520) (>= y 600) (<= y 640)
-      (set! matrix (remplaceValue 1 15 12 matrix))
-    ))
-
-    ((and (>= x 520) (<= x 560) (>= y 600) (<= y 640)
-      (set! matrix (remplaceValue 1 15 13 matrix))
-    ))
-
-    ((and (>= x 560) (<= x 600) (>= y 600) (<= y 640)
-      (set! matrix (remplaceValue 1 15 14 matrix))
-          
-    ))
-
-    ((and (>= x 600) (<= x 640) (> y 580) (<= y 640)
-      (set! matrix (remplaceValue 1 15 15 matrix))
-      (print matrix)
-    ))
-
-    (else
-      (print "Error")
-  
-  )
-  
+; Función que devuelve la fila y la columna seleccionada
+(define (checkPiecePosition matrix posXmouse posYmouse)
+  (checkPiecePositionAux matrix posXmouse posYmouse '0 '40 '0 '40 '0 '0 '())
 )
 
-;############################################################
-;#############  CHECK WIN-LOSE  PLAYER TURN #################
+(define (checkPiecePositionAux matrix posXmouse posYmouse xMin xMax yMin yMax fila columna lista)
+    (cond ; Caso en donde se tiene la fila y la columna
+          ((and (>= posXmouse xMin) (<= posXmouse xMax) (>= posYmouse yMin) (<= posYmouse yMax))
+              ;(set! matrix (remplaceValue '1 fila columna matrix))
+              (append lista (list fila) 
+                            (list columna))
+          )
+          ; Caso en donde se tiene la fila (se busca la columna)
+          ((and (>= posYmouse yMin) (<= posYmouse yMax) (not (and (>= posXmouse xMin) (<= posXmouse xMax))) )
+              (checkPiecePositionAux matrix 
+                                     posXmouse 
+                                     posYmouse
+                                     (+ xMin 40)
+                                     (+ xMax 40)
+                                     yMin
+                                     yMax
+                                     fila
+                                     (+ columna 1)
+                                     lista)
+          )
+          ; Caso en donde se tiene la columna (se busca la fila)
+          ((and (>= posXmouse xMin) (<= posXmouse xMax) (not (and (>= posYmouse yMin) (<= posYmouse yMax))) )
+              (checkPiecePositionAux matrix 
+                                     posXmouse 
+                                     posYmouse
+                                     xMin
+                                     xMax
+                                     (+ yMin 40)
+                                     (+ yMax 40)
+                                     (+ fila 1)
+                                     columna
+                                     lista)
+          )
+          ; Caso en donde no se tienen ni la fila ni la columna
+          (else
+              (checkPiecePositionAux matrix 
+                                     posXmouse 
+                                     posYmouse
+                                     (+ xMin 40)
+                                     (+ xMax 40)
+                                     (+ yMin 40)
+                                     (+ yMax 40) 
+                                     (+ fila 1)
+                                     (+ columna 1)
+                                     lista)
+          )
+    )
+
+)
+
+(define (checkWinLoseGUI matrix)
+   ;############################################################
+   ;#############  CHECK WIN-LOSE  PLAYER TURN #################
     
-    (cond
+  (cond
     ((equal? 1 (checkWinLose matrix))
       (send winnerAlert show #t)
-      (exit))
-
+      (exit)
+    )
     ((equal? 2 (checkWinLose matrix))
       (send loserAlert show #t)
-      (exit))
-  
+      (exit)
+    )
     ((equal? 3 (checkWinLose matrix))
       (send tieAlert show #t)
-      (exit))
+      (exit)
     )
+  )
+)
+
+; Función para verificar si la posición seleccionada es válida
+(define (checkMatriz matrix posX posY)
+  (checkMatrizAux matrix (car matrix) (car(checkPiecePosition matrix posX posY)) (cadr(checkPiecePosition matrix posX posY)) '0 '0)
+)
+
+(define (checkMatrizAux matrix fila numFila numColumna filaTemp columnaTemp)
+  (cond ; Se busca la fila correcta
+        ((not (equal? filaTemp numFila))
+            (checkMatrizAux (cdr matrix)
+                            (cadr matrix)
+                            numFila
+                            numColumna
+                            (+ filaTemp 1)
+                            columnaTemp)
+        )
+        ; Se busca la columna correcta
+        ((and (equal? filaTemp numFila) (not (equal? columnaTemp numColumna)))
+            (checkMatrizAux matrix
+                            (cdr fila)
+                            numFila
+                            numColumna
+                            filaTemp
+                            (+ columnaTemp 1))
+        )
+        ; Se tienen la fila y la columna pero ya hay ficha en esa posición
+        ((and (equal? filaTemp numFila) (equal? columnaTemp numColumna) (not (equal? (car fila) '0)))
+            #f
+        )
+        ; Se tienen la fila y la columna y no hay ficha en esa posición
+        ((and (equal? filaTemp numFila) (equal? columnaTemp numColumna) (equal? (car fila) '0))
+            #t
+        )
+  )
+)
+
+; Función solución que verifica la posición correcta de la ficha ingresada
+; E: matriz
+; S: matriz con la posición deseada cambiada por un 2
+(define (checkCorrectSolution2 matrix)
+    (cond ((null? matrix)
+                '())
+           (else
+                (checkCorrectSolutionAux2 matrix matrix (car matrix) (cadr matrix) '0 '0 '0)
+           )
+    )
+)
+ 
+; Función auxiliar de checkCorrectSolution
+; E: matriz, matriz, primera fila de matriz, segunda fila de matriz, número de fila, número de columna
+; S: matriz con la posición deseada cambiada por un 2
+(define (checkCorrectSolutionAux2 matrix matrixOriginal fila1 fila2 numFila numPos cont)
+    (cond   ; Caso en donde se tiene solo una fila en la matrixOriginal
+            ((null? (cdr matrixOriginal))
+                (cond   ((null? fila1)
+                            matrix
+                        )
+                        ; Caso en donde se busca en la última fila
+                        ((not(equal? (car fila1) '3))
+                            (checkCorrectSolutionAux2 matrix 
+                                                      matrixOriginal 
+                                                      (cdr fila1) 
+                                                      fila2 
+                                                      numFila 
+                                                      (+ numPos 1)
+                                                      cont)
+                        )
+                        (else   
+                            (list (remplaceMatrix '3 '1 matrix)
+                                  (list cont))
+                        )
+                )
+            )
+            ; Se realiza la búsqueda en la siguiente fila de la matriz
+            ((and (null? fila1) (>= (length matrixOriginal) 3))
+                (checkCorrectSolutionAux2 matrix 
+                                        (cdr matrixOriginal) 
+                                        (cadr matrixOriginal) 
+                                        (caddr matrixOriginal) 
+                                        (+ numFila 1)
+                                         '0
+                                         cont)
+            )
+            ; Se realiza la búsqueda en la siguiente fila de la matriz cuando solo se tienen 2 filas
+            ((and (null? fila1) (= (length matrixOriginal) 2))
+                (checkCorrectSolutionAux2 matrix 
+                                        (cdr matrixOriginal) 
+                                        (cadr matrixOriginal) 
+                                        '() 
+                                        (+ numFila 1) 
+                                        '0
+                                        cont)
+            )
+            ; Caso en donde se tienen más de 2 filas
+            ((and (not(equal? (car fila1) '3)) (>= (length matrixOriginal) 2))
+                (checkCorrectSolutionAux2 matrix 
+                                         matrixOriginal 
+                                         (cdr fila1) 
+                                         (cdr fila2) 
+                                         numFila 
+                                         (+ numPos 1)
+                                         cont)
+            )
+            ; Caso en donde se encuentra la posición deseada
+            ((and (equal? (car fila1) '3) (equal? (car fila2) '0))
+                (checkCorrectSolutionAux2 (changeTempValue2 matrix numFila numPos '0 '() #f)
+                                         (changeTempValue2 matrix numFila numPos '0 '() #f)
+                                         (car (changeTempValue2 matrix numFila numPos '0 '() #f))
+                                         (cadr (changeTempValue2 matrix numFila numPos '0 '() #f))
+                                         '0
+                                         '0
+                                         (+ cont 40))
+            )
+            (else
+                (list (remplaceMatrix '3 '1 matrix)
+                        (list cont))
+            )
+    
+    )
+)
+
+; Función que cambia un valor temporal en una fila de la matriz dada
+; E: matriz, posición de fila, posición de columna, contador, matriz vacía, boolean que indica si ya se cambió el elemento de la matriz 
+; S: matriz con el elemento buscado cambiado de posición
+(define (changeTempValue2 matrix rowPos columnPos cont newMatrix bool)
+    (cond   ((null? matrix)
+                newMatrix
+            )
+            ; Caso en donde se debe cambiar el 3
+            ((equal? cont rowPos)
+                (append newMatrix
+                        (list (put columnPos '0 (car matrix)))
+                        (changeTempValue2 (cdr matrix)
+                                          rowPos
+                                          columnPos
+                                          (+ cont 1)
+                                          newMatrix
+                                          #t))
+            )
+            ; Caso en donde se cambia el 0 por un 3
+            ((equal? bool #t)
+                (append newMatrix
+                        (list (put columnPos '3 (car matrix)))
+                        (changeTempValue2 (cdr matrix)
+                                          rowPos
+                                          columnPos
+                                          (+ cont 1)
+                                          newMatrix
+                                          #f))
+            )
+            (else
+                (append newMatrix
+                        (list (car matrix))
+                        (changeTempValue2 (cdr matrix)
+                                          rowPos
+                                          columnPos
+                                          (+ cont 1)
+                                          newMatrix
+                                          #f))
+            )
+    )
+)
+
+(define (remplace element newElement lista)
+    (remplaceAux element newElement lista '())
+)
+
+(define (remplaceAux element newElement lista res)
+    (cond
+        ((null? lista)
+            res
+        )
+        ((equal? (car lista) element)
+            (remplaceAux
+         element newElement (cdr lista) (append res (list newElement)))
+        )
+        (else
+        (remplaceAux
+     element newElement (cdr lista) (append res (list (car lista)))))
+
+    )
+)
+
+(define (remplaceMatrix element newElement matrix)
+    (remplaceMatrixAux element newElement matrix '())
+)
+
+(define (remplaceMatrixAux element newElement matrix newMatrix)
+    (cond
+        ((null? matrix)
+            newMatrix
+        )
+        (else
+            (remplaceMatrixAux element newElement (cdr matrix) (append newMatrix (list (remplace element newElement (car matrix)))))
+        )
+    
+    )
+
+)
+;Funcion auxiliar de put
+(define (putAux pos element lista newLista)
+    (cond
+        ((zero? pos)
+            (append newLista (list element) (cdr lista))
+        )
+        (else
+            (putAux (- pos 1) element (cdr lista) (append newLista (list (car lista))))
+        )
+    
+    )
+)
+
+;Funcion que inserta/remplaza un elemento en una lista
+(define (put pos element lista)
+    (putAux pos element lista '())
+)
+
+(define (position-piece event)
+  (define-values (x y) (values (send event get-x) (+ 20 (send event get-y))))
+  (cond ;Se verifica si la posición indicada es válida 
+        ((equal? (checkMatriz matrix x y) #t)
+            (set! matrix (remplaceValue '3 (car (checkPiecePosition matrix x y)) (cadr (checkPiecePosition matrix x y)) matrix))
+            (set! listaMatrizTemp (checkCorrectSolution2 matrix))
+            
+            (set! matrix (car listaMatrizTemp))
+            (set! mouseY (cadr listaMatrizTemp))
+
+            ;(set! matrix (remplaceValue 1 (car (checkPiecePosition matrix x y)) (cadr (checkPiecePosition matrix x y)) matrix))
+            (set! changeValue #t)
+        ) 
+        (else
+            (send positionWarning show #t)
+        )
+  )
 )
 
 
@@ -1134,17 +342,21 @@
 (define winnerAlert (new dialog% [label "Alerta"]
                  [parent gameWindow]
                  [width 300]
-                 [height 300]))
+                 [height 350]))
 
 (define loserAlert (new dialog% [label "Alerta"]
                  [parent gameWindow]
                  [width 300]
-                 [height 300]))
+                 [height 350]))
 
 (define tieAlert (new dialog% [label "Alerta"]
                  [parent gameWindow]
                  [width 300]
-                 [height 300]))
+                 [height 350]))
+(define positionWarning (new dialog% [label "Alerta"]
+                 [parent gameWindow]
+                 [width 900]
+                 [height 350]))
 
 (define winnerCanvas (new canvas% [parent winnerAlert]
                                   [paint-callback 
@@ -1169,6 +381,13 @@
                                   (lambda (canvas dc)
                                   (send dc set-font (make-object font% 20 "Century Gothic" 'decorative 'normal 'bold))
                                   (send dc draw-text "EMPATE!" 10 10)
+                                  (let ((winnerPicture (make-object bitmap% "3enlinea/4enLinea.png")))
+                                  (send dc draw-bitmap winnerPicture 30 50)))]))
+(define positionWarningCanvas (new canvas% [parent positionWarning]
+                                  [paint-callback 
+                                  (lambda (canvas dc)
+                                  (send dc set-font (make-object font% 20 "Century Gothic" 'decorative 'normal 'bold))
+                                  (send dc draw-text "No se puede insertar la ficha en el lugar indicado!" 10 10)
                                   (let ((winnerPicture (make-object bitmap% "3enlinea/4enLinea.png")))
                                   (send dc draw-bitmap winnerPicture 30 50)))]))
 
@@ -1247,1306 +466,1294 @@
     ;Button mouseclick izquierdo donde empieza el game
     (define/override (on-event e)
       (when (eq? (send e get-event-type) 'left-down)
-
+        
         (position-piece e)
+        
+        (for ([id (in-hash-keys token-piece-data)])
+          (define piece (make-token-piece id))
+        
+        (when (equal? changeValue #t)
+          (send board insert piece (- (send e get-x) 15) (+ (- (send e get-y) 15) (car mouseY)))
+          (checkWinLoseGUI matrix)
+          (set! changeValue #f)
+        )
 
         (sleep/yield 1)
         (set! matrix (greedyAlgorithm matrix))
-        (print matrix)
-       
-        (define window-x (send e get-x))
-        (define window-y (send e get-y))
-
-        (for ([id (in-hash-keys token-piece-data)])
-        (define piece (make-token-piece id))
-        (send board insert piece (- window-x 15) (- window-y 15))
-
-;###########################################################################
-;############### POSICIONES PARA LA FICHA DE LA MAQUINA ####################
-
-    ;1 segundo por turno
-    (sleep/yield 1)
-    (define rows (length matrix))
-    (define columns (length (list-ref matrix 0)))
-
-    ;###############PRIMERA FILA###################
-    (when (equal? 2 (list-ref(list-ref matrix 0) 0))
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 0 0))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 0) 1)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 40 0))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 0) 2)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 80 0))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 0) 3)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 120 0))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 0) 4)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 160 0))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 0) 5)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 200 0))
-
-    (when (equal? 2 (list-ref(list-ref matrix 0) 6)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 240 0))
-
-    (when (equal? 2 (list-ref(list-ref matrix 0) 7)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 280 0))
-
-    (when (>= columns 9) 
-      (when (equal? 2 (list-ref(list-ref matrix 0) 8)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 320 0)))
-    
-    (when (>= columns 10) 
-      (when (equal? 2 (list-ref(list-ref matrix 0) 9)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 360 0)))
-
-    (when (>= columns 11) 
-      (when (equal? 2 (list-ref(list-ref matrix 0) 10)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 400 0)))     
-    
-    (when (>= columns 12) 
-      (when (equal? 2 (list-ref(list-ref matrix 0) 11)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 440 0)))
-
-    (when (>= columns 13) 
-      (when (equal? 2 (list-ref(list-ref matrix 0) 12)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 480 0)))
-
-    (when (>= columns 14) 
-      (when (equal? 2 (list-ref(list-ref matrix 0) 13)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 520 0)))
-    
-    (when (>= columns 15) 
-      (when (equal? 2 (list-ref(list-ref matrix 0) 14)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 560 0)))
-      
-    (when (>= columns 16) 
-      (when (equal? 2 (list-ref(list-ref matrix 6) 15)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 600 0)))
-
-    ;###############SEGUNDA FILA###################
-    (when (equal? 2 (list-ref(list-ref matrix 1) 0))
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 0 35))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 1) 1)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 40 35))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 1) 2)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 80 35))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 1) 3)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 120 35))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 1) 4)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 160 35))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 1) 5)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 200 35))
-
-    (when (equal? 2 (list-ref(list-ref matrix 1) 6)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 240 35))
-
-    (when (equal? 2 (list-ref(list-ref matrix 1) 7)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 280 35))
-
-    (when (>= columns 9) 
-      (when (equal? 2 (list-ref(list-ref matrix 1) 8)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 320 35)))
-    
-    (when (>= columns 10) 
-      (when (equal? 2 (list-ref(list-ref matrix 1) 9)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 360 35)))
-
-    (when (>= columns 11) 
-      (when (equal? 2 (list-ref(list-ref matrix 1) 10)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 400 35)))     
-    
-    (when (>= columns 12) 
-      (when (equal? 2 (list-ref(list-ref matrix 1) 11)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 440 35)))
-
-    (when (>= columns 13) 
-      (when (equal? 2 (list-ref(list-ref matrix 1) 12)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 480 35)))
-
-    (when (>= columns 14) 
-      (when (equal? 2 (list-ref(list-ref matrix 1) 13)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 520 35)))
-    
-    (when (>= columns 15) 
-      (when (equal? 2 (list-ref(list-ref matrix 1) 14)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 560 35)))
-      
-    (when (= columns 16) 
-      (when (equal? 2 (list-ref(list-ref matrix 1) 15)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 600 35)))
-
-    
-    ;###############TERCERA FILA###################
-    (when (equal? 2 (list-ref(list-ref matrix 2) 0))
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 0 70))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 2) 1)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 40 70))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 2) 2)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 80 70))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 2) 3)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 120 70))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 2) 4)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 160 70))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 2) 5)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 200 70))
-
-    (when (equal? 2 (list-ref(list-ref matrix 2) 6)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 240 70))
-
-    (when (equal? 2 (list-ref(list-ref matrix 2) 7)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 280 70))
-
-    (when (>= columns 9) 
-      (when (equal? 2 (list-ref(list-ref matrix 2) 8)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 320 70)))
-    
-    (when (>= columns 10) 
-      (when (equal? 2 (list-ref(list-ref matrix 2) 9)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 360 70)))
-
-    (when (>= columns 11) 
-      (when (equal? 2 (list-ref(list-ref matrix 2) 10)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 400 70)))     
-    
-    (when (>= columns 12) 
-      (when (equal? 2 (list-ref(list-ref matrix 2) 11)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 440 70)))
-
-    (when (>= columns 13) 
-      (when (equal? 2 (list-ref(list-ref matrix 2) 12)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 480 70)))
-
-    (when (>= columns 14) 
-      (when (equal? 2 (list-ref(list-ref matrix 2) 13)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 520 70)))
-    
-    (when (>= columns 15) 
-      (when (equal? 2 (list-ref(list-ref matrix 2) 14)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 560 70)))
-      
-    (when (= columns 16) 
-      (when (equal? 2 (list-ref(list-ref matrix 2) 15)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 600 70)))
-
-    ;###############CUARTA FILA###################
-    (when (equal? 2 (list-ref(list-ref matrix 3) 0))
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 0 110))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 3) 1)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 40 110))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 3) 2)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 80 110))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 3) 3)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 120 110))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 3) 4)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 160 110))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 3) 5)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 200 110))
-
-    (when (equal? 2 (list-ref(list-ref matrix 3) 6)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 240 110))
-
-    (when (equal? 2 (list-ref(list-ref matrix 3) 7)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 280 110))
-
-    (when (>= columns 9) 
-      (when (equal? 2 (list-ref(list-ref matrix 3) 8)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 320 110)))
-    
-    (when (>= columns 10) 
-      (when (equal? 2 (list-ref(list-ref matrix 3) 9)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 360 110)))
-
-    (when (>= columns 11) 
-      (when (equal? 2 (list-ref(list-ref matrix 3) 10)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 400 110)))     
-    
-    (when (>= columns 12) 
-      (when (equal? 2 (list-ref(list-ref matrix 3) 11)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 440 110)))
-
-    (when (>= columns 13) 
-      (when (equal? 2 (list-ref(list-ref matrix 3) 12)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 480 110)))
-
-    (when (>= columns 14) 
-      (when (equal? 2 (list-ref(list-ref matrix 3) 13)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 520 110)))
-    
-    (when (>= columns 15) 
-      (when (equal? 2 (list-ref(list-ref matrix 3) 14)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 560 110)))
-      
-    (when (>= columns 16) 
-      (when (equal? 2 (list-ref(list-ref matrix 3) 15)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 600 110)))
-
-     ;###############QUINTA FILA###################
-    (when (equal? 2 (list-ref(list-ref matrix 4) 0))
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 0 150))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 4) 1)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 40 150))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 4) 2)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 80 150))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 4) 3)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 120 150))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 4) 4)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 160 150))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 4) 5)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 200 150))
-
-    (when (equal? 2 (list-ref(list-ref matrix 4) 6)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 240 150))
-
-    (when (equal? 2 (list-ref(list-ref matrix 4) 7)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 280 150))
-
-    (when (>= columns 10) 
-      (when (equal? 2 (list-ref(list-ref matrix 4) 9)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 360 150)))
-
-    (when (>= columns 11) 
-      (when (equal? 2 (list-ref(list-ref matrix 4) 10)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 400 150)))     
-    
-    (when (>= columns 12) 
-      (when (equal? 2 (list-ref(list-ref matrix 4) 11)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 440 150)))
-
-    (when (>= columns 13) 
-      (when (equal? 2 (list-ref(list-ref matrix 4) 12)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 480 150)))
-
-    (when (>= columns 14) 
-      (when (equal? 2 (list-ref(list-ref matrix 4) 13)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 520 150)))
-    
-    (when (>= columns 15) 
-      (when (equal? 2 (list-ref(list-ref matrix 4) 14)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 560 150)))
-      
-    (when (>= columns 16) 
-      (when (equal? 2 (list-ref(list-ref matrix 4) 15)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 600 150)))
-
-    ;###############SEXTA FILA###################
-    (when (equal? 2 (list-ref(list-ref matrix 5) 0))
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 0 190))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 5) 1)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 40 190))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 5) 2)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 80 190))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 5) 3)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 120 190))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 5) 4)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 160 190))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 5) 5)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 200 190))
-
-    (when (equal? 2 (list-ref(list-ref matrix 5) 6)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 240 190))
-
-    (when (equal? 2 (list-ref(list-ref matrix 5) 7)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 280 190))
-
-    (when (>= columns 10) 
-      (when (equal? 2 (list-ref(list-ref matrix 5) 9)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 360 190)))
-
-    (when (>= columns 11) 
-      (when (equal? 2 (list-ref(list-ref matrix 5) 10)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 400 190)))     
-    
-    (when (>= columns 12) 
-      (when (equal? 2 (list-ref(list-ref matrix 5) 11)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 440 190)))
-
-    (when (>= columns 13) 
-      (when (equal? 2 (list-ref(list-ref matrix 5) 12)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 480 190)))
-
-    (when (>= columns 14) 
-      (when (equal? 2 (list-ref(list-ref matrix 5) 13)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 520 190)))
-    
-    (when (>= columns 15) 
-      (when (equal? 2 (list-ref(list-ref matrix 5) 14)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 560 190)))
-      
-    (when (>= columns 16) 
-      (when (equal? 2 (list-ref(list-ref matrix 5) 15)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 600 190)))
-
-
-    ;###############SEPTIMA FILA###################
-    (when (equal? 2 (list-ref(list-ref matrix 6) 0))
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 0 230))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 6) 1)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 40 230))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 6) 2)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 80 230))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 6) 3)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 120 230))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 6) 4)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 160 230))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 6) 5)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 200 230))
-
-    (when (equal? 2 (list-ref(list-ref matrix 6) 6)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 240 230))
-
-    (when (equal? 2 (list-ref(list-ref matrix 6) 7)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 280 230))
-
-    (when (>= columns 9) 
-      (when (equal? 2 (list-ref(list-ref matrix 6) 8)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 320 230)))
-    
-    (when (>= columns 10) 
-      (when (equal? 2 (list-ref(list-ref matrix 6) 9)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 360 230)))
-
-    (when (>= columns 11) 
-      (when (equal? 2 (list-ref(list-ref matrix 6) 10)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 400 230)))     
-    
-    (when (>= columns 12) 
-      (when (equal? 2 (list-ref(list-ref matrix 6) 11)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 440 230)))
-
-    (when (>= columns 13) 
-      (when (equal? 2 (list-ref(list-ref matrix 6) 12)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 480 230)))
-
-    (when (>= columns 14) 
-      (when (equal? 2 (list-ref(list-ref matrix 6) 13)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 520 230)))
-    
-    (when (>= columns 15) 
-      (when (equal? 2 (list-ref(list-ref matrix 6) 14)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 560 230)))
-      
-    (when (>= columns 16) 
-      (when (equal? 2 (list-ref(list-ref matrix 6) 15)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 600 230)))
-
-    ;###############OCTAVA FILA###################
-    (when (equal? 2 (list-ref(list-ref matrix 7) 0))
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 0 270))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 7) 1)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 40 270))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 7) 2)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 80 270))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 7) 3)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 120 270))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 7) 4)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 160 270))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 7) 5)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 200 270))
-
-    (when (equal? 2 (list-ref(list-ref matrix 7) 6)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 240 270))
-
-    (when (equal? 2 (list-ref(list-ref matrix 7) 7)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 280 270))
-
-    (when (>= columns 9) 
-      (when (equal? 2 (list-ref(list-ref matrix 7) 8)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 320 270)))
-    
-    (when (>= columns 10) 
-      (when (equal? 2 (list-ref(list-ref matrix 7) 9)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 360 270)))
-
-    (when (>= columns 11) 
-      (when (equal? 2 (list-ref(list-ref matrix 7) 10)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 400 270)))     
-    
-    (when (>= columns 12) 
-      (when (equal? 2 (list-ref(list-ref matrix 7) 11)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 440 270)))
-
-    (when (>= columns 13) 
-      (when (equal? 2 (list-ref(list-ref matrix 7) 12)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 480 270)))
-
-    (when (>= columns 14) 
-      (when (equal? 2 (list-ref(list-ref matrix 7) 13)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 520 270)))
-    
-    (when (>= columns 15) 
-      (when (equal? 2 (list-ref(list-ref matrix 7) 14)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 560 270)))
-      
-    (when (>= columns 16) 
-      (when (equal? 2 (list-ref(list-ref matrix 7) 15)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 600 270)))
-
-    ;############### NOVENA FILA ###################
-    (when (>= rows 9)
-      
-    (when (equal? 2 (list-ref(list-ref matrix 8) 0))
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 0 305))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 8) 1)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 40 305))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 8) 2)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 80 305))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 8) 3)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 120 305))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 8) 4)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 160 305))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 8) 5)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 200 305))
-
-    (when (equal? 2 (list-ref(list-ref matrix 8) 6)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 240 305))
-
-    (when (equal? 2 (list-ref(list-ref matrix 8) 7)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 280 305))
-
-    (when (>= columns 9) 
-      (when (equal? 2 (list-ref(list-ref matrix 8) 8)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 320 305)))
-    
-    (when (>= columns 10) 
-      (when (equal? 2 (list-ref(list-ref matrix 8) 9)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 360 305)))
-
-    (when (>= columns 11) 
-      (when (equal? 2 (list-ref(list-ref matrix 8) 10)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 400 305)))     
-    
-    (when (>= columns 12) 
-      (when (equal? 2 (list-ref(list-ref matrix 8) 11)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 440 305)))
-
-    (when (>= columns 13) 
-      (when (equal? 2 (list-ref(list-ref matrix 8) 12)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 480 305)))
-
-    (when (>= columns 14) 
-      (when (equal? 2 (list-ref(list-ref matrix 8) 13)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 520 305)))
-    
-    (when (>= columns 15) 
-      (when (equal? 2 (list-ref(list-ref matrix 8) 14)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 560 305)))
-      
-    (when (>= columns 16) 
-      (when (equal? 2 (list-ref(list-ref matrix 8) 15)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 600 305)))
-    )  
-    
-     ;############### DECIMA FILA ###################
-    (when (>= rows 10)
-      
-    (when (equal? 2 (list-ref(list-ref matrix 9) 0))
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 0 345))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 9) 1)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 40 345))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 9) 2)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 80 345))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 9) 3)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 120 345))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 9) 4)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 160 345))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 9) 5)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 200 345))
-
-    (when (equal? 2 (list-ref(list-ref matrix 9) 6)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 240 345))
-
-    (when (equal? 2 (list-ref(list-ref matrix 9) 7)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 280 345))
-
-    (when (>= columns 9) 
-      (when (equal? 2 (list-ref(list-ref matrix 9) 8)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 320 345)))
-    
-    (when (>= columns 10) 
-      (when (equal? 2 (list-ref(list-ref matrix 9) 9)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 360 345)))
-
-    (when (>= columns 11) 
-      (when (equal? 2 (list-ref(list-ref matrix 9) 10)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 400 345)))     
-    
-    (when (>= columns 12) 
-      (when (equal? 2 (list-ref(list-ref matrix 9) 11)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 440 345)))
-
-    (when (>= columns 13) 
-      (when (equal? 2 (list-ref(list-ref matrix 9) 12)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 480 345)))
-
-    (when (>= columns 14) 
-      (when (equal? 2 (list-ref(list-ref matrix 9) 13)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 520 345)))
-    
-    (when (>= columns 15) 
-      (when (equal? 2 (list-ref(list-ref matrix 9) 14)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 560 345)))
-      
-    (when (>= columns 16) 
-      (when (equal? 2 (list-ref(list-ref matrix 9) 15)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 600 345)))
+
+        
+        ;###########################################################################
+        ;############### POSICIONES PARA LA FICHA DE LA MAQUINA ####################
+
+        ;1 segundo por turno
+        (sleep/yield 1)
+        (define rows (length matrix))
+        (define columns (length (list-ref matrix 0)))
+
+        ;###############PRIMERA FILA###################
+        (when (equal? 2 (list-ref(list-ref matrix 0) 0))
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 0 0))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 0) 1)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 40 0))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 0) 2)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 80 0))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 0) 3)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 120 0))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 0) 4)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 160 0))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 0) 5)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 200 0))
+
+        (when (equal? 2 (list-ref(list-ref matrix 0) 6)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 240 0))
+
+        (when (equal? 2 (list-ref(list-ref matrix 0) 7)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 280 0))
+
+        (when (>= columns 9) 
+          (when (equal? 2 (list-ref(list-ref matrix 0) 8)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 320 0)))
+        
+        (when (>= columns 10) 
+          (when (equal? 2 (list-ref(list-ref matrix 0) 9)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 360 0)))
+
+        (when (>= columns 11) 
+          (when (equal? 2 (list-ref(list-ref matrix 0) 10)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 400 0)))     
+        
+        (when (>= columns 12) 
+          (when (equal? 2 (list-ref(list-ref matrix 0) 11)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 440 0)))
+
+        (when (>= columns 13) 
+          (when (equal? 2 (list-ref(list-ref matrix 0) 12)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 480 0)))
+
+        (when (>= columns 14) 
+          (when (equal? 2 (list-ref(list-ref matrix 0) 13)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 520 0)))
+        
+        (when (>= columns 15) 
+          (when (equal? 2 (list-ref(list-ref matrix 0) 14)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 560 0)))
+          
+        (when (>= columns 16) 
+          (when (equal? 2 (list-ref(list-ref matrix 6) 15)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 600 0)))
+
+        ;###############SEGUNDA FILA###################
+        (when (equal? 2 (list-ref(list-ref matrix 1) 0))
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 0 35))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 1) 1)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 40 35))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 1) 2)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 80 35))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 1) 3)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 120 35))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 1) 4)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 160 35))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 1) 5)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 200 35))
+
+        (when (equal? 2 (list-ref(list-ref matrix 1) 6)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 240 35))
+
+        (when (equal? 2 (list-ref(list-ref matrix 1) 7)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 280 35))
+
+        (when (>= columns 9) 
+          (when (equal? 2 (list-ref(list-ref matrix 1) 8)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 320 35)))
+        
+        (when (>= columns 10) 
+          (when (equal? 2 (list-ref(list-ref matrix 1) 9)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 360 35)))
+
+        (when (>= columns 11) 
+          (when (equal? 2 (list-ref(list-ref matrix 1) 10)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 400 35)))     
+        
+        (when (>= columns 12) 
+          (when (equal? 2 (list-ref(list-ref matrix 1) 11)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 440 35)))
+
+        (when (>= columns 13) 
+          (when (equal? 2 (list-ref(list-ref matrix 1) 12)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 480 35)))
+
+        (when (>= columns 14) 
+          (when (equal? 2 (list-ref(list-ref matrix 1) 13)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 520 35)))
+        
+        (when (>= columns 15) 
+          (when (equal? 2 (list-ref(list-ref matrix 1) 14)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 560 35)))
+          
+        (when (= columns 16) 
+          (when (equal? 2 (list-ref(list-ref matrix 1) 15)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 600 35)))
+
+        
+        ;###############TERCERA FILA###################
+        (when (equal? 2 (list-ref(list-ref matrix 2) 0))
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 0 70))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 2) 1)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 40 70))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 2) 2)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 80 70))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 2) 3)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 120 70))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 2) 4)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 160 70))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 2) 5)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 200 70))
+
+        (when (equal? 2 (list-ref(list-ref matrix 2) 6)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 240 70))
+
+        (when (equal? 2 (list-ref(list-ref matrix 2) 7)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 280 70))
+
+        (when (>= columns 9) 
+          (when (equal? 2 (list-ref(list-ref matrix 2) 8)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 320 70)))
+        
+        (when (>= columns 10) 
+          (when (equal? 2 (list-ref(list-ref matrix 2) 9)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 360 70)))
+
+        (when (>= columns 11) 
+          (when (equal? 2 (list-ref(list-ref matrix 2) 10)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 400 70)))     
+        
+        (when (>= columns 12) 
+          (when (equal? 2 (list-ref(list-ref matrix 2) 11)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 440 70)))
+
+        (when (>= columns 13) 
+          (when (equal? 2 (list-ref(list-ref matrix 2) 12)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 480 70)))
+
+        (when (>= columns 14) 
+          (when (equal? 2 (list-ref(list-ref matrix 2) 13)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 520 70)))
+        
+        (when (>= columns 15) 
+          (when (equal? 2 (list-ref(list-ref matrix 2) 14)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 560 70)))
+          
+        (when (= columns 16) 
+          (when (equal? 2 (list-ref(list-ref matrix 2) 15)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 600 70)))
+
+        ;###############CUARTA FILA###################
+        (when (equal? 2 (list-ref(list-ref matrix 3) 0))
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 0 110))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 3) 1)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 40 110))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 3) 2)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 80 110))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 3) 3)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 120 110))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 3) 4)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 160 110))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 3) 5)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 200 110))
+
+        (when (equal? 2 (list-ref(list-ref matrix 3) 6)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 240 110))
+
+        (when (equal? 2 (list-ref(list-ref matrix 3) 7)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 280 110))
+
+        (when (>= columns 9) 
+          (when (equal? 2 (list-ref(list-ref matrix 3) 8)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 320 110)))
+        
+        (when (>= columns 10) 
+          (when (equal? 2 (list-ref(list-ref matrix 3) 9)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 360 110)))
+
+        (when (>= columns 11) 
+          (when (equal? 2 (list-ref(list-ref matrix 3) 10)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 400 110)))     
+        
+        (when (>= columns 12) 
+          (when (equal? 2 (list-ref(list-ref matrix 3) 11)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 440 110)))
+
+        (when (>= columns 13) 
+          (when (equal? 2 (list-ref(list-ref matrix 3) 12)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 480 110)))
+
+        (when (>= columns 14) 
+          (when (equal? 2 (list-ref(list-ref matrix 3) 13)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 520 110)))
+        
+        (when (>= columns 15) 
+          (when (equal? 2 (list-ref(list-ref matrix 3) 14)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 560 110)))
+          
+        (when (>= columns 16) 
+          (when (equal? 2 (list-ref(list-ref matrix 3) 15)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 600 110)))
+
+        ;###############QUINTA FILA###################
+        (when (equal? 2 (list-ref(list-ref matrix 4) 0))
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 0 150))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 4) 1)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 40 150))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 4) 2)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 80 150))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 4) 3)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 120 150))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 4) 4)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 160 150))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 4) 5)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 200 150))
+
+        (when (equal? 2 (list-ref(list-ref matrix 4) 6)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 240 150))
+
+        (when (equal? 2 (list-ref(list-ref matrix 4) 7)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 280 150))
+
+        (when (>= columns 10) 
+          (when (equal? 2 (list-ref(list-ref matrix 4) 9)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 360 150)))
+
+        (when (>= columns 11) 
+          (when (equal? 2 (list-ref(list-ref matrix 4) 10)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 400 150)))     
+        
+        (when (>= columns 12) 
+          (when (equal? 2 (list-ref(list-ref matrix 4) 11)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 440 150)))
+
+        (when (>= columns 13) 
+          (when (equal? 2 (list-ref(list-ref matrix 4) 12)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 480 150)))
+
+        (when (>= columns 14) 
+          (when (equal? 2 (list-ref(list-ref matrix 4) 13)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 520 150)))
+        
+        (when (>= columns 15) 
+          (when (equal? 2 (list-ref(list-ref matrix 4) 14)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 560 150)))
+          
+        (when (>= columns 16) 
+          (when (equal? 2 (list-ref(list-ref matrix 4) 15)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 600 150)))
+
+        ;###############SEXTA FILA###################
+        (when (equal? 2 (list-ref(list-ref matrix 5) 0))
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 0 190))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 5) 1)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 40 190))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 5) 2)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 80 190))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 5) 3)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 120 190))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 5) 4)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 160 190))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 5) 5)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 200 190))
+
+        (when (equal? 2 (list-ref(list-ref matrix 5) 6)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 240 190))
+
+        (when (equal? 2 (list-ref(list-ref matrix 5) 7)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 280 190))
+
+        (when (>= columns 10) 
+          (when (equal? 2 (list-ref(list-ref matrix 5) 9)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 360 190)))
+
+        (when (>= columns 11) 
+          (when (equal? 2 (list-ref(list-ref matrix 5) 10)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 400 190)))     
+        
+        (when (>= columns 12) 
+          (when (equal? 2 (list-ref(list-ref matrix 5) 11)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 440 190)))
+
+        (when (>= columns 13) 
+          (when (equal? 2 (list-ref(list-ref matrix 5) 12)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 480 190)))
+
+        (when (>= columns 14) 
+          (when (equal? 2 (list-ref(list-ref matrix 5) 13)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 520 190)))
+        
+        (when (>= columns 15) 
+          (when (equal? 2 (list-ref(list-ref matrix 5) 14)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 560 190)))
+          
+        (when (>= columns 16) 
+          (when (equal? 2 (list-ref(list-ref matrix 5) 15)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 600 190)))
+
+
+        ;###############SEPTIMA FILA###################
+        (when (equal? 2 (list-ref(list-ref matrix 6) 0))
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 0 230))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 6) 1)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 40 230))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 6) 2)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 80 230))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 6) 3)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 120 230))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 6) 4)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 160 230))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 6) 5)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 200 230))
+
+        (when (equal? 2 (list-ref(list-ref matrix 6) 6)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 240 230))
+
+        (when (equal? 2 (list-ref(list-ref matrix 6) 7)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 280 230))
+
+        (when (>= columns 9) 
+          (when (equal? 2 (list-ref(list-ref matrix 6) 8)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 320 230)))
+        
+        (when (>= columns 10) 
+          (when (equal? 2 (list-ref(list-ref matrix 6) 9)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 360 230)))
+
+        (when (>= columns 11) 
+          (when (equal? 2 (list-ref(list-ref matrix 6) 10)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 400 230)))     
+        
+        (when (>= columns 12) 
+          (when (equal? 2 (list-ref(list-ref matrix 6) 11)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 440 230)))
+
+        (when (>= columns 13) 
+          (when (equal? 2 (list-ref(list-ref matrix 6) 12)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 480 230)))
+
+        (when (>= columns 14) 
+          (when (equal? 2 (list-ref(list-ref matrix 6) 13)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 520 230)))
+        
+        (when (>= columns 15) 
+          (when (equal? 2 (list-ref(list-ref matrix 6) 14)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 560 230)))
+          
+        (when (>= columns 16) 
+          (when (equal? 2 (list-ref(list-ref matrix 6) 15)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 600 230)))
+
+        ;###############OCTAVA FILA###################
+        (when (equal? 2 (list-ref(list-ref matrix 7) 0))
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 0 270))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 7) 1)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 40 270))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 7) 2)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 80 270))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 7) 3)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 120 270))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 7) 4)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 160 270))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 7) 5)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 200 270))
+
+        (when (equal? 2 (list-ref(list-ref matrix 7) 6)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 240 270))
+
+        (when (equal? 2 (list-ref(list-ref matrix 7) 7)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 280 270))
+
+        (when (>= columns 9) 
+          (when (equal? 2 (list-ref(list-ref matrix 7) 8)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 320 270)))
+        
+        (when (>= columns 10) 
+          (when (equal? 2 (list-ref(list-ref matrix 7) 9)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 360 270)))
+
+        (when (>= columns 11) 
+          (when (equal? 2 (list-ref(list-ref matrix 7) 10)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 400 270)))     
+        
+        (when (>= columns 12) 
+          (when (equal? 2 (list-ref(list-ref matrix 7) 11)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 440 270)))
+
+        (when (>= columns 13) 
+          (when (equal? 2 (list-ref(list-ref matrix 7) 12)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 480 270)))
+
+        (when (>= columns 14) 
+          (when (equal? 2 (list-ref(list-ref matrix 7) 13)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 520 270)))
+        
+        (when (>= columns 15) 
+          (when (equal? 2 (list-ref(list-ref matrix 7) 14)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 560 270)))
+          
+        (when (>= columns 16) 
+          (when (equal? 2 (list-ref(list-ref matrix 7) 15)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 600 270)))
+
+        ;############### NOVENA FILA ###################
+        (when (>= rows 9)
+          
+        (when (equal? 2 (list-ref(list-ref matrix 8) 0))
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 0 305))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 8) 1)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 40 305))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 8) 2)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 80 305))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 8) 3)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 120 305))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 8) 4)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 160 305))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 8) 5)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 200 305))
+
+        (when (equal? 2 (list-ref(list-ref matrix 8) 6)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 240 305))
+
+        (when (equal? 2 (list-ref(list-ref matrix 8) 7)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 280 305))
+
+        (when (>= columns 9) 
+          (when (equal? 2 (list-ref(list-ref matrix 8) 8)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 320 305)))
+        
+        (when (>= columns 10) 
+          (when (equal? 2 (list-ref(list-ref matrix 8) 9)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 360 305)))
+
+        (when (>= columns 11) 
+          (when (equal? 2 (list-ref(list-ref matrix 8) 10)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 400 305)))     
+        
+        (when (>= columns 12) 
+          (when (equal? 2 (list-ref(list-ref matrix 8) 11)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 440 305)))
+
+        (when (>= columns 13) 
+          (when (equal? 2 (list-ref(list-ref matrix 8) 12)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 480 305)))
+
+        (when (>= columns 14) 
+          (when (equal? 2 (list-ref(list-ref matrix 8) 13)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 520 305)))
+        
+        (when (>= columns 15) 
+          (when (equal? 2 (list-ref(list-ref matrix 8) 14)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 560 305)))
+          
+        (when (>= columns 16) 
+          (when (equal? 2 (list-ref(list-ref matrix 8) 15)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 600 305)))
+        )  
+        
+        ;############### DECIMA FILA ###################
+        (when (>= rows 10)
+          
+        (when (equal? 2 (list-ref(list-ref matrix 9) 0))
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 0 345))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 9) 1)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 40 345))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 9) 2)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 80 345))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 9) 3)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 120 345))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 9) 4)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 160 345))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 9) 5)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 200 345))
+
+        (when (equal? 2 (list-ref(list-ref matrix 9) 6)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 240 345))
+
+        (when (equal? 2 (list-ref(list-ref matrix 9) 7)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 280 345))
+
+        (when (>= columns 9) 
+          (when (equal? 2 (list-ref(list-ref matrix 9) 8)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 320 345)))
+        
+        (when (>= columns 10) 
+          (when (equal? 2 (list-ref(list-ref matrix 9) 9)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 360 345)))
+
+        (when (>= columns 11) 
+          (when (equal? 2 (list-ref(list-ref matrix 9) 10)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 400 345)))     
+        
+        (when (>= columns 12) 
+          (when (equal? 2 (list-ref(list-ref matrix 9) 11)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 440 345)))
+
+        (when (>= columns 13) 
+          (when (equal? 2 (list-ref(list-ref matrix 9) 12)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 480 345)))
+
+        (when (>= columns 14) 
+          (when (equal? 2 (list-ref(list-ref matrix 9) 13)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 520 345)))
+        
+        (when (>= columns 15) 
+          (when (equal? 2 (list-ref(list-ref matrix 9) 14)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 560 345)))
+          
+        (when (>= columns 16) 
+          (when (equal? 2 (list-ref(list-ref matrix 9) 15)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 600 345)))
+        )
+
+        ;############### DECIMA FILA ###################
+        (when (>= rows 10)
+          
+        (when (equal? 2 (list-ref(list-ref matrix 9) 0))
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 0 345))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 9) 1)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 40 345))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 9) 2)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 80 345))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 9) 3)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 120 345))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 9) 4)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 160 345))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 9) 5)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 200 345))
+
+        (when (equal? 2 (list-ref(list-ref matrix 9) 6)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 240 345))
+
+        (when (equal? 2 (list-ref(list-ref matrix 9) 7)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 280 345))
+
+        (when (>= columns 9) 
+          (when (equal? 2 (list-ref(list-ref matrix 9) 8)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 320 345)))
+        
+        (when (>= columns 10) 
+          (when (equal? 2 (list-ref(list-ref matrix 9) 9)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 360 345)))
+
+        (when (>= columns 11) 
+          (when (equal? 2 (list-ref(list-ref matrix 9) 10)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 400 345)))     
+        
+        (when (>= columns 12) 
+          (when (equal? 2 (list-ref(list-ref matrix 9) 11)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 440 345)))
+
+        (when (>= columns 13) 
+          (when (equal? 2 (list-ref(list-ref matrix 9) 12)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 480 345)))
+
+        (when (>= columns 14) 
+          (when (equal? 2 (list-ref(list-ref matrix 9) 13)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 520 345)))
+        
+        (when (>= columns 15) 
+          (when (equal? 2 (list-ref(list-ref matrix 9) 14)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 560 345)))
+          
+        (when (>= columns 16) 
+          (when (equal? 2 (list-ref(list-ref matrix 9) 15)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 600 345)))
+        )
+
+        ;############### UNDECIMA FILA ###################
+        (when (>= rows 11)
+          
+        (when (equal? 2 (list-ref(list-ref matrix 10) 0))
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 0 380))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 10) 1)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 40 380))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 10) 2)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 80 380))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 10) 3)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 120 380))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 10) 4)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 160 380))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 10) 5)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 200 380))
+
+        (when (equal? 2 (list-ref(list-ref matrix 10) 6)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 240 380))
+
+        (when (equal? 2 (list-ref(list-ref matrix 10) 7)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 280 380))
+
+        (when (>= columns 9) 
+          (when (equal? 2 (list-ref(list-ref matrix 10) 8)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 320 380)))
+        
+        (when (>= columns 10) 
+          (when (equal? 2 (list-ref(list-ref matrix 10) 9)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 360 380)))
+
+        (when (>= columns 11) 
+          (when (equal? 2 (list-ref(list-ref matrix 10) 10)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 400 380)))     
+        
+        (when (>= columns 12) 
+          (when (equal? 2 (list-ref(list-ref matrix 10) 11)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 440 380)))
+
+        (when (>= columns 13) 
+          (when (equal? 2 (list-ref(list-ref matrix 10) 12)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 480 380)))
+
+        (when (>= columns 14) 
+          (when (equal? 2 (list-ref(list-ref matrix 10) 13)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 520 380)))
+        
+        (when (>= columns 15) 
+          (when (equal? 2 (list-ref(list-ref matrix 10) 14)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 560 380)))
+          
+        (when (>= columns 16) 
+          (when (equal? 2 (list-ref(list-ref matrix 10) 15)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 600 380)))
+        )    
+
+        ;############### DOCEAVA FILA ###################
+        (when (>= rows 12)
+          
+        (when (equal? 2 (list-ref(list-ref matrix 11) 0))
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 0 420))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 11) 1)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 40 420))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 11) 2)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 80 420))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 11) 3)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 120 420))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 11) 4)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 160 420))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 11) 5)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 200 420))
+
+        (when (equal? 2 (list-ref(list-ref matrix 11) 6)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 240 420))
+
+        (when (equal? 2 (list-ref(list-ref matrix 11) 7)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 280 420))
+
+        (when (>= columns 9) 
+          (when (equal? 2 (list-ref(list-ref matrix 11) 8)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 320 420)))
+        
+        (when (>= columns 10) 
+          (when (equal? 2 (list-ref(list-ref matrix 11) 9)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 360 420)))
+
+        (when (>= columns 11) 
+          (when (equal? 2 (list-ref(list-ref matrix 11) 10)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 400 420)))     
+        
+        (when (>= columns 12) 
+          (when (equal? 2 (list-ref(list-ref matrix 11) 11)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 440 420)))
+
+        (when (>= columns 13) 
+          (when (equal? 2 (list-ref(list-ref matrix 11) 12)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 480 420)))
+
+        (when (>= columns 14) 
+          (when (equal? 2 (list-ref(list-ref matrix 11) 13)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 520 420)))
+        
+        (when (>= columns 15) 
+          (when (equal? 2 (list-ref(list-ref matrix 11) 14)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 560 420)))
+          
+        (when (>= columns 16) 
+          (when (equal? 2 (list-ref(list-ref matrix 11) 15)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 600 420)))
+        )      
+        
+        ;############### TRECEAVA FILA ###################
+        (when (>= rows 13)
+          
+        (when (equal? 2 (list-ref(list-ref matrix 12) 0))
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 0 455))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 12) 1)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 40 455))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 12) 2)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 80 455))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 12) 3)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 120 455))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 12) 4)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 160 455))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 12) 5)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 200 455))
+
+        (when (equal? 2 (list-ref(list-ref matrix 12) 6)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 240 455))
+
+        (when (equal? 2 (list-ref(list-ref matrix 12) 7)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 280 455))
+
+        (when (>= columns 9) 
+          (when (equal? 2 (list-ref(list-ref matrix 12) 8)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 320 455)))
+        
+        (when (>= columns 10) 
+          (when (equal? 2 (list-ref(list-ref matrix 12) 9)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 360 455)))
+
+        (when (>= columns 11) 
+          (when (equal? 2 (list-ref(list-ref matrix 12) 10)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 400 455)))     
+        
+        (when (>= columns 12) 
+          (when (equal? 2 (list-ref(list-ref matrix 12) 11)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 440 455)))
+
+        (when (>= columns 13) 
+          (when (equal? 2 (list-ref(list-ref matrix 12) 12)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 480 455)))
+
+        (when (>= columns 14) 
+          (when (equal? 2 (list-ref(list-ref matrix 12) 13)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 520 455)))
+        
+        (when (>= columns 15) 
+          (when (equal? 2 (list-ref(list-ref matrix 12) 14)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 560 455)))
+          
+        (when (>= columns 16) 
+          (when (equal? 2 (list-ref(list-ref matrix 12) 15)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 600 455)))
+        )
+
+        ;############### CATORCEAVA FILA ###################
+        (when (>= rows 14)
+          
+        (when (equal? 2 (list-ref(list-ref matrix 13) 0))
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 0 495))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 13) 1)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 40 495))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 13) 2)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 80 495))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 13) 3)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 120 495))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 13) 4)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 160 495))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 13) 5)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 200 495))
+
+        (when (equal? 2 (list-ref(list-ref matrix 13) 6)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 240 495))
+
+        (when (equal? 2 (list-ref(list-ref matrix 13) 7)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 280 495))
+
+        (when (>= columns 9) 
+          (when (equal? 2 (list-ref(list-ref matrix 13) 8)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 320 495)))
+        
+        (when (>= columns 10) 
+          (when (equal? 2 (list-ref(list-ref matrix 13) 9)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 360 495)))
+
+        (when (>= columns 11) 
+          (when (equal? 2 (list-ref(list-ref matrix 13) 10)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 400 495)))     
+        
+        (when (>= columns 12) 
+          (when (equal? 2 (list-ref(list-ref matrix 13) 11)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 440 495)))
+
+        (when (>= columns 13) 
+          (when (equal? 2 (list-ref(list-ref matrix 13) 12)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 480 495)))
+
+        (when (>= columns 14) 
+          (when (equal? 2 (list-ref(list-ref matrix 13) 13)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 520 495)))
+        
+        (when (>= columns 15) 
+          (when (equal? 2 (list-ref(list-ref matrix 13) 14)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 560 495)))
+          
+        (when (>= columns 16) 
+          (when (equal? 2 (list-ref(list-ref matrix 13) 15)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 600 495)))
+        )
+
+        ;############### QUINCEAVA FILA ###################
+        (when (>= rows 15)
+          
+        (when (equal? 2 (list-ref(list-ref matrix 14) 0))
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 0 535))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 14) 1)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 40 535))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 14) 2)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 80 535))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 14) 3)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 120 535))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 14) 4)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 160 535))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 14) 5)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 200 535))
+
+        (when (equal? 2 (list-ref(list-ref matrix 14) 6)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 240 535))
+
+        (when (equal? 2 (list-ref(list-ref matrix 14) 7)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 280 535))
+
+        (when (>= columns 9) 
+          (when (equal? 2 (list-ref(list-ref matrix 14) 8)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 320 535)))
+        
+        (when (>= columns 10) 
+          (when (equal? 2 (list-ref(list-ref matrix 14) 9)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 360 535)))
+
+        (when (>= columns 11) 
+          (when (equal? 2 (list-ref(list-ref matrix 14) 10)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 400 535)))     
+        
+        (when (>= columns 12) 
+          (when (equal? 2 (list-ref(list-ref matrix 14) 11)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 440 535)))
+
+        (when (>= columns 13) 
+          (when (equal? 2 (list-ref(list-ref matrix 14) 12)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 480 535)))
+
+        (when (>= columns 14) 
+          (when (equal? 2 (list-ref(list-ref matrix 14) 13)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 520 535)))
+        
+        (when (>= columns 15) 
+          (when (equal? 2 (list-ref(list-ref matrix 14) 14)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 560 535)))
+          
+        (when (>= columns 16) 
+          (when (equal? 2 (list-ref(list-ref matrix 14) 15)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 600 535)))
+        )
+
+        ;############### DECIMOSEXTA FILA ###################
+        (when (>= rows 16)
+          
+        (when (equal? 2 (list-ref(list-ref matrix 15) 0))
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 0 570))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 15) 1)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 40 570))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 15) 2)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 80 570))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 15) 3)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 120 570))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 15) 4)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 160 570))
+        
+        (when (equal? 2 (list-ref(list-ref matrix 15) 5)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 200 570))
+
+        (when (equal? 2 (list-ref(list-ref matrix 15) 6)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 240 570))
+
+        (when (equal? 2 (list-ref(list-ref matrix 15) 7)) 
+        (define piece (make-tokenBOT-piece id))
+        (send board insert piece 280 570))
+
+        (when (>= columns 9) 
+          (when (equal? 2 (list-ref(list-ref matrix 15) 8)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 320 570)))
+        
+        (when (>= columns 10) 
+          (when (equal? 2 (list-ref(list-ref matrix 15) 9)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 360 570)))
+
+        (when (>= columns 11) 
+          (when (equal? 2 (list-ref(list-ref matrix 15) 10)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 400 570)))     
+        
+        (when (>= columns 12) 
+          (when (equal? 2 (list-ref(list-ref matrix 15) 11)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 440 570)))
+
+        (when (>= columns 13) 
+          (when (equal? 2 (list-ref(list-ref matrix 15) 12)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 480 570)))
+
+        (when (>= columns 14) 
+          (when (equal? 2 (list-ref(list-ref matrix 15) 13)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 520 570)))
+        
+        (when (>= columns 15) 
+          (when (equal? 2 (list-ref(list-ref matrix 15) 14)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 560 570)))
+          
+        (when (>= columns 16) 
+          (when (equal? 2 (list-ref(list-ref matrix 15) 15)) 
+            (define piece (make-tokenBOT-piece id))
+            (send board insert piece 600 570)))
+        )
+        (checkWinLoseGUI matrix)
+        ) 
+      )
     )
-
-    ;############### DECIMA FILA ###################
-    (when (>= rows 10)
-      
-    (when (equal? 2 (list-ref(list-ref matrix 9) 0))
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 0 345))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 9) 1)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 40 345))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 9) 2)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 80 345))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 9) 3)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 120 345))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 9) 4)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 160 345))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 9) 5)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 200 345))
-
-    (when (equal? 2 (list-ref(list-ref matrix 9) 6)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 240 345))
-
-    (when (equal? 2 (list-ref(list-ref matrix 9) 7)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 280 345))
-
-    (when (>= columns 9) 
-      (when (equal? 2 (list-ref(list-ref matrix 9) 8)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 320 345)))
-    
-    (when (>= columns 10) 
-      (when (equal? 2 (list-ref(list-ref matrix 9) 9)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 360 345)))
-
-    (when (>= columns 11) 
-      (when (equal? 2 (list-ref(list-ref matrix 9) 10)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 400 345)))     
-    
-    (when (>= columns 12) 
-      (when (equal? 2 (list-ref(list-ref matrix 9) 11)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 440 345)))
-
-    (when (>= columns 13) 
-      (when (equal? 2 (list-ref(list-ref matrix 9) 12)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 480 345)))
-
-    (when (>= columns 14) 
-      (when (equal? 2 (list-ref(list-ref matrix 9) 13)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 520 345)))
-    
-    (when (>= columns 15) 
-      (when (equal? 2 (list-ref(list-ref matrix 9) 14)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 560 345)))
-      
-    (when (>= columns 16) 
-      (when (equal? 2 (list-ref(list-ref matrix 9) 15)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 600 345)))
-    )
-
-    ;############### UNDECIMA FILA ###################
-    (when (>= rows 11)
-      
-    (when (equal? 2 (list-ref(list-ref matrix 10) 0))
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 0 380))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 10) 1)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 40 380))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 10) 2)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 80 380))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 10) 3)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 120 380))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 10) 4)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 160 380))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 10) 5)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 200 380))
-
-    (when (equal? 2 (list-ref(list-ref matrix 10) 6)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 240 380))
-
-    (when (equal? 2 (list-ref(list-ref matrix 10) 7)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 280 380))
-
-    (when (>= columns 9) 
-      (when (equal? 2 (list-ref(list-ref matrix 10) 8)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 320 380)))
-    
-    (when (>= columns 10) 
-      (when (equal? 2 (list-ref(list-ref matrix 10) 9)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 360 380)))
-
-    (when (>= columns 11) 
-      (when (equal? 2 (list-ref(list-ref matrix 10) 10)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 400 380)))     
-    
-    (when (>= columns 12) 
-      (when (equal? 2 (list-ref(list-ref matrix 10) 11)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 440 380)))
-
-    (when (>= columns 13) 
-      (when (equal? 2 (list-ref(list-ref matrix 10) 12)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 480 380)))
-
-    (when (>= columns 14) 
-      (when (equal? 2 (list-ref(list-ref matrix 10) 13)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 520 380)))
-    
-    (when (>= columns 15) 
-      (when (equal? 2 (list-ref(list-ref matrix 10) 14)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 560 380)))
-      
-    (when (>= columns 16) 
-      (when (equal? 2 (list-ref(list-ref matrix 10) 15)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 600 380)))
-    )    
-
-    ;############### DOCEAVA FILA ###################
-    (when (>= rows 12)
-      
-    (when (equal? 2 (list-ref(list-ref matrix 11) 0))
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 0 420))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 11) 1)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 40 420))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 11) 2)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 80 420))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 11) 3)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 120 420))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 11) 4)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 160 420))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 11) 5)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 200 420))
-
-    (when (equal? 2 (list-ref(list-ref matrix 11) 6)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 240 420))
-
-    (when (equal? 2 (list-ref(list-ref matrix 11) 7)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 280 420))
-
-    (when (>= columns 9) 
-      (when (equal? 2 (list-ref(list-ref matrix 11) 8)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 320 420)))
-    
-    (when (>= columns 10) 
-      (when (equal? 2 (list-ref(list-ref matrix 11) 9)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 360 420)))
-
-    (when (>= columns 11) 
-      (when (equal? 2 (list-ref(list-ref matrix 11) 10)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 400 420)))     
-    
-    (when (>= columns 12) 
-      (when (equal? 2 (list-ref(list-ref matrix 11) 11)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 440 420)))
-
-    (when (>= columns 13) 
-      (when (equal? 2 (list-ref(list-ref matrix 11) 12)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 480 420)))
-
-    (when (>= columns 14) 
-      (when (equal? 2 (list-ref(list-ref matrix 11) 13)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 520 420)))
-    
-    (when (>= columns 15) 
-      (when (equal? 2 (list-ref(list-ref matrix 11) 14)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 560 420)))
-      
-    (when (>= columns 16) 
-      (when (equal? 2 (list-ref(list-ref matrix 11) 15)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 600 420)))
-    )      
-    
-    ;############### TRECEAVA FILA ###################
-    (when (>= rows 13)
-      
-    (when (equal? 2 (list-ref(list-ref matrix 12) 0))
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 0 455))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 12) 1)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 40 455))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 12) 2)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 80 455))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 12) 3)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 120 455))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 12) 4)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 160 455))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 12) 5)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 200 455))
-
-    (when (equal? 2 (list-ref(list-ref matrix 12) 6)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 240 455))
-
-    (when (equal? 2 (list-ref(list-ref matrix 12) 7)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 280 455))
-
-    (when (>= columns 9) 
-      (when (equal? 2 (list-ref(list-ref matrix 12) 8)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 320 455)))
-    
-    (when (>= columns 10) 
-      (when (equal? 2 (list-ref(list-ref matrix 12) 9)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 360 455)))
-
-    (when (>= columns 11) 
-      (when (equal? 2 (list-ref(list-ref matrix 12) 10)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 400 455)))     
-    
-    (when (>= columns 12) 
-      (when (equal? 2 (list-ref(list-ref matrix 12) 11)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 440 455)))
-
-    (when (>= columns 13) 
-      (when (equal? 2 (list-ref(list-ref matrix 12) 12)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 480 455)))
-
-    (when (>= columns 14) 
-      (when (equal? 2 (list-ref(list-ref matrix 12) 13)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 520 455)))
-    
-    (when (>= columns 15) 
-      (when (equal? 2 (list-ref(list-ref matrix 12) 14)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 560 455)))
-      
-    (when (>= columns 16) 
-      (when (equal? 2 (list-ref(list-ref matrix 12) 15)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 600 455)))
-    )
-
-    ;############### CATORCEAVA FILA ###################
-    (when (>= rows 14)
-      
-    (when (equal? 2 (list-ref(list-ref matrix 13) 0))
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 0 495))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 13) 1)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 40 495))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 13) 2)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 80 495))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 13) 3)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 120 495))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 13) 4)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 160 495))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 13) 5)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 200 495))
-
-    (when (equal? 2 (list-ref(list-ref matrix 13) 6)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 240 495))
-
-    (when (equal? 2 (list-ref(list-ref matrix 13) 7)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 280 495))
-
-    (when (>= columns 9) 
-      (when (equal? 2 (list-ref(list-ref matrix 13) 8)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 320 495)))
-    
-    (when (>= columns 10) 
-      (when (equal? 2 (list-ref(list-ref matrix 13) 9)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 360 495)))
-
-    (when (>= columns 11) 
-      (when (equal? 2 (list-ref(list-ref matrix 13) 10)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 400 495)))     
-    
-    (when (>= columns 12) 
-      (when (equal? 2 (list-ref(list-ref matrix 13) 11)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 440 495)))
-
-    (when (>= columns 13) 
-      (when (equal? 2 (list-ref(list-ref matrix 13) 12)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 480 495)))
-
-    (when (>= columns 14) 
-      (when (equal? 2 (list-ref(list-ref matrix 13) 13)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 520 495)))
-    
-    (when (>= columns 15) 
-      (when (equal? 2 (list-ref(list-ref matrix 13) 14)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 560 495)))
-      
-    (when (>= columns 16) 
-      (when (equal? 2 (list-ref(list-ref matrix 13) 15)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 600 495)))
-    )
-
-    ;############### QUINCEAVA FILA ###################
-    (when (>= rows 15)
-      
-    (when (equal? 2 (list-ref(list-ref matrix 14) 0))
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 0 535))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 14) 1)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 40 535))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 14) 2)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 80 535))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 14) 3)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 120 535))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 14) 4)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 160 535))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 14) 5)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 200 535))
-
-    (when (equal? 2 (list-ref(list-ref matrix 14) 6)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 240 535))
-
-    (when (equal? 2 (list-ref(list-ref matrix 14) 7)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 280 535))
-
-    (when (>= columns 9) 
-      (when (equal? 2 (list-ref(list-ref matrix 14) 8)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 320 535)))
-    
-    (when (>= columns 10) 
-      (when (equal? 2 (list-ref(list-ref matrix 14) 9)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 360 535)))
-
-    (when (>= columns 11) 
-      (when (equal? 2 (list-ref(list-ref matrix 14) 10)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 400 535)))     
-    
-    (when (>= columns 12) 
-      (when (equal? 2 (list-ref(list-ref matrix 14) 11)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 440 535)))
-
-    (when (>= columns 13) 
-      (when (equal? 2 (list-ref(list-ref matrix 14) 12)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 480 535)))
-
-    (when (>= columns 14) 
-      (when (equal? 2 (list-ref(list-ref matrix 14) 13)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 520 535)))
-    
-    (when (>= columns 15) 
-      (when (equal? 2 (list-ref(list-ref matrix 14) 14)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 560 535)))
-      
-    (when (>= columns 16) 
-      (when (equal? 2 (list-ref(list-ref matrix 14) 15)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 600 535)))
-    )
-
-    ;############### DECIMOSEXTA FILA ###################
-    (when (>= rows 16)
-      
-    (when (equal? 2 (list-ref(list-ref matrix 15) 0))
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 0 570))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 15) 1)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 40 570))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 15) 2)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 80 570))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 15) 3)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 120 570))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 15) 4)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 160 570))
-    
-    (when (equal? 2 (list-ref(list-ref matrix 15) 5)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 200 570))
-
-    (when (equal? 2 (list-ref(list-ref matrix 15) 6)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 240 570))
-
-    (when (equal? 2 (list-ref(list-ref matrix 15) 7)) 
-    (define piece (make-tokenBOT-piece id))
-    (send board insert piece 280 570))
-
-    (when (>= columns 9) 
-      (when (equal? 2 (list-ref(list-ref matrix 15) 8)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 320 570)))
-    
-    (when (>= columns 10) 
-      (when (equal? 2 (list-ref(list-ref matrix 15) 9)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 360 570)))
-
-    (when (>= columns 11) 
-      (when (equal? 2 (list-ref(list-ref matrix 15) 10)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 400 570)))     
-    
-    (when (>= columns 12) 
-      (when (equal? 2 (list-ref(list-ref matrix 15) 11)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 440 570)))
-
-    (when (>= columns 13) 
-      (when (equal? 2 (list-ref(list-ref matrix 15) 12)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 480 570)))
-
-    (when (>= columns 14) 
-      (when (equal? 2 (list-ref(list-ref matrix 15) 13)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 520 570)))
-    
-    (when (>= columns 15) 
-      (when (equal? 2 (list-ref(list-ref matrix 15) 14)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 560 570)))
-      
-    (when (>= columns 16) 
-      (when (equal? 2 (list-ref(list-ref matrix 15) 15)) 
-        (define piece (make-tokenBOT-piece id))
-        (send board insert piece 600 570)))
-    )
-
-;#############################################################
-;#############  CHECK WIN-LOSE  MACHINE TURN #################
-    (cond
-    ((equal? 1 (checkWinLose matrix))
-      (send winnerAlert show #t)
-      (exit))
-
-    ((equal? 2 (checkWinLose matrix))
-      (send loserAlert show #t)
-      (exit))
-  
-    ((equal? 3 (checkWinLose matrix))
-      (send tieAlert show #t))
-      (exit))
-   ) 
   )
- )
-)
 )
 
 
