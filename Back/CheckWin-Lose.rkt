@@ -1156,12 +1156,18 @@
 |#
 
 
-;Conjunto de candidatos: posiciones 0, 1 ,2 en una matriz
+; Se define el conjunto de candidatos: posiciones 0, 1 ,2 en una matriz
 
+; Función que reemplaza un elemento por otro dado en un lista específica
+; E: elemento a reemplazar, elemento deseado, lista
+; S: lista con el elemento deseado en la posición del elemento a reemplazar
 (define (remplace element newElement lista)
     (remplaceAux element newElement lista '())
 )
 
+; Función auxiliar de remplace
+; E: elemento a reemplazar, elemento deseado, lista
+; S: lista con el elemento deseado en la posición del elemento a reemplazar
 (define (remplaceAux element newElement lista res)
     (cond
         ((null? lista)
@@ -1178,10 +1184,16 @@
     )
 )
 
+; Función para reemplazar un elemento en una matriz por el elemento deseado 
+; E: elemento a reemplazar, elemento deseado, matriz
+; S: matriz con el elemento a cambiar sustituido por el elemento deseado
 (define (remplaceMatrix element newElement matrix)
     (remplaceMatrixAux element newElement matrix '())
 )
 
+; Función auxiliar de remplaceMatrixAux 
+; E: elemento a reemplazar, elemento deseado, matriz, matriz vacía
+; S: matriz con el elemento a cambiar sustituido por el elemento deseado
 (define (remplaceMatrixAux element newElement matrix newMatrix)
     (cond
         ((null? matrix)
@@ -1195,10 +1207,16 @@
 
 )
 
+; Función para invertir la matriz
+; E: matriz
+; S: matriz con la última fila de primero
 (define (turnMatrix matrix)
     (turnMatrixAux matrix '())
 )
 
+; Función auxiliar de turnMatrix
+; E: matriz, matriz vacía
+; S: matriz con la última fila de primero
 (define (turnMatrixAux matrix newMatrix)
     (cond
         ((null? matrix)
@@ -1215,12 +1233,16 @@
 ;------------------------------------------------------
 ;------------------------------------------------------
 
-;funcion que cuenta las repeticiones de un elemento en una lista
+; Función que cuenta las repeticiones de un elemento en una lista
+; E: elemento a buscar, lista
+; S: cantidad de repeticiones del elemento ingresado
 (define (contList element lista)
     (contListAux element lista 0)
 )
 
-;funcion auxiliar de contlist que realiza toda la recursion
+; Función auxiliar de contList que relaiza la recursión
+; E: elemento a buscar, lista, cero
+; S: cantidad de repeticiones del elemento ingresado
 (define (contListAux element lista res)
     (cond
         ((null? lista) res)
@@ -1232,7 +1254,9 @@
     )
 )
 
-;funcion que determina si existe algun cero posible en una lista para insertar ficha
+; Función que determina si existe algun campo en una lista para insertar ficha
+; E: lista
+; S: boolean que indica si se puede insertar la ficha o no
 (define (canAdd? lista)
     (cond
         ((zero? (contList 0 lista))
@@ -1244,7 +1268,16 @@
     )
 )
 
-;funcion auxiliar de maxRere que realiza toda la recursion
+; Función que retorna el máximo de repeticiones consecutivas en una lista
+; E: elemento a buscar, lista
+; S: cantidad de repeticiones consecutivas en la lista dada
+(define (maxRepe element lista)
+    (maxRepeAux element lista 0 0)
+)
+
+; Función auxiliar de maxRepe que realiza toda la recursión
+; E: elemento a buscar, lista, cantidad de repeticiones, repeticiones temporales
+; S: cantidad de repeticiones consecutivas en la lista dada
 (define (maxRepeAux element lista repe tempRepe)
     (cond
         ((and (> tempRepe repe) (null? lista))
@@ -1266,12 +1299,16 @@
     )
 )
 
-;funcion que retorta el maximo de repeticiones consecutivas en una lista
-(define (maxRepe element lista)
-    (maxRepeAux element lista 0 0)
+; Función que encuentra la posición para colocar la ficha en la mejor posicion
+; E: elemento a colocar, lista
+; S: posición temporal del elemento en la lista
+(define (findPlace element lista)
+    (findPlaceAux element lista lista 0 0)
 )
 
-;funcion auxiliar de findPlace que realiza toda la recursividad
+; Función auxiliar de findPlace que realiza toda la recursividad
+; E: elemento a colocar, lista, lista, cantidad de repeticiones, posición temporal
+; S: posición temporal del elemento en la lista
 (define (findPlaceAux element lista listaPerm repe tempPos)
     (cond
         ((equal? repe (maxRepe element listaPerm))
@@ -1295,18 +1332,16 @@
         )
     )
 )
-
-;funcion que encuentra la posicion para colocar la ficha en la mejor posicion
-(define (findPlace element lista)
-    (findPlaceAux element lista lista 0 0)
-)
-
-;funcion que determina las posiciones de los campos con 0
+; Función que determina las posiciones de los campos con 0
+; E: lista
+; S: lista con las posibles posibles posiciones para colocar una ficha
 (define (availableField lista)
     (availableFieldAux lista '() 0)
 )
 
 ;funcion auxiliar de availableField
+; E: lista, lista vacía, contador en cero
+; S: lista con las posibles posibles posiciones para colocar una ficha
 (define (availableFieldAux lista res tempPos)
     (cond
         ((null? lista)
@@ -1321,7 +1356,9 @@
     )
 )
 
-;Funcion que obtiene el elemento en la pisicion determinada
+; Función que obtiene el elemento en la posicion determinada
+; E: posición del elemento, lista
+; S: elemento en la posición deseada de la lista
 (define (getElement2 pos lista)
     (cond
         ((zero? pos)
@@ -1332,7 +1369,16 @@
 
 )
 
-;Funcion auxiliar de put
+; Función que inserta/remplaza un elemento en una lista
+; E: posición en la cual se insertará el elemento, elemento, lista
+; S: lista con el elemento insertado en la posición indicada
+(define (put pos element lista)
+    (putAux pos element lista '())
+)
+
+; Función auxiliar de put
+; E: posición en la cual se insertará el elemento, elemento, lista, lista vacía
+; S: lista con el elemento insertado en la posición indicada
 (define (putAux pos element lista newLista)
     (cond
         ((zero? pos)
@@ -1344,13 +1390,9 @@
     
     )
 )
-
-;Funcion que inserta/remplaza un elemento en una lista
-(define (put pos element lista)
-    (putAux pos element lista '())
-)
-
-;Funcion que determina el mejor espacio para colocar la siguiente ficha en una lista
+; Función que determina el mejor espacio para colocar la siguiente ficha en una lista
+; E: elemento, lista, elemento alterno
+; S: lista con el elemento insertado o en un su defecto un #f en caso de no poder insertarlo
 (define (selectPlace element lista altElement)
     (cond
         ((canAdd? lista)
@@ -1375,27 +1417,6 @@
     )
 )
 
-#|
-;Funcion que determina la fila para insertar la ficha en la matriz
-(define (findRow element matrix)
-    (findRowAux element matrix '())
-)
-(define (findRowAux element matrix newMatrix)
-    (cond
-        ((null? matrix)
-            #f
-        )
-        ((equal? (selectPlace element (car matrix)) #f)
-            (findRowAux element (cdr matrix) (append newMatrix (list (car matrix))))
-        )
-        (else
-            (append newMatrix (list (selectPlace element (car matrix))) (cdr matrix))
-        )
-    
-    )
-)
-|#
-
 ; Función que ejecuta el algoritmo codicioso
 ; E: matriz
 ; S: matriz con el elemento insertado en la mejor posición encontrada por el algoritmo
@@ -1411,9 +1432,8 @@
     (findTemporalAux element matrix 0 '() '())
 )
 
-;tempList primer fila de la matriz
 ; Función auxiliar de findTemporalAux
-; E: elemento a buscar, matriz, número de repeticiones, matriz vacía, lista vacía
+; E: elemento a buscar, matriz, número de repeticiones, matriz vacía, primer fila de la matriz
 ; S: matriz con una solución parcial
 (define (findTemporalAux element matrix repe newMatrix tempList)
 

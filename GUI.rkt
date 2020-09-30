@@ -3,24 +3,49 @@
 (require "Back/CheckWin-Lose.rkt")
 (require embedded-gui)
 
-;################################################
-;########## IMPLEMENTACION CON LA LOGICA ########
-;################################################
+#|
+*********************************************************************************************
+************************    VARIABLES REQUERIDAS POR EL JUEGO   *****************************
+*********************************************************************************************
+|#
 
-;LA MATRIZ PRINCIPAL
+; Variable que contiene la matriz del tablero
 (define matrix '(()))
 
+; Variable que contiene un boolean indicando si se realizó un cambio en la matriz
 (define changeValue #f)
 
+; Variables x,y que contienen la posición "x" y "y" del mouse
 (define-values (mouseX mouseY) (values '0 '0))
 
+; Variable que contiene la matriz temporal al realizar un cambio en la matriz original 
 (define listaMatrizTemp '())
 
-; Función que devuelve la fila y la columna seleccionada
+
+#|
+*********************************************************************************************
+*********************************************************************************************
+*********************************************************************************************
+|#
+
+
+#|
+*********************************************************************************************
+***********************    FUNCIONES REQUERIDAS PARA VALIDACIÓN   ***************************
+*********************************************************************************************
+|#
+
+; Función que devuelve la fila y la columna correspondientes de la matriz seleccionadas por el usuario  
+; E: matriz, posición en "x" del mouse, posición en "y" del mouse
+; S: lista con la fila y columna de la matriz respectiva
 (define (checkPiecePosition matrix posXmouse posYmouse)
   (checkPiecePositionAux matrix posXmouse posYmouse '0 '40 '0 '40 '0 '0 '())
 )
 
+; Función auxiliar de checkPiecePosition
+; E: matriz, posición en "x" del mouse, posición en "y" del mouse, posición mínima en "x", posición máxima en "x", 
+;    posición mínima en "y", posición máxima en "y", número de fila, número de columna, lista vacía    
+; S: lista con la fila y columna de la matriz respectiva
 (define (checkPiecePositionAux matrix posXmouse posYmouse xMin xMax yMin yMax fila columna lista)
     (cond ; Caso en donde se tiene la fila y la columna
           ((and (>= posXmouse xMin) (<= posXmouse xMax) (>= posYmouse yMin) (<= posYmouse yMax))
@@ -71,31 +96,37 @@
 
 )
 
+; Función que revisa si el jugador ganó, perdió o quedo empatado
+; E: matriz
+; S: número que indica si el jugador ganó (1 = ganó, 2 = perdío, 3 = empate)
 (define (checkWinLoseGUI matrix)
-   ;############################################################
-   ;#############  CHECK WIN-LOSE  PLAYER TURN #################
-    
   (cond
     ((equal? 1 (checkWinLose matrix))
-      (send winnerAlert show #t)
-      (exit)
+        (send winnerAlert show #t)
+        (exit)
     )
     ((equal? 2 (checkWinLose matrix))
-      (send loserAlert show #t)
-      (exit)
+        (send loserAlert show #t)
+        (exit)
     )
     ((equal? 3 (checkWinLose matrix))
-      (send tieAlert show #t)
-      (exit)
+        (send tieAlert show #t)
+        (exit)
     )
   )
 )
 
 ; Función para verificar si la posición seleccionada es válida
+; E: matriz, posición en "x" (fila), posición en "y" (columna)
+; S: boolean que indica si la posición seleccionada por el usuario es válida
 (define (checkMatriz matrix posX posY)
   (checkMatrizAux matrix (car matrix) (car(checkPiecePosition matrix posX posY)) (cadr(checkPiecePosition matrix posX posY)) '0 '0)
 )
 
+; Función auxiliar de checkMatrix
+; E: matriz, primera fila de la matriz, número de fila, número de columna, 
+;    número de fila temporal, número de columna temporal
+; S: boolean que indica si la posición seleccionada por el usuario es válida
 (define (checkMatrizAux matrix fila numFila numColumna filaTemp columnaTemp)
   (cond ; Se busca la fila correcta
         ((not (equal? filaTemp numFila))
@@ -253,10 +284,16 @@
     )
 )
 
+; Función que reemplaza un elemento por otro dado en un lista específica
+; E: elemento a reemplazar, elemento deseado, lista
+; S: lista con el elemento deseado en la posición del elemento a reemplazar
 (define (remplace element newElement lista)
     (remplaceAux element newElement lista '())
 )
 
+; Función auxiliar de remplace
+; E: elemento a reemplazar, elemento deseado, lista
+; S: lista con el elemento deseado en la posición del elemento a reemplazar
 (define (remplaceAux element newElement lista res)
     (cond
         ((null? lista)
@@ -273,10 +310,16 @@
     )
 )
 
+; Función para reemplazar un elemento en una matriz por el elemento deseado 
+; E: elemento a reemplazar, elemento deseado, matriz
+; S: matriz con el elemento a cambiar sustituido por el elemento deseado
 (define (remplaceMatrix element newElement matrix)
     (remplaceMatrixAux element newElement matrix '())
 )
 
+; Función auxiliar de remplaceMatrixAux 
+; E: elemento a reemplazar, elemento deseado, matriz, matriz vacía
+; S: matriz con el elemento a cambiar sustituido por el elemento deseado
 (define (remplaceMatrixAux element newElement matrix newMatrix)
     (cond
         ((null? matrix)
@@ -289,7 +332,17 @@
     )
 
 )
-;Funcion auxiliar de put
+
+; Función que inserta/remplaza un elemento en una lista
+; E: posición en la cual se insertará el elemento, elemento, lista
+; S: lista con el elemento insertado en la posición indicada
+(define (put pos element lista)
+    (putAux pos element lista '())
+)
+
+; Función auxiliar de put
+; E: posición en la cual se insertará el elemento, elemento, lista, lista vacía
+; S: lista con el elemento insertado en la posición indicada
 (define (putAux pos element lista newLista)
     (cond
         ((zero? pos)
@@ -302,22 +355,21 @@
     )
 )
 
-;Funcion que inserta/remplaza un elemento en una lista
-(define (put pos element lista)
-    (putAux pos element lista '())
-)
 
+; Función que realiza el cambio de valor en la matriz y actualiza el valor en la interfaz
+; E: evento del mouse
+; S: actualiza la matriz en caso de un cambio exitoso y sino muestra una ventana de alerta
 (define (position-piece event)
   (define-values (x y) (values (send event get-x) (+ 20 (send event get-y))))
   (cond ;Se verifica si la posición indicada es válida 
         ((equal? (checkMatriz matrix x y) #t)
             (set! matrix (remplaceValue '3 (car (checkPiecePosition matrix x y)) (cadr (checkPiecePosition matrix x y)) matrix))
+            ; Se verifica si se debe bajar la posición de la ficha
             (set! listaMatrizTemp (checkCorrectSolution2 matrix))
             
             (set! matrix (car listaMatrizTemp))
             (set! mouseY (cadr listaMatrizTemp))
 
-            ;(set! matrix (remplaceValue 1 (car (checkPiecePosition matrix x y)) (cadr (checkPiecePosition matrix x y)) matrix))
             (set! changeValue #t)
         ) 
         (else
@@ -327,116 +379,152 @@
 )
 
 
-;#####################################################
-;############### INTERFAZ GRAFICA ####################
-;#####################################################
+#|
+*********************************************************************************************
+*********************************************************************************************
+*********************************************************************************************
+|#
 
-;FRAME DEL JUEGO
+
+#|
+*********************************************************************************************
+***********************    CONFIGURACIONES DE INTERFAZ GRÁFICA   ****************************
+*********************************************************************************************
+|#
+
+; Frame principal del juego
 (define gameWindow (new frame% 
                 [label "4 en Linea"]
                 [width 640]
                 [height 640]
-                [style (list 'no-resize-border)]))
+                [style (list 'no-resize-border)])
+)
 
+; Frame para ventana de alerta que indica que el jugador ganó
 (define winnerAlert (new dialog% [label "Alerta"]
                  [parent gameWindow]
                  [width 300]
-                 [height 350]))
+                 [height 350])
+)
 
+; Frame para ventana de alerta que indica que el jugador perdió
 (define loserAlert (new dialog% [label "Alerta"]
                  [parent gameWindow]
                  [width 300]
-                 [height 350]))
+                 [height 350])
+)
 
+; Frame para ventana de alerta que indica que el jugador empató
 (define tieAlert (new dialog% [label "Alerta"]
                  [parent gameWindow]
                  [width 300]
-                 [height 350]))
+                 [height 350])
+)
+
+; Frame para ventana de alerta que indica que el jugador puso una ficha en una posición inválida
 (define positionWarning (new dialog% [label "Alerta"]
                  [parent gameWindow]
                  [width 900]
-                 [height 350]))
+                 [height 350])
+)
 
+; Canvas del frame winnerAlert
 (define winnerCanvas (new canvas% [parent winnerAlert]
                                   [paint-callback 
                                   (lambda (canvas dc)
                                   (send dc set-font (make-object font% 20 "Century Gothic" 'decorative 'normal 'bold))
                                   (send dc draw-text "GANASTE!" 10 10)
                                   (let ((winnerPicture (make-object bitmap% "3enlinea/4enLinea.png")))
-                                  (send dc draw-bitmap winnerPicture 30 50)))]))
+                                  (send dc draw-bitmap winnerPicture 30 50)))])
+)
 
-
+; Canvas del frame loserAlert
 (define loserCanvas (new canvas% [parent loserAlert]
                                   [paint-callback 
                                   (lambda (canvas dc)
                                   (send dc set-font (make-object font% 20 "Century Gothic" 'decorative 'normal 'bold))
                                   (send dc draw-text "PERDISTE!" 10 10)
                                   (let ((winnerPicture (make-object bitmap% "3enlinea/4enLinea.png")))
-                                  (send dc draw-bitmap winnerPicture 30 50)))]))
+                                  (send dc draw-bitmap winnerPicture 30 50)))])
+)
 
-
+; Canvas del frame tieAlert
 (define tieCanvas (new canvas% [parent tieAlert]
                                   [paint-callback 
                                   (lambda (canvas dc)
                                   (send dc set-font (make-object font% 20 "Century Gothic" 'decorative 'normal 'bold))
                                   (send dc draw-text "EMPATE!" 10 10)
                                   (let ((winnerPicture (make-object bitmap% "3enlinea/4enLinea.png")))
-                                  (send dc draw-bitmap winnerPicture 30 50)))]))
+                                  (send dc draw-bitmap winnerPicture 30 50)))])
+)
+
+; Canvas del frame positionWarning
 (define positionWarningCanvas (new canvas% [parent positionWarning]
                                   [paint-callback 
                                   (lambda (canvas dc)
                                   (send dc set-font (make-object font% 20 "Century Gothic" 'decorative 'normal 'bold))
                                   (send dc draw-text "No se puede insertar la ficha en el lugar indicado!" 10 10)
                                   (let ((winnerPicture (make-object bitmap% "3enlinea/4enLinea.png")))
-                                  (send dc draw-bitmap winnerPicture 30 50)))]))
+                                  (send dc draw-bitmap winnerPicture 30 50)))])
+)
 
-
-;FRAME DE CONFIGURACIONES
+; Frame de configuraciones de la ventana principal
 (define topWindow (new frame% 
                 [label "4 en Linea"]
                 [width 350]
                 [height 310]
-                [style (list 'no-resize-border)]))
-                (send topWindow show #t)
+                [style (list 'no-resize-border)])
+)
+(send topWindow show #t)
 
-
+; Frame de configuración para el título
 (define(drawTitle canvas dc)
   (send dc set-font (make-object font% 20 "Century Gothic" 'decorative 'normal 'bold))
-  (send dc draw-text "4 EN LINEA" 100 10))
+  (send dc draw-text "4 EN LINEA" 100 10)
+)
 
+; Configuración del título
 (define title(new canvas% [parent topWindow]
                            [paint-callback drawTitle]
-                           [style (list 'transparent)]))
+                           [style (list 'transparent)])
+)
 
-;PANEL PARA CONFIGURACIONES
+; Panel de configuraciones
 (define controlPane (new vertical-pane% [parent topWindow]
                                         [spacing 25]
-                                        [alignment '(center top)]))
-;CONFIGURACIONES PARA LA MATRIZ
-(new message% [parent controlPane]
-              [label "Configuraciones: "])
+                                        [alignment '(center top)])
+)
 
+; Configuraciones de la matriz
+(new message% [parent controlPane]
+              [label "Configuraciones: "]
+)
+
+; Configuraciones del panel 
 (define sizePane (new horizontal-pane% [parent controlPane]
                                        [spacing 5]
-                                       [alignment '(center top)]))
-                           
+                                       [alignment '(center top)])
+)
 
+; Configuración de seleción de filas                           
 (define selectRow(new choice% [parent sizePane]
                               [label "Filas:  "]
-                              [choices '("8" "9" "10" "11" "12" "13" "14" "15" "16")]
-                              ))
+                              [choices '("8" "9" "10" "11" "12" "13" "14" "15" "16")])
+)
 
+; Configuración de selección de columnas
 (define selectColumn(new choice% [parent sizePane]
                                  [label "Columnas:  "]
-                                 [choices '("8" "9" "10" "11" "12" "13" "14" "15" "16")]
-                                 ))
+                                 [choices '("8" "9" "10" "11" "12" "13" "14" "15" "16")])
+)
 
+; Configuración de selección de ficha
 (define selectToken(new choice% [parent controlPane]
                                 [label "Ficha:  "]
-                                [choices '("Rojo" "Azul")]
-                                ))
+                                [choices '("Rojo" "Azul")])
+)
 
-;Boton encargado de guardar las configuraciones y comenzar el juego
+; Botón encargado de guardar las configuraciones y comenzar el juego
 (define accept(new button% [parent controlPane]
                            [label "Aceptar"]
                            [callback (lambda (button event)
@@ -444,17 +532,28 @@
                            (define matrixCols (string->number (send selectColumn get-string-selection)))
                            (set! matrix (createMatrix matrixRows matrixCols))
                            (send gameWindow show #t)
-                           (send topWindow show #f))]))
+                           (send topWindow show #f))])
+)
 
-
-
+; Variable para almacenar el token escogido por el usuario
 (define token (send selectToken get-string-selection))
 
-;#############################################################
-;############### TABLERO CON LOGICA Y GUI ####################
-;#############################################################
+#|
+*********************************************************************************************
+*********************************************************************************************
+*********************************************************************************************
+|#
 
-;Override de la clase pasteboard%, de manera que sea posible dibujar el tablero con la funcion draw-4Line-board y pegar las fichitas
+
+#|
+*********************************************************************************************
+*********************    CONFIGURACIONES DEL TABLERO Y FICHAS    ****************************
+*********************************************************************************************
+|#
+
+
+; Override de la clase pasteboard%, de manera que sea posible dibujar el tablero 
+; con la funcion draw-4Line-board y pintar las fichas
 (define 4Line-board%
   (class pasteboard%
     (super-new)
@@ -470,7 +569,8 @@
         
         (for ([id (in-hash-keys token-piece-data)])
           (define piece (make-token-piece id))
-        
+
+        ; Se pinta del color del token del jugador en caso de que haya un cambio válido
         (when (equal? changeValue #t)
           (send board insert piece (- (send e get-x) 15) (+ (- (send e get-y) 15) (- (car mouseY) 10)))
           (checkWinLoseGUI matrix)
@@ -478,6 +578,8 @@
         )
 
         (sleep/yield 1)
+        
+        ; Se ejecuta el algoritmo codicioso
         (set! matrix (greedyAlgorithm matrix))
 
         
@@ -1755,12 +1857,9 @@
   )
 )
 
-
-;###############################################################
-;######################## TABLERO ##############################
-
-
-;Funcion encargada de dibujar el tablero
+; Función encargada de dibujar el tablero
+; E: tablero
+; S: tablero con las configuraciones dadas por el usuario
 (define (draw-4Line-board dc)
   (define brush (send the-brush-list find-or-create-brush "gray" 'solid))
   (define pen (send the-pen-list find-or-create-pen "white" 1 'solid))
@@ -1776,141 +1875,161 @@
   (send dc set-font font)
 
   (for* ([row (in-range (string->number (send selectRow get-string-selection)))] [col (in-range (string->number (send selectColumn get-string-selection)))])
-    (define-values [x y] (values (* col cell-width) (* row cell-height)))
-    (send dc draw-ellipse x y cell-width cell-height)))
+      (define-values [x y] (values (* col cell-width) (* row cell-height)))
+      (send dc draw-ellipse x y cell-width cell-height)
+  )
+)
 
-;Tablero
+; Variable para mantener el tablero
 (define board (new 4Line-board%))
 
-;Canvas de clase editor%, encargado de contener el pasteboard correspondiente
+; Canvas de clase editor%, encargado de contener el pasteboard correspondiente
 (define boardContainer (new editor-canvas%
                        [parent gameWindow]
                        [style '(no-hscroll no-vscroll)]
                        [horizontal-inset 0]
                        [vertical-inset 0]
-                       [editor board]))
+                       [editor board])
+)
 
-;Unicode del Token de los dos jugadores
+; Unicode del token de los dos jugadores
 (define token-piece-data
-  (hash
-   "Token" #\u2b55))
+  (hash "Token" #\u2b55)
+)
 
-;Define a la clase tipo snip, para poder pegarlo en el pasteboard
+; Se define la clase tipo snip del jugador, para poder pegarlo en el pasteboard
 (define token-piece-snip-class
   (make-object
    (class snip-class%
-     (super-new)
-     (send this set-classname "token-snip"))))
+      (super-new)
+      (send this set-classname "token-snip")
+   )
+  )
+)
 
+; Se añade la clase tipo snip del jugador
 (send (get-the-snip-class-list) add token-piece-snip-class)
 
-;
+; Se define la clase tipo snip del bot, para poder pegarlo en el pasteboard
 (define tokenBOT-piece-snip-class
   (make-object
    (class snip-class%
-     (super-new)
-     (send this set-classname "tokenBOT-snip"))))
+      (super-new)
+      (send this set-classname "tokenBOT-snip")
+   )
+  )
+)
 
+; Se añade la clase tipo snip del bot
 (send (get-the-snip-class-list) add tokenBOT-piece-snip-class)
 
-;Define al objeto Token, de tipo snip class
+; Se define al objeto Token del jugador, de tipo class snip
 (define token-piece%
   (class snip%
     (init-field glyph font size [location #f])
     (super-new)
     (send this set-snipclass token-piece-snip-class)
     
-    ;Configura el tamano del Token
+    ; Configura el tamaño del Token
     (define/override (get-extent dc x y width height descent space lspace rspace)
       (when width (set-box! width size))
       (when height (set-box! height size))
       (when descent (set-box! descent 1.0))
       (when space (set-box! space 1.0))
       (when lspace (set-box! lspace 1.0))
-      (when rspace (set-box! rspace 1.0)))
+      (when rspace (set-box! rspace 1.0))
+    )
 
-     ;Dibuja el token en el board segun el color que eligio el jugador 
+     ; Dibuja el token en el board según el color que eligió el jugador 
     (define/override (draw dc x y . other)
-    (cond 
-      ((equal? "Rojo" (send selectToken get-string-selection))
-
-      (send dc set-font font)
-      (send dc set-text-foreground "red")
-      (define-values (glyph-width glyph-height baseline extra-space)
-      (send dc get-text-extent glyph font #t))
-      (let ((ox (/ (- size glyph-width) 2))
-            (oy (/ (- size glyph-height 2))))
-        (send dc draw-text glyph (+ x ox) (+ y oy))))
-      
-      ((equal? "Azul" (send selectToken get-string-selection))
-      
-      (send dc set-font font)
-      (send dc set-text-foreground "blue")
-      (define-values (glyph-width glyph-height baseline extra-space)
-      (send dc get-text-extent glyph font #t))
-      (let ((ox (/ (- size glyph-width) 2))
-            (oy (/ (- size glyph-height 2))))
-       
-        (send dc draw-text glyph (+ x ox) (+ y oy))))
-    ))
+      (cond 
+        ((equal? "Rojo" (send selectToken get-string-selection))
+          (send dc set-font font)
+          (send dc set-text-foreground "red")
+          (define-values (glyph-width glyph-height baseline extra-space)
+          (send dc get-text-extent glyph font #t))
+          (let ((ox (/ (- size glyph-width) 2))
+                (oy (/ (- size glyph-height 2))))
+          (send dc draw-text glyph (+ x ox) (+ y oy)))
+        )
+        ((equal? "Azul" (send selectToken get-string-selection))
+          (send dc set-font font)
+          (send dc set-text-foreground "blue")
+          (define-values (glyph-width glyph-height baseline extra-space)
+          (send dc get-text-extent glyph font #t))
+          (let ((ox (/ (- size glyph-width) 2))
+                (oy (/ (- size glyph-height 2))))
+          (send dc draw-text glyph (+ x ox) (+ y oy)))
+        )
+      )
+    )
   )
 )
 
+; Se define al objeto Token del bot, de tipo class snip
 (define tokenBOT-piece%
   (class snip%
     (init-field glyph font size [location #f])
     (super-new)
     (send this set-snipclass tokenBOT-piece-snip-class)
     
-    ;Configura el tamano del bot Token
+    ; Configura el tamaño del bot Token
     (define/override (get-extent dc x y width height descent space lspace rspace)
       (when width (set-box! width size))
       (when height (set-box! height size))
       (when descent (set-box! descent 1.0))
       (when space (set-box! space 1.0))
       (when lspace (set-box! lspace 1.0))
-      (when rspace (set-box! rspace 1.0)))
+      (when rspace (set-box! rspace 1.0))
+    )
 
-     ;Dibuja el token del bot en el board segun el color que eligio el jugador 
+     ; Dibuja el token del bot en el board según el color que eligió el jugador 
     (define/override (draw dc x y . other)
-    (cond 
-      ((equal? "Rojo" (send selectToken get-string-selection))
-
-      (send dc set-font font)
-      (send dc set-text-foreground "blue")
-      (define-values (glyph-width glyph-height baseline extra-space)
-      (send dc get-text-extent glyph font #t))
-      (let ((ox (/ (- size glyph-width) 2))
-            (oy (/ (- size glyph-height 2))))
-        (send dc draw-text glyph (+ x ox) (+ y oy))))
-      
-      ((equal? "Azul" (send selectToken get-string-selection))
-      
-      (send dc set-font font)
-      (send dc set-text-foreground "red")
-      (define-values (glyph-width glyph-height baseline extra-space)
-      (send dc get-text-extent glyph font #t))
-      (let ((ox (/ (- size glyph-width) 2))
-            (oy (/ (- size glyph-height 2))))
-       
-        (send dc draw-text glyph (+ x ox) (+ y oy))))
-    ))
+      (cond 
+        ((equal? "Rojo" (send selectToken get-string-selection))
+          (send dc set-font font)
+          (send dc set-text-foreground "blue")
+          (define-values (glyph-width glyph-height baseline extra-space)
+          (send dc get-text-extent glyph font #t))
+          (let ((ox (/ (- size glyph-width) 2))
+                (oy (/ (- size glyph-height 2))))
+            (send dc draw-text glyph (+ x ox) (+ y oy)))
+        )
+        ((equal? "Azul" (send selectToken get-string-selection))
+          (send dc set-font font)
+          (send dc set-text-foreground "red")
+          (define-values (glyph-width glyph-height baseline extra-space)
+          (send dc get-text-extent glyph font #t))
+          (let ((ox (/ (- size glyph-width) 2))
+                (oy (/ (- size glyph-height 2))))
+          
+            (send dc draw-text glyph (+ x ox) (+ y oy)))
+        )
+      )
+    )
   )
 )
 
- ;Crea el Token piece       
+; Se crea el Token piece del jugador       
 (define (make-token-piece id)
   (define glyph (hash-ref token-piece-data id))
   (define font (send the-font-list find-or-create-font 20 'default 'normal 'normal))
   (new token-piece% [glyph (string glyph)] [font font] [size 35])
 )
 
+; Se crea el Token piece del bot  
 (define (make-tokenBOT-piece id)
   (define glyph (hash-ref token-piece-data id))
   (define font (send the-font-list find-or-create-font 20 'default 'normal 'normal))
   (new tokenBOT-piece% [glyph (string glyph)] [font font] [size 35])
 )
 
+
+#|
+*********************************************************************************************
+*********************************************************************************************
+*********************************************************************************************
+|#
 
 
 
