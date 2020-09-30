@@ -1,7 +1,6 @@
 #lang racket
 (require racket/gui)
 (require "Back/CheckWin-Lose.rkt")
-(require "Back/GreedyAlgorithms.rkt")
 (require embedded-gui)
 
 ;################################################
@@ -473,7 +472,7 @@
           (define piece (make-token-piece id))
         
         (when (equal? changeValue #t)
-          (send board insert piece (- (send e get-x) 15) (+ (- (send e get-y) 15) (car mouseY)))
+          (send board insert piece (- (send e get-x) 15) (+ (- (send e get-y) 15) (- (car mouseY) 10)))
           (checkWinLoseGUI matrix)
           (set! changeValue #f)
         )
